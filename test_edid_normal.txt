@@ -1,0 +1,332 @@
+Parsing test_edid
+EDID version: 1.4
+
+
+
+
+BASE EDID:
+[Manufacturing/vendor info]
+  Manufacturer ID:       ACI
+  ID Product Code:       9713
+  Serial number:         116464
+  Week of manufacture:   29
+  Year of manufacture:   2011
+
+
+
+
+[Basic Display Information]
+Digital Video Signal Interface
+  Color Bit Depth:                                   8 Bits per Primary Color
+  Digital Video Interface Standard Support:          DisplayPort is supported
+  Maximum dimensions (cm):                           55 x 31
+  Display gamma:                                     2.00
+  DPM active-off supported:                          True
+  Display color type:                                RGB 4:4:4 + YCrCb 4:4:4 + YCrCb 4:2:2
+  Preferred timing includes native timing pixel
+    format and refresh rate:                         True
+
+
+
+
+[Chromaticity information]
+    Red: (661, 339)
+  Green: (301, 650)
+   Blue: (154,  69)
+  White: (321, 337)
+
+
+
+
+[Established timing bitmap]
+  720x400      @ 70 Hz
+  640x480      @ 60 Hz
+  640x480      @ 67 Hz
+  640x480      @ 72 Hz
+  640x480      @ 75 Hz
+  800x600      @ 56 Hz
+  800x600      @ 60 Hz
+  800x600      @ 72 Hz
+  800x600      @ 75 Hz
+  832x624      @ 75 Hz
+  1024x768     @ 60 Hz
+  1024x768     @ 72 Hz
+  1024x768     @ 75 Hz
+  1280x1024    @ 75 Hz
+
+
+
+
+[Standard timing information]
+  1152 x  864  (4:3)    @ 75 Hz
+  1280 x  720  (16:9)   @ 60 Hz
+  1280 x  960  (4:3)    @ 60 Hz
+  1280 x 1024  (5:4)    @ 60 Hz
+  1440 x  900  (16:10)  @ 60 Hz
+  1440 x  900  (16:10)  @ 75 Hz
+  1680 x 1050  (16:10)  @ 60 Hz
+  1920 x 1080  (16:9)   @ 60 Hz
+
+
+
+
+[Descriptor blocks 1-4]
+Block #1: Detailed Timing Descriptor
+  Pixel clock:      148.5 MHz
+  Addressable:      1920 x 1080
+  Blanking:         280 x 45
+  Front porch:      88 x 4
+  Sync pulse:       44 x 5
+  Image size (mm):  553 x 311
+  Border:           0 x 0
+  Interlace:        False
+  Stereo viewing:   No stereo
+  Sync type:        Digital Separate Sync: 
+                    vertical sync is positive; 
+                    horizontal sync is positive (outside of V-sync)
+
+
+
+
+Block #2: Display Product Serial Number
+  Data string:	B7LMTF116464
+
+
+
+
+Block #3: Display Range Limits Descriptor
+Subtype: CVT supported
+  Vertical rate (Hz):                 50 - 75
+  Horizontal rate (kHz):              24 - 83
+  Pixel clock (MHz):                  170
+  CVT Version:                        1.1
+  Additional Pixel Clock:             170.0 MHz
+  Maximum active pixels:              1920
+  Supported aspect ratios:            4:3 AR
+                                      16:9 AR
+                                      16:10 AR
+                                      5:4 AR
+                                      15:9 AR
+  Preferred aspect ratio:             16:9 AR
+  CVT blanking support:               Standard CVT Blanking
+                                      Reduced CVT Blanking
+  Display scaling support:            Horizontal Shrink
+                                      Horizontal Stretch
+                                      Vertical Shrink
+                                      Vertical Stretch
+  Preferred vertical refresh:         60 Hz
+
+
+
+
+Block #4: Display Product Name
+  Data string:	ASUS VE258
+
+
+
+
+
+
+
+
+EXTENSION NUMBER 1: Video Timing Block Extension (VTB-EXT)
+Version:                            1
+Number of DTBs:                     3
+Number of CVTs:                     6
+Number of STs:                      3
+
+
+DTD
+  Pixel clock:      129.0 MHz
+  Addressable:      3840 x 2400
+  Blanking:         256 x 22
+  Front porch:      32 x 4
+  Sync pulse:       128 x 10
+  Image size (mm):  477 x 297
+  Border:           0 x 0
+  Interlace:        False
+  Stereo viewing:   No stereo
+  Sync type:        Digital Separate Sync: 
+                    vertical sync is positive; 
+                    horizontal sync is negative (outside of V-sync)
+
+
+DTD
+  Pixel clock:      157.0 MHz
+  Addressable:      3072 x 1920
+  Blanking:         120 x 40
+  Front porch:      16 x 10
+  Sync pulse:       64 x 12
+  Image size (mm):  477 x 297
+  Border:           0 x 0
+  Interlace:        False
+  Stereo viewing:   No stereo
+  Sync type:        Digital Separate Sync: 
+                    vertical sync is positive; 
+                    horizontal sync is negative (outside of V-sync)
+
+
+DTD
+  Pixel clock:      158.0 MHz
+  Addressable:      2456 x 1536
+  Blanking:         120 x 36
+  Front porch:      16 x 10
+  Sync pulse:       64 x 8
+  Image size (mm):  477 x 297
+  Border:           0 x 0
+  Interlace:        False
+  Stereo viewing:   No stereo
+  Sync type:        Digital Separate Sync: 
+                    vertical sync is positive; 
+                    horizontal sync is negative (outside of V-sync)
+
+
+CVT
+  Active vertical lines:              1440
+  Aspect ratio:                       16:10
+  Preferred refresh rate:             60Hz (reduced blanking)
+  Supported refresh rates:            60Hz (reduced blanking)
+
+
+CVT
+  Active vertical lines:              1200
+  Aspect ratio:                       16:10
+  Preferred refresh rate:             60Hz (reduced blanking)
+  Supported refresh rates:            60Hz (reduced blanking)
+
+
+CVT
+  Active vertical lines:              1080
+  Aspect ratio:                       16:10
+  Preferred refresh rate:             60Hz (reduced blanking)
+  Supported refresh rates:            60Hz (reduced blanking)
+
+
+CVT
+  Active vertical lines:              720
+  Aspect ratio:                       16:10
+  Preferred refresh rate:             60Hz (standard blanking)
+  Supported refresh rates:            60Hz (standard blanking)  75Hz (standard blanking)
+
+
+CVT
+  Active vertical lines:              600
+  Aspect ratio:                       16:10
+  Preferred refresh rate:             60Hz (standard blanking)
+  Supported refresh rates:            60Hz (standard blanking)  75Hz (standard blanking)
+
+
+CVT
+  Active vertical lines:              480
+  Aspect ratio:                       16:10
+  Preferred refresh rate:             60Hz (standard blanking)
+  Supported refresh rates:            60Hz (standard blanking)  75Hz (standard blanking)
+
+
+STs
+  1680 x 1050  (16:10)  @ 120 Hz
+
+
+STs
+  1536 x  960  (16:10)  @ 120 Hz
+
+
+STs
+  1224 x  765  (16:10)  @ 120 Hz
+
+
+
+
+EXTENSION NUMBER 2: CEA-861 Series Timing Extension
+  Version:                3
+  Underscan support:      True
+  Basic audio support:    True
+  Native DTD count:       1
+
+
+
+
+Data Block Video Data Block
+  Native              1920x1080p            59.94Hz/60Hz  16:9    1:1
+  Non-native          1920x1080p            50Hz          16:9    1:1
+  Non-native          1280x720p             59.94Hz/60Hz  16:9    1:1
+  Non-native          1280x720p             50Hz          16:9    1:1
+  Non-native          720x480p              59.94Hz/60Hz  16:9    32:27
+
+
+
+
+Data Block Audio Data Block
+Short audio descriptor #1
+  Type:               Linear Pulse Code Modulation (LPCM)
+  Max channel count:  2
+  Supported sampling: 48kHz  44.1kHz  32kHz
+  Bit depth:          ['24 bit', '20 bit', '16 bit']
+
+
+
+
+
+
+Data Block Speaker Allocation Block
+  Speaker allocation:
+    Front Left / Front Right
+
+
+
+
+Detailed Timing Descriptor #1:
+  Pixel clock:      148.5 MHz
+  Addressable:      1920 x 1080
+  Blanking:         720 x 45
+  Front porch:      528 x 4
+  Sync pulse:       44 x 5
+  Image size (mm):  1018 x 572
+  Border:           0 x 0
+  Interlace:        False
+  Stereo viewing:   No stereo
+  Sync type:        Digital Separate Sync: 
+                    vertical sync is positive; 
+                    horizontal sync is positive (outside of V-sync)
+
+
+
+
+Detailed Timing Descriptor #2:
+  Pixel clock:      74.2 MHz
+  Addressable:      1280 x 720
+  Blanking:         370 x 30
+  Front porch:      110 x 5
+  Sync pulse:       40 x 5
+  Image size (mm):  1018 x 572
+  Border:           0 x 0
+  Interlace:        False
+  Stereo viewing:   No stereo
+  Sync type:        Digital Separate Sync: 
+                    vertical sync is positive; 
+                    horizontal sync is positive (outside of V-sync)
+
+
+
+
+Detailed Timing Descriptor #3:
+  Pixel clock:      74.2 MHz
+  Addressable:      1280 x 720
+  Blanking:         700 x 30
+  Front porch:      440 x 5
+  Sync pulse:       40 x 5
+  Image size (mm):  1018 x 572
+  Border:           0 x 0
+  Interlace:        False
+  Stereo viewing:   No stereo
+  Sync type:        Digital Separate Sync: 
+                    vertical sync is positive; 
+                    horizontal sync is positive (outside of V-sync)
+
+
+
+
+
+
+
+
