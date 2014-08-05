@@ -32,10 +32,10 @@ class CoordinatedVideoTiming(object):
   """Returns a CoordinatedVideoTiming object and its properties."""
 
   _ref_rates = [
-      [0x10, '50Hz (standard blanking)'],
-      [0x08, '60Hz (standard blanking)'],
-      [0x04, '75Hz (standard blanking)'],
-      [0x02, '85Hz (standard blanking)'],
+      [0x10, '50Hz'],
+      [0x08, '60Hz'],
+      [0x04, '75Hz'],
+      [0x02, '85Hz'],
       [0x01, '60Hz (reduced blanking)']
   ]
 
@@ -78,13 +78,13 @@ class CoordinatedVideoTiming(object):
     asp_ratio = ''
 
     if ar == 0x00:
-      asp_ratio = '4:3'
+      asp_ratio = '4:3 AR'
     elif ar == 0x01:
-      asp_ratio = '16:9'
+      asp_ratio = '16:9 AR'
     elif ar == 0x02:
-      asp_ratio = '16:10'
+      asp_ratio = '16:10 AR'
     elif ar == 0x03:
-      asp_ratio = '15:9'
+      asp_ratio = '15:9 AR'
 
     return asp_ratio
 
@@ -108,10 +108,11 @@ class CoordinatedVideoTiming(object):
     """Fetches the list of supported refresh rates.
 
     Returns:
-      A list of strings, each of which is a supported refresh rate.
+      A dict of strings and booleans, each representing a refresh rate and
+      whether it is supported.
     """
     supp_code = self._block[2] & 0x1F
-    return tools.ListFilter(self._ref_rates, supp_code)
+    return tools.DictFilter(self._ref_rates, supp_code)
 
   def CheckErrors(self, index=None):
     """Checks for errors in the coordinated video timing block.

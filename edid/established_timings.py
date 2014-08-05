@@ -29,13 +29,13 @@ _timings = [
     [0x200, '1024x768 @ 75 Hz'],
     [0x100, '1280x1024 @ 75 Hz'],
     [0x80, '1152x870 @ 75 Hz (Apple Macintosh II)'],
-    [0x40, 'Manufacturer specific display mode'],
-    [0x20, 'Manufacturer specific display mode'],
-    [0x10, 'Manufacturer specific display mode'],
-    [0x8, 'Manufacturer specific display mode'],
-    [0x4, 'Manufacturer specific display mode'],
-    [0x2, 'Manufacturer specific display mode'],
-    [0x1, 'Manufacturer specific display mode']
+    [0x40, 'Manufacturer specific display mode 1'],
+    [0x20, 'Manufacturer specific display mode 2'],
+    [0x10, 'Manufacturer specific display mode 3'],
+    [0x8, 'Manufacturer specific display mode 4'],
+    [0x4, 'Manufacturer specific display mode 5'],
+    [0x2, 'Manufacturer specific display mode 6'],
+    [0x1, 'Manufacturer specific display mode 7']
 ]
 
 
@@ -55,9 +55,9 @@ class EstablishedTimings(object):
     """Creates the list of supported timings.
 
     Returns:
-      The list of strings indicating supported timings.
+      The dict of strings and bools indicating supported timings.
     """
     # Bytes 35, 36, 37
     timing_byte = ((self._edid[0x23] << 16) + (self._edid[0x24] << 8)
                    + (self._edid[0x25]))
-    return tools.ListFilter(_timings, timing_byte)
+    return tools.DictFilter(_timings, timing_byte)

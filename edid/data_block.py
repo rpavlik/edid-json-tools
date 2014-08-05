@@ -442,9 +442,10 @@ class ShortAudioDescriptor(object):
     However, those bits are set to 0 so will never translate as supported.
 
     Returns:
-      A list of string constants that indicate supported sampling frequencies.
+      A dict of string constants and bools that indicate sampling frequencies
+      and whether each one is supported.
     """
-    return tools.ListFilter(_freqs, self._block[1] & 0x7F)
+    return tools.DictFilter(_freqs, self._block[1] & 0x7F)
 
 
 class AudioDescriptorLpcm(ShortAudioDescriptor):
@@ -464,9 +465,10 @@ class AudioDescriptorLpcm(ShortAudioDescriptor):
     """Fetches the supported bit depths.
 
     Returns:
-      A list of strings that indicate supported bit depths.
+      A dict of strings and bools that indicate bit depths and whether each one
+      is supported.
     """
-    return tools.ListFilter(_bits, self._block[2] & 0x07)
+    return tools.DictFilter(_bits, self._block[2] & 0x07)
 
 
 class AudioDescriptorBitRate(ShortAudioDescriptor):
@@ -692,10 +694,10 @@ class SpeakerBlock(DataBlock):
     """Fetches the speaker allocation.
 
     Returns:
-      A list of strings indicating the speaker allocation.
+      A dict of strings and bools indicating the speaker allocation.
     """
     alloc_bits = ((self._block[2] & 0x07) << 8) + self._block[1]
-    return tools.ListFilter(_speakers, alloc_bits)
+    return tools.DictFilter(_speakers, alloc_bits)
 
 
 class VideoCapabilityBlock(DataBlock):
@@ -801,9 +803,9 @@ class ColorimetryDataBlock(DataBlock):
     """Fetches the colorimetry.
 
     Returns:
-      A list of strings indicating the colorimetry.
+      A dict of strings and bools indicating the colorimetry.
     """
-    return tools.ListFilter(_colors, self._block[2])
+    return tools.DictFilter(_colors, self._block[2])
 
   @property
   def metadata(self):

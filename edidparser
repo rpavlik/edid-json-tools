@@ -24,6 +24,7 @@ import edid.data_block as data_block
 import edid.descriptor as descriptor
 import edid.edid as edid
 import edid.extensions as extensions
+import edid.tools as tools
 
 
 LAYOUT_MODE = 0
@@ -196,7 +197,7 @@ def GetBasicDisplay(e, mode, raw_mode):
       ['Maximum dimensions (cm):', max_dim],
       ['Aspect ratio (portrait):', bd.aspect_ratio_portrait],
       ['Aspect ratio (landscape):', bd.aspect_ratio_landscape],
-      ['Display gamma:', bd.display_gamma],
+      ['Display gamma:', '%.2f' % bd.display_gamma],
       ['DPM standby supported:', bd.dpm_standby],
       ['DPM suspend supported:', bd.dpm_suspend],
       ['DPM active-off supported:', bd.active_off],
@@ -258,8 +259,7 @@ def GetEstablishedTiming(e, mode, raw_mode):
     return
 
   et = e.established_timings
-
-  results = et.supported_timings
+  results = tools.ListTrueOnly(et.supported_timings)
 
   if not results:  # If empty list was returned
     print '  None'
@@ -405,17 +405,17 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
     if desc.subtype == descriptor.SUBTYPE_DISPLAY_RANGE_CVT:
 
       ss = []
-      for ar in desc.supported_aspect_ratios:
+      for ar in tools.ListTrueOnly(desc.supported_aspect_ratios):
         ss.append('  %-35s %s' % ('', ar))
       asp = '\n'.join(ss)
 
       ss = []
-      for cb in desc.cvt_blanking_support:
+      for cb in tools.ListTrueOnly(desc.cvt_blanking_support):
         ss.append('  %-35s %s' % ('', cb))
       cvt_blank = '\n'.join(ss)
 
       ss = []
-      for ds in desc.display_scaling_support:
+      for ds in tools.ListTrueOnly(desc.display_scaling_support):
         ss.append('  %-35s %s' % ('', ds))
       dis_scal = '\n'.join(ss)
 
@@ -428,8 +428,7 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
           ['Preferred aspect ratio:', desc.preferred_aspect_ratio],
           ['CVT blanking support:', cvt_blank.strip()],
           ['Display scaling support:', dis_scal.strip()],
-          ['Preferred vertical refresh:',
-           desc.preferred_vert_refresh]
+          ['Preferred vertical refresh (Hz):', desc.preferred_vert_refresh]
       ]
 
       PrintList(cvt_info, mode, '  %-35s %s')
@@ -480,7 +479,7 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
 
   elif desc.type == descriptor.TYPE_ESTABLISHED_TIMINGS_III:
 
-    print desc.established_timings
+    print tools.ListTrueOnly(desc.established_timings)
 
   elif desc.type == descriptor.TYPE_MANUFACTURER_SPECIFIED:
     if raw_mode:
@@ -504,7 +503,7 @@ def PrintCp(cp, num):
   cp_info = [
       ['Index number:', cp.index_number],
       ['White point coordinates:', wht],
-      ['Gamma:', cp.gamma]
+      ['Gamma:', str(cp.gamma) if cp.gamma else 'Gamma not described here']
   ]
 
   PrintList(cp_info, VERBOSE_MODE, '  %-30s %s')
@@ -542,8 +541,9 @@ def PrintDtd(desc):
   PrintList(info, VERBOSE_MODE, '  %-17s %s')
 
   st = desc.sync_type
-  print ('  %-17s %s\n  %-17s %s\n  %-17s %s' %
-         ('Sync type:', st[0], '', st[1], '', st[2]))
+  print '  Sync type:'
+  for x in st:
+    print '    %-39s %s' % ('%s:' % x, st[x])
 
 
 def AnalyzeExtension(e, mode, raw_mode, block_num=1):
@@ -614,7 +614,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
       print 'Data Block %s' % db.type
 
       if raw_mode:
-        PrintRawRange(db.GetBlock, raw_mode)
+        PrintRawRange(db.GetBlock(), raw_mode)
 
       db_basic = [
           ['Tag:', db.tag],
@@ -639,12 +639,12 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           ad = ads[x]
           print 'Short audio descriptor #%d' % (x + 1)
 
-          ssf = '  '.join(ad.supported_sampling_freqs)
+          ssf = tools.ListTrueOnly(ad.supported_sampling_freqs)
 
           ad_basic = [
               ['Type:', ad.type],
               ['Max channel count:', ad.max_channel_count],
-              ['Supported sampling:', ssf],
+              ['Supported sampling:', '  '.join(ssf)],
           ]
 
           if mode == VERBOSE_MODE:
@@ -653,7 +653,8 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           PrintList(ad_basic, mode, '  %-19s %s')
 
           if ad.type == data_block.AUDIO_TYPE_LPCM:
-            print '  %-19s %s' % ('Bit depth:', ad.bit_depth)
+            print '  %-19s %s' % ('Bit depth:',
+                                  tools.ListTrueOnly(ad.bit_depth))
           elif ad.type == data_block.AUDIO_TYPE_DRA:
             print '  %-19s %s' % ('DRA value:', ad.value)
           elif ad.format_code <= 8 and ad.format_code >= 2:
@@ -670,8 +671,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
       elif db.type == data_block.DB_TYPE_SPEAKER_ALLOCATION:
 
         print '  Speaker allocation:'
-        alloc = db.allocation
-        for a in alloc:
+        for a in tools.ListTrueOnly(db.allocation):
           print '    %s' % a
 
       elif (db.type == data_block.DB_TYPE_VENDOR_SPECIFIC or
@@ -682,9 +682,8 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
       elif db.type == data_block.DB_TYPE_COLORIMETRY:
 
-        cs = db.colorimetry
         print '  Colorimetry:'
-        for c in cs:
+        for c in tools.ListTrueOnly(db.colorimetry):
           print '    %s' % c
         print '  %-20s %s' % ('Metadata:', db.metadata)
 
@@ -825,13 +824,13 @@ def PrintCvt(cvt):
   Args:
     cvt: A single CoordinatedVideoTiming object.
   """
-  supp = '  '.join(cvt.supported_vertical_rates)
+  svr = tools.ListTrueOnly(cvt.supported_vertical_rates)
 
   cvt_info = [
       ['Active vertical lines:', cvt.active_vertical_lines],
       ['Aspect ratio:', cvt.aspect_ratio],
       ['Preferred refresh rate:', cvt.preferred_vertical_rate],
-      ['Supported refresh rates:', supp]
+      ['Supported refresh rates:', '  '.join(svr)]
   ]
 
   if cvt:
@@ -943,7 +942,7 @@ def PrintHexEdid(e):
   data = e.GetData()
   hex_rows = len(data) / 16
 
-  print '\t\t\t\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F'
+  print '\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F'
 
   for x in xrange(0, hex_rows):
 

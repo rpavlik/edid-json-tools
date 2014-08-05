@@ -7,7 +7,7 @@
 
 for i in $(ls edids); do
     if [[ $i != *.txt && ! -d $i ]]; then
-        ./edidparser parse -v edids/$i #> edids/extEdids/$i.txt
+        ./edidparser parse edids/$i #> edids/extEdids/$i.txt
         printf "\n\n\n\n\n"
     fi
 done

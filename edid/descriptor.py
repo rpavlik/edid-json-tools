@@ -7,6 +7,7 @@
 18-byte descriptors are found both in the base EDID and in extensions.
 The various types of Descriptor all inherit the basic Descriptor object.
 """
+import collections
 
 import coordinated_video_timings as cvt_module
 import error
@@ -499,9 +500,9 @@ class DisplayRangeCVT(DisplayRangeDescriptor):
     """Fetches supported aspect ratios.
 
     Returns:
-      A list of strings specifying supported aspect ratios.
+      A dict of strings and bools specifying supported aspect ratios.
     """
-    return tools.ListFilter(self._aspect_ratios, self._block[14])
+    return tools.DictFilter(self._aspect_ratios, self._block[14])
 
   @property
   def preferred_aspect_ratio(self):
@@ -520,45 +521,41 @@ class DisplayRangeCVT(DisplayRangeDescriptor):
     """Fetches the CVT blanking support.
 
     Returns:
-      A list of strings indicating types of CVT blanking support.
+      A collections.OrderedDict of string keys and boolean values indicating
+      types of CVT blanking support.
     """
-    blanking_supp = []
+    b = collections.OrderedDict()
 
-    if self._block[15] & 0x08:
-      blanking_supp.append('Standard CVT Blanking')
-    if self._block[15] & 0x10:
-      blanking_supp.append('Reduced CVT Blanking')
+    b['Standard CVT Blanking'] = bool(self._block[15] & 0x08)
+    b['Reduced CVT Blanking'] = bool(self._block[15] & 0x10)
 
-    return blanking_supp
+    return b
 
   @property
   def display_scaling_support(self):
     """Fetches the types of display scaling support.
 
     Returns:
-      A list of strings indicating the supported types of display scaling.
+      A collections.OrderedDict of string keys and boolean values indicating the
+      supported types of display scaling.
     """
-    display_scaling = []
+    d = collections.OrderedDict()
 
-    if self._block[16] & 0x80:
-      display_scaling.append('Horizontal Shrink')
-    if self._block[16] & 0x40:
-      display_scaling.append('Horizontal Stretch')
-    if self._block[16] & 0x20:
-      display_scaling.append('Vertical Shrink')
-    if self._block[16] & 0x10:
-      display_scaling.append('Vertical Stretch')
+    d['Horizontal Shrink'] = bool(self._block[16] & 0x80)
+    d['Horizontal Stretch'] = bool(self._block[16] & 0x40)
+    d['Vertical Shrink'] = bool(self._block[16] & 0x20)
+    d['Vertical Stretch'] = bool(self._block[16] & 0x10)
 
-    return display_scaling
+    return d
 
   @property
   def preferred_vert_refresh(self):
     """Fetches preferred vertical refresh rate.
 
     Returns:
-      A string indicating preferred vertical refresh rate.
+      An int indicating preferred vertical refresh rate in Hz.
     """
-    return '%s Hz' % self._block[17]
+    return self._block[17]
 
 
 # NB: This class is untested
@@ -604,9 +601,6 @@ class ColorPointDescriptor(Descriptor):
 
     if self._block[5] == 0x00:
       errors.append(error.Error('ColorPointDescriptor', 'First color point is '
-                                'invalid', 'Non-0 value', 0x00))
-    if self._block[10] == 0x00:
-      errors.append(error.Error('ColorPointDescriptor', 'Second color point is '
                                 'invalid', 'Non-0 value', 0x00))
 
     return errors
@@ -658,12 +652,12 @@ class ColorPoint(object):
     """Fetches the gamma value (range 1.00-3.54).
 
     Returns:
-      A string describing the gamma value.
+      A float describing the gamma value, or None if unspecified.
     """
     if self._block[4] == 0xFF:
-      return 'Gamma Value not defined here'
+      return None
     else:
-      return str((self._block[4] + 100) / 100)
+      return (self._block[4] + 100) / 100
 
 
 class StandardTimingDescriptor(Descriptor):
@@ -872,13 +866,13 @@ class EstablishedTimingsIIIDescriptor(Descriptor):
     """Fetches the supported established timings.
 
     Returns:
-      A list of strings denoting the supported established timings.
+      A dict of strings and bools denoting the supported established timings.
     """
     # Bytes 6-10 plus first half of 11
     timing_byte = ((self._block[6] << 36) + (self._block[7] << 28) +
                    (self._block[8] << 20) + (self._block[9] << 12) +
                    (self._block[10] << 4) + (self._block[11] >> 4))
-    return tools.ListFilter(self._timings, timing_byte)
+    return tools.DictFilter(self._timings, timing_byte)
 
 
 # This descriptor is not supposed to be used yet
@@ -1130,43 +1124,33 @@ class DetailedTimingDescriptor(Descriptor):
     """Fetches the sync signal definition type.
 
     Returns:
-      A list of strings indicating sync signal definition types.
+      A dict of strings and bools indicating sync signal definition types.
     """
+    s = collections.OrderedDict()
+    s['Type'] = None
+
     # Bits 4-1 | Sync signal definitions:
-    sync_type = []
     sync_bits = (self._block[17] >> 1) & 0x0F
     if not sync_bits & 0x08:  # Analog sync signal definitions
+
       if not sync_bits & 0x04:
-        sync_type.append('Analog Composite Sync')
+        s['Type'] = 'Analog Composite Sync'
       else:
-        sync_type = 'Bipolar Analog Composite Sync: '
-      if not sync_bits & 0x02:
-        sync_type.append('without serrations')
-      else:
-        sync_type.append('with serrations (H-sync during V-sync); ')
-      if not sync_bits & 0x01:
-        sync_type.append('sync on green signal only')
-      else:
-        sync_type.append('sync on all three (RGB) video signals')
+        s['Type'] = 'Bipolar Analog Composite Sync'
+
+      s['Serrations'] = bool(sync_bits & 0x02)
+      s['Sync on RGB'] = bool(sync_bits & 0x01)
+
     else:  # Digital sync signal definitions
       if not sync_bits & 0x04:
-        sync_type.append('Digital Composite Sync: ')
-        if not sync_bits & 0x02:
-          sync_type.append('without serrations; ')
-        else:
-          sync_type.append('with serrations (H-sync during V-sync); ')
+        s['Type'] = 'Digital Composite Sync'
+        s['Serrations'] = bool(sync_bits & 0x02)
       else:
-        sync_type.append('Digital Separate Sync: ')
-        if not sync_bits & 0x02:
-          sync_type.append('vertical sync is negative; ')
-        else:
-          sync_type.append('vertical sync is positive; ')
-      if not sync_bits & 0x01:
-        sync_type.append('horizontal sync is negative (outside of '
-                         'V-sync)')
-      else:
-        sync_type.append('horizontal sync is positive (outside of '
-                         'V-sync)')
+        s['Type'] = 'Digital Separate Sync'
+        s['Vertical sync'] = 'Positive' if sync_bits & 0x02 else 'Negative'
 
-    return sync_type
+      s['Horizontal sync (outside of V-sync)'] = ('Positive' if sync_bits & 0x01
+                                                  else 'Negative')
+
+    return s
 

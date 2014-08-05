@@ -84,15 +84,15 @@ class BasicDisplay(object):
     if supp == 0x00:
       return None
     elif supp == 0x01:
-      return 'DVI is supported'
+      return 'DVI'
     elif supp == 0x02:
-      return 'HDMI-a is supported'
+      return 'HDMI-a'
     elif supp == 0x03:
-      return 'HDMI-b is supported'
+      return 'HDMI-b'
     elif supp == 0x04:
-      return 'MDDI is supported'
+      return 'MDDI'
     elif supp == 0x05:
-      return 'DisplayPort is supported'
+      return 'DisplayPort'
     else:
       return 'Reserved: Should not be used'
 
@@ -212,7 +212,7 @@ class BasicDisplay(object):
     Returns:
       A float indicating aspect ratio (portrait), or None.
     """
-    if not self._edid[0x15]:
+    if not self._edid[0x15] and self._edid[0x16]:
       aspect_ratio = 100.0 / (self._edid[0x16] + 99.0)
       return '%.2f : 1' % aspect_ratio
     else:
@@ -225,7 +225,7 @@ class BasicDisplay(object):
     Returns:
       A float indicating aspect ratio (landscape), or None.
     """
-    if not self._edid[0x16]:
+    if not self._edid[0x16] and self._edid[0x15]:
       aspect_ratio = (self._edid[0x15] + 99.0) / 100.0
       return '%.2f : 1' % aspect_ratio
     else:
@@ -239,9 +239,9 @@ class BasicDisplay(object):
     Gamma is in range 1.00-3.54.
 
     Returns:
-      A string that formats the display gamma float to 2 decimal places.
+      A float representing the display gamma.
     """
-    return '%.2f' % ((self._edid[0x17] + 100) / 100)
+    return (self._edid[0x17] + 100) / 100.0
 
   # SUPPORTED FEATURES SECTION
 
