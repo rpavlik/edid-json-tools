@@ -10,7 +10,6 @@ The various types of DataBlocks all inherit the basic DataBlock object.
 """
 
 import tools
-import video_block
 
 
 DB_TYPE_AUDIO = 'Audio Data Block'
@@ -150,6 +149,11 @@ OU_NOT_SUPPORTED = 'Video Formats not supported'
 OU_OVERSCAN = 'Always Overscanned'
 OU_UNDERSCAN = 'Always Underscanned'
 OU_BOTH = 'Supports both over- and underscan'
+
+
+VIDEO_PREFERENCE_VIC = 'Video Preference VIC'
+VIDEO_PREFERENCE_DTD = 'Video Preference DTD'
+VIDEO_PREFERENCE_RESERVED = 'Video Preference Reserved'
 
 
 INFO_FRAME_TYPE_VENDOR_SPECIFIC = 'Vendor Specific'
@@ -616,30 +620,54 @@ class VideoBlock(DataBlock):
   def short_video_descriptors(self):
     """Fetches the short video descriptors.
 
-    Calls on the video_block module to get strings representing SVDs from the
-    codes indicated in the Video Data Block.
-
     Returns:
       A list of short video descriptors (strings).
     """
     svds = []
 
     for x in xrange(self._offset + 1, len(self._block)):
-
-      vic7 = self._block[x] & 0x7F
-      vic8 = self._block[x]
-
-      if vic8 in [0, 128, 254, 255]:
-        svds.append([SVD_UNSPECIFIED, 'RESERVED'])
-
-      elif vic8 >= 1 and vic8 <= 64:
-        svds.append([SVD_NONNATIVE, video_block.GetSvd(vic7)])
-      elif vic8 >= 129 and vic8 <= 192:
-        svds.append([SVD_NATIVE, video_block.GetSvd(vic7)])
-      else:
-        svds.append([SVD_UNSPECIFIED, video_block.GetSvd(vic8)])
+      svds.append(ShortVideoDescriptor(self._block[x]))
 
     return svds
+
+
+class ShortVideoDescriptor(object):
+  """Defines a Short Video Descriptor."""
+
+  def __init__(self, byte):
+    """Creates a ShortVideoDescriptor object.
+
+    Args:
+      byte: The single byte that codes for the Short Video Descriptor.
+    """
+    self._byte = byte
+
+  @property
+  def nativity(self):
+    """Fetches the nativity of the Short Video Descriptor.
+
+    Nativity options include SVD_NATIVE, SVD_NONNATIVE, and SVD_UNSPECIFIED.
+
+    Returns:
+      A string indicating the nativity of the Short Video Descriptor.
+    """
+    if 1 <= self._byte <= 64:
+      return SVD_NONNATIVE
+    elif 129 <= self._byte <= 192:
+      return SVD_NATIVE
+    else:
+      return SVD_UNSPECIFIED
+
+  @property
+  def vic(self):
+    """Fetches the Video Identification code for the Short Video Descriptor.
+
+    Returns:
+      An integer representing the Video Identification Code.
+    """
+    if 1 <= self._byte <= 64 or 129 <= self._byte <= 192:
+      return self._byte & 0x7F
+    return self._byte
 
 
 class VendorSpecificBlock(DataBlock):
@@ -838,20 +866,114 @@ class VideoFormatPrefBlock(DataBlock):
     into supported video preferences.
 
     Returns:
-      A list of strings indicating the video preferences.
+      A list of VideoPreference objects indicating the video preferences.
     """
     prefs = []
 
     for x in xrange(2, len(self._block)):
       svr = self._block[x]
       if (svr in [0, 128, 254, 255]) or (svr >= 145 and svr <= 192):
-        prefs.append('RESERVED')
+        prefs.append(VideoPreferenceReserved(svr))
       elif svr >= 129 and svr <= 144:
-        prefs.append('%d-th DTD in EDID' % (svr - 128))
+        prefs.append(VideoPreferenceDtd(svr))
       else:
-        prefs.append(video_block.GetSvd(svr))
+        prefs.append(VideoPreferenceVic(svr))
 
     return prefs
+
+
+class VideoPreference(object):
+  """Defines a Video Preference object."""
+
+  def __init__(self, byte, atype):
+    """Creates a VideoPreference object.
+
+    Args:
+      byte: The single byte that codes for the Video Preference object.
+      atype: The string that indicates the type of the Video Preference object.
+    """
+    self._byte = byte
+    self._type = atype
+
+  def GetSvr(self):
+    """Fetches the Short Video Reference value.
+
+    Returns:
+      An integer indicating the Short Video Reference.
+    """
+    return self._byte
+
+  @property
+  def type(self):
+    """Fetches the type of the Video Preference object.
+
+    Returns:
+      A string indicating the type of the Video Preference object.
+    """
+    return self._type
+
+
+class VideoPreferenceVic(VideoPreference):
+  """Defines a Video Preference VIC object."""
+
+  def __init__(self, byte):
+    """Creates a Video Preference VIC object.
+
+    Args:
+      byte: The single byte that codes for the Video Preference object.
+    """
+    VideoPreference.__init__(self, byte, VIDEO_PREFERENCE_VIC)
+
+  @property
+  def vic(self):
+    """Fetches the Video Identification Code value.
+
+    Returns:
+      An integer specifying the Video Identification Code value.
+    """
+    return self._byte
+
+
+class VideoPreferenceDtd(VideoPreference):
+  """Defines a Video Preference DTD object."""
+
+  def __init__(self, byte):
+    """Creates a Video Preference DTD object.
+
+    Args:
+      byte: The single byte that codes for the Video Preference object.
+    """
+    VideoPreference.__init__(self, byte, VIDEO_PREFERENCE_DTD)
+
+  @property
+  def dtd_index(self):
+    """Fetches the DTD index.
+
+    Returns:
+      An integer (1-16) specifying the DTD index.
+    """
+    return self._byte - 128
+
+
+class VideoPreferenceReserved(VideoPreference):
+  """Defines a Video Preference Reserved object."""
+
+  def __init__(self, byte):
+    """Creates a Video Preference Reserved object.
+
+    Args:
+      byte: The single byte that codes for the Video Preference object.
+    """
+    VideoPreference.__init__(self, byte, VIDEO_PREFERENCE_RESERVED)
+
+  @property
+  def svr(self):
+    """Fetches the Short Video Reference.
+
+    Returns:
+      An integer specifying the Short Video Reference.
+    """
+    return self._byte
 
 
 class YCBCR420CapabilityMapBlock(DataBlock):

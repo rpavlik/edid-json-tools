@@ -25,6 +25,7 @@ import edid.descriptor as descriptor
 import edid.edid as edid
 import edid.extensions as extensions
 import edid.tools as tools
+import edid.video_block as video_block
 
 
 LAYOUT_MODE = 0
@@ -630,7 +631,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           db.type == data_block.DB_TYPE_YCBCR420_VIDEO):
         svds = db.short_video_descriptors
         for svd in svds:
-          print '  %-20s%s' % (svd[0], svd[1])
+          print '  %-20s%s' % (svd.nativity, video_block.GetSvd(svd.vic))
 
       elif db.type == data_block.DB_TYPE_AUDIO:
         ads = db.short_audio_descriptors
@@ -738,7 +739,12 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
       elif db.type == data_block.DB_TYPE_VIDEO_FORMAT_PREFERENCE:
         vps = db.video_preferences
         for vp in vps:
-          print vp
+          if vp.type == data_block.VIDEO_PREFERENCE_VIC:
+            print video_block.GetSvd(vp.vic)
+          elif vp.type == data_block.VIDEO_PREFERENCE_DTD:
+            print '%d-th DTD in EDID' % vp.dtd_index
+          elif vp.type == data_block.VIDEO_PREFERENCE_RESERVED:
+            print 'Reserved: %d' % vp.svr
 
       PrintSpace()
 
