@@ -1001,7 +1001,7 @@ class YCBCR420CapabilityMapBlock(DataBlock):
     supported = []
     index = 0
 
-    for x in xrange(2, self._block):
+    for x in xrange(2, len(self._block)):
       byte = self._block[x]
       for _ in range(0, 8):
         if byte & 0x01:
