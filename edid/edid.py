@@ -5,6 +5,8 @@
 
 """Provides EDID class with methods for parsing info."""
 
+import array
+
 import basic_display
 import chromaticity
 import descriptor
@@ -239,3 +241,13 @@ class Edid(object):
       A list of error.Error objects.
     """
     return error_check.GetErrors(self.GetData(), self.edid_version)
+
+  def ConvertToBinary(self, filename):
+    """Converts an EDID object into a binary blob.
+
+    Args:
+      filename: The string filename of the text file.
+    """
+    with open(filename, 'wb') as myfile:
+      blob = array.array('B', self._edid).tostring()
+      myfile.write(blob)
