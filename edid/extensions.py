@@ -461,12 +461,14 @@ class ExtensionBlockMap(Extension):
 
   @property
   def all_tags(self):
-    """Fetches all tags in the block map.
+    """Fetches all 126 tags in the block map.
+
+    Zeroes indicate unused blocks.
 
     Returns:
-      A list of tags (integers) indicating the tag of each following extension.
+      A list of 126 tags (integers) indicating the tag of each following block.
     """
-    return [x for x in self._block[1:127] if x != 0]
+    return self._block[1:127]
 
 
 class ManufacturerExtension(Extension):

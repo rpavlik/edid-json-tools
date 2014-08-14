@@ -819,7 +819,8 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     tags = ext.all_tags
 
     for x in xrange(0, len(tags)):
-      print '%d. %s' % (x + 1, tags[x])
+      if tags[x]:  # Not 0, bc 0 indicates unused block
+        print 'Block %d: %d' % (x + block_num + 1, tags[x])
 
 
 def PrintCvt(cvt):
