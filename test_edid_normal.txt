@@ -18,9 +18,9 @@ BASE EDID:
 [Basic Display Information]
 Digital Video Signal Interface
   Color Bit Depth:                                   8 Bits per Primary Color
-  Digital Video Interface Standard Support:          DisplayPort is supported
+  Digital Video Interface Standard Support:          DisplayPort
   Maximum dimensions (cm):                           55 x 31
-  Display gamma:                                     2.00
+  Display gamma:                                     2.20
   DPM active-off supported:                          True
   Display color type:                                RGB 4:4:4 + YCrCb 4:4:4 + YCrCb 4:2:2
   Preferred timing includes native timing pixel
@@ -81,9 +81,10 @@ Block #1: Detailed Timing Descriptor
   Border:           0 x 0
   Interlace:        False
   Stereo viewing:   No stereo
-  Sync type:        Digital Separate Sync: 
-                    vertical sync is positive; 
-                    horizontal sync is positive (outside of V-sync)
+  Sync type:
+    Type:                                   Digital Separate Sync
+    Vertical sync:                          Positive
+    Horizontal sync (outside of V-sync):    Positive
 
 
 
@@ -114,7 +115,7 @@ Subtype: CVT supported
                                       Horizontal Stretch
                                       Vertical Shrink
                                       Vertical Stretch
-  Preferred vertical refresh:         60 Hz
+  Preferred vertical refresh (Hz):    60
 
 
 
@@ -146,9 +147,10 @@ DTD
   Border:           0 x 0
   Interlace:        False
   Stereo viewing:   No stereo
-  Sync type:        Digital Separate Sync: 
-                    vertical sync is positive; 
-                    horizontal sync is negative (outside of V-sync)
+  Sync type:
+    Type:                                   Digital Separate Sync
+    Vertical sync:                          Positive
+    Horizontal sync (outside of V-sync):    Negative
 
 
 DTD
@@ -161,9 +163,10 @@ DTD
   Border:           0 x 0
   Interlace:        False
   Stereo viewing:   No stereo
-  Sync type:        Digital Separate Sync: 
-                    vertical sync is positive; 
-                    horizontal sync is negative (outside of V-sync)
+  Sync type:
+    Type:                                   Digital Separate Sync
+    Vertical sync:                          Positive
+    Horizontal sync (outside of V-sync):    Negative
 
 
 DTD
@@ -176,51 +179,52 @@ DTD
   Border:           0 x 0
   Interlace:        False
   Stereo viewing:   No stereo
-  Sync type:        Digital Separate Sync: 
-                    vertical sync is positive; 
-                    horizontal sync is negative (outside of V-sync)
+  Sync type:
+    Type:                                   Digital Separate Sync
+    Vertical sync:                          Positive
+    Horizontal sync (outside of V-sync):    Negative
 
 
 CVT
   Active vertical lines:              1440
-  Aspect ratio:                       16:10
+  Aspect ratio:                       16:10 AR
   Preferred refresh rate:             60Hz (reduced blanking)
   Supported refresh rates:            60Hz (reduced blanking)
 
 
 CVT
   Active vertical lines:              1200
-  Aspect ratio:                       16:10
+  Aspect ratio:                       16:10 AR
   Preferred refresh rate:             60Hz (reduced blanking)
   Supported refresh rates:            60Hz (reduced blanking)
 
 
 CVT
   Active vertical lines:              1080
-  Aspect ratio:                       16:10
+  Aspect ratio:                       16:10 AR
   Preferred refresh rate:             60Hz (reduced blanking)
   Supported refresh rates:            60Hz (reduced blanking)
 
 
 CVT
   Active vertical lines:              720
-  Aspect ratio:                       16:10
-  Preferred refresh rate:             60Hz (standard blanking)
-  Supported refresh rates:            60Hz (standard blanking)  75Hz (standard blanking)
+  Aspect ratio:                       16:10 AR
+  Preferred refresh rate:             60Hz
+  Supported refresh rates:            60Hz  75Hz
 
 
 CVT
   Active vertical lines:              600
-  Aspect ratio:                       16:10
-  Preferred refresh rate:             60Hz (standard blanking)
-  Supported refresh rates:            60Hz (standard blanking)  75Hz (standard blanking)
+  Aspect ratio:                       16:10 AR
+  Preferred refresh rate:             60Hz
+  Supported refresh rates:            60Hz  75Hz
 
 
 CVT
   Active vertical lines:              480
-  Aspect ratio:                       16:10
-  Preferred refresh rate:             60Hz (standard blanking)
-  Supported refresh rates:            60Hz (standard blanking)  75Hz (standard blanking)
+  Aspect ratio:                       16:10 AR
+  Preferred refresh rate:             60Hz
+  Supported refresh rates:            60Hz  75Hz
 
 
 STs
@@ -285,9 +289,10 @@ Detailed Timing Descriptor #1:
   Border:           0 x 0
   Interlace:        False
   Stereo viewing:   No stereo
-  Sync type:        Digital Separate Sync: 
-                    vertical sync is positive; 
-                    horizontal sync is positive (outside of V-sync)
+  Sync type:
+    Type:                                   Digital Separate Sync
+    Vertical sync:                          Positive
+    Horizontal sync (outside of V-sync):    Positive
 
 
 
@@ -302,9 +307,10 @@ Detailed Timing Descriptor #2:
   Border:           0 x 0
   Interlace:        False
   Stereo viewing:   No stereo
-  Sync type:        Digital Separate Sync: 
-                    vertical sync is positive; 
-                    horizontal sync is positive (outside of V-sync)
+  Sync type:
+    Type:                                   Digital Separate Sync
+    Vertical sync:                          Positive
+    Horizontal sync (outside of V-sync):    Positive
 
 
 
@@ -319,9 +325,10 @@ Detailed Timing Descriptor #3:
   Border:           0 x 0
   Interlace:        False
   Stereo viewing:   No stereo
-  Sync type:        Digital Separate Sync: 
-                    vertical sync is positive; 
-                    horizontal sync is positive (outside of V-sync)
+  Sync type:
+    Type:                                   Digital Separate Sync
+    Vertical sync:                          Positive
+    Horizontal sync (outside of V-sync):    Positive
 
 
 

@@ -244,8 +244,7 @@ class DisplayRangeDescriptor(Descriptor):
     """
     return self._subtype
 
-  @property
-  def max_vertical_rate_offset(self):
+  def _GetMaxVerticalRateOffset(self):
     """Fetches the maximum vertical rate offset.
 
     Returns:
@@ -256,8 +255,7 @@ class DisplayRangeDescriptor(Descriptor):
     else:
       return 0
 
-  @property
-  def min_vertical_rate_offset(self):
+  def _GetMinVerticalRateOffset(self):
     """Fetches the minimum vertical rate offset.
 
     Returns:
@@ -268,8 +266,7 @@ class DisplayRangeDescriptor(Descriptor):
     else:
       return 0
 
-  @property
-  def max_horizontal_rate_offset(self):
+  def _GetMaxHorizontalRateOffset(self):
     """Fetches the maximum horizontal rate offset.
 
     Returns:
@@ -280,8 +277,7 @@ class DisplayRangeDescriptor(Descriptor):
     else:
       return 0
 
-  @property
-  def min_horizontal_rate_offset(self):
+  def _GetMinHorizontalRateOffset(self):
     """Fetches the minimum horizontal rate offset.
 
     Returns:
@@ -299,7 +295,7 @@ class DisplayRangeDescriptor(Descriptor):
     Returns:
       An integer specifying the minimum vertical rate (in Hz).
     """
-    return self._block[5] + self.min_vertical_rate_offset
+    return self._block[5] + self._GetMinVerticalRateOffset()
 
   @property
   def max_vertical_rate(self):
@@ -308,7 +304,7 @@ class DisplayRangeDescriptor(Descriptor):
     Returns:
       An integer specifying the maximum vertical rate (in Hz).
     """
-    return self._block[6] + self.max_vertical_rate_offset
+    return self._block[6] + self._GetMaxVerticalRateOffset()
 
   @property
   def min_horizontal_rate(self):
@@ -317,7 +313,7 @@ class DisplayRangeDescriptor(Descriptor):
     Returns:
       An integer specifying the minimum horizontal rate (in kHz).
     """
-    return self._block[7] + self.min_horizontal_rate_offset
+    return self._block[7] + self._GetMinHorizontalRateOffset()
 
   @property
   def max_horizontal_rate(self):
@@ -326,7 +322,7 @@ class DisplayRangeDescriptor(Descriptor):
     Returns:
       An integer specifying the maximum horizontal rate (in kHz).
     """
-    return self._block[8] + self.max_horizontal_rate_offset
+    return self._block[8] + self._GetMaxHorizontalRateOffset()
 
   @property
   def pixel_clock(self):

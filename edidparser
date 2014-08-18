@@ -378,22 +378,10 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
 
     print 'Subtype:', desc.subtype
 
-    vert_off = '%2d - %d' % (desc.min_vertical_rate_offset,
-                             desc.max_vertical_rate_offset)
-    hor_off = '%2d - %d' % (desc.min_horizontal_rate_offset,
-                            desc.max_horizontal_rate_offset)
     vert_rate = '%2d - %d' % (desc.min_vertical_rate,
                               desc.max_vertical_rate)
     hor_rate = '%2d - %d' % (desc.min_horizontal_rate,
                              desc.max_horizontal_rate)
-
-    offset_info = [
-        ['Vertical offset (Hz):', vert_off],
-        ['Horizontal offset (kHz):', hor_off],
-    ]
-
-    if mode == VERBOSE_MODE:
-      PrintList(offset_info, mode, '  %-35s %s')
 
     info = [
         ['Vertical rate (Hz):', vert_rate],
