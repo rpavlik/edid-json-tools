@@ -690,7 +690,14 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
         PrintList(vc_info, mode, '  %-35s %s')
 
       elif db.type == data_block.DB_TYPE_INFO_FRAME:
+
+        if_proc = db.if_processing
         vsifs = db.vsifs
+        print '  %-25s %s' % ('VSIF count:', len(vsifs))
+
+        if if_proc.payload:
+          print '  %-25s %s' % ('InfoFrame Processing Descriptor Payload:',
+                                if_proc.payload)
 
         for vsif in vsifs:
 
@@ -699,8 +706,6 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
             print '  %-25s %s' % ('Type:', v_type)
             if v_type == data_block.INFO_FRAME_TYPE_VENDOR_SPECIFIC:
               print '  %-25s %s' % ('IEEE:', vsif.ieee_oui)
-            if v_type == data_block.INFO_FRAME_TYPE_PROCESSING:
-              print '  %-25s %s' % ('VSIF count:', vsif.vsif_count)
             continue
 
           vsif_info = [
@@ -714,9 +719,6 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
           if vsif.type == data_block.INFO_FRAME_TYPE_VENDOR_SPECIFIC:
             print '  %-25s %s' % ('IEEE:', vsif.ieee_oui)
-
-          if v_type == data_block.INFO_FRAME_TYPE_PROCESSING:
-            print '  %-25s %s' % ('VSIF count:', vsif.vsif_count)
 
       elif db.type == data_block.DB_TYPE_YCBCR420_CAPABILITY_MAP:
         sdis = db.supported_descriptor_indices

@@ -1024,6 +1024,15 @@ class InfoFrameDataBlock(DataBlock):
     DataBlock.__init__(self, block, DB_TYPE_INFO_FRAME)
 
   @property
+  def if_processing(self):
+    """Fetches the InfoFrame Processing Descriptor.
+
+    Returns:
+      An InfoFrame Processing Descriptor object.
+    """
+    return InfoFrameProcessingDescriptor(self._block[2:])
+
+  @property
   def vsifs(self):
     """Fetches the Vendor-Specific InfoFrame.
 
@@ -1032,7 +1041,7 @@ class InfoFrameDataBlock(DataBlock):
     """
     vsifs = []
 
-    start = 4
+    start = 2 + 2 + self.if_processing.payload_length
 
     while start < len(self._block):
       vsif = self._GetVsif(self._block[start:])
@@ -1052,10 +1061,7 @@ class InfoFrameDataBlock(DataBlock):
       A single InfoFrameDescriptor object.
     """
     code = new_block[0] & 0x1F
-    if code == 0x00:
-      return InfoFrameProcessingDescriptor(new_block)
-
-    elif code == 0x01:
+    if code == 0x01:
       return InfoFrameVendorSpecific(new_block)
 
     elif code == 0x02:
@@ -1122,7 +1128,7 @@ class InfoFrameDescriptor(object):
     """Fetches the data payload.
 
     Returns:
-      A list of bytes that make up the data payload.
+      A list of bytes that make up the data payload; may be an empty list.
     """
     return self._block[1:self.payload_length + 1]
 
