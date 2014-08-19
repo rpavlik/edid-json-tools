@@ -470,26 +470,39 @@ class DisplayRangeCVT(DisplayRangeDescriptor):
     return '%d.%d' % (version, revision)
 
   @property
+  def pixel_clock(self):
+    """Fetches the pixel clock, overriding the general method.
+
+    Since CVT Display Range descriptors have an addtional pixel clock field,
+    this additional value is subtracted from the original method.
+
+    Returns:
+      A float specifying the pixel clock (MHz).
+    """
+    return (self._block[9] * 10) - self.additional_pixel_clock
+
+  @property
   def additional_pixel_clock(self):
     """Fetches additional pixel clock value.
 
     Returns:
       A float indicating additional pixel clock value (in MHz).
     """
-    return (self._block[9] * 10) - (((self._block[12] >> 2) & 0x3F) * 0.25)
+    return (self._block[12] >> 2) * 0.25
 
   @property
   def max_active_pixels(self):
     """Fetches maximum active pixels.
 
     Returns:
-      A string describing the limit on horizontal active pixels.
+      An int describing the limit on horizontal active pixels, or None if no
+      limit.
     """
     if self._block[13] == 0x00:
-      return 'No limit on horizontal active pixels'
+      return None
     else:  # 8 x [Byte13 + (256 x (Byte 12, bits 1-0))]
       byte12_end = self._block[12] & 0x03
-      return str(8 * (self._block[13] + (256 * byte12_end)))
+      return 8 * (self._block[13] + (256 * byte12_end))
 
   @property
   def supported_aspect_ratios(self):

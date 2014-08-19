@@ -578,9 +578,8 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
     # BASIC CEA INFO
 
-    cea_base = e.GetData(128, 132)
-
     if raw_mode:
+      cea_base = ext.GetBlock()[0:4]
       PrintRawRange(cea_base, raw_mode)
 
     cea_info = [
@@ -774,6 +773,10 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
       return
 
+    if raw_mode:
+      vtb_base = ext.GetBlock()[0:4]
+      PrintRawRange(vtb_base, raw_mode)
+
     ext_basic = [
         ['Version:', ext.version],
         ['Number of DTBs:', ext.dtb_count],
@@ -786,14 +789,20 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     for dtb in dtbs:
 
       print '\n\nDTD'
+      if raw_mode:
+        PrintRawRange(dtb.GetBlock(), raw_mode)
       PrintDtd(dtb)
 
     for cvt in cvts:
       print '\n\nCVT'
+      if raw_mode:
+        PrintRawRange(cvt.GetBlock(), raw_mode)
       PrintCvt(cvt)
 
     for st in sts:
       print '\n\nSTs'
+      if raw_mode:
+        PrintRawRange(st.GetBlock(), raw_mode)
       PrintSt(st)
 
   elif ext.type == extensions.TYPE_EXTENSION_BLOCK_MAP:
