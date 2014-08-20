@@ -78,7 +78,7 @@
                 "Type": "Display Product Serial Number"
             }, 
             {
-                "Additional Pixel Clock (MHz)": 170.0, 
+                "Additional Pixel Clock (MHz)": 0.0, 
                 "CVT Version": "1.1", 
                 "CVT blanking support": {
                     "Reduced CVT Blanking": true, 
@@ -94,10 +94,10 @@
                     "Maximum": 83, 
                     "Minimum": 24
                 }, 
-                "Maximum active pixels": "1920", 
-                "Pixel clock (MHz)": 170, 
+                "Maximum active pixels": 1920, 
+                "Pixel clock (MHz)": 170.0, 
                 "Preferred aspect ratio": "16:9 AR", 
-                "Preferred vertical refresh": 60, 
+                "Preferred vertical refresh (Hz)": 60, 
                 "Subtype": "CVT supported", 
                 "Supported aspect ratios": {
                     "15:9 AR": true, 

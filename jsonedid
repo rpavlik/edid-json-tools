@@ -248,7 +248,7 @@ def BuildBlockAnalysis(desc):
           'Additional Pixel Clock (MHz)': desc.additional_pixel_clock,
           'Maximum active pixels': desc.max_active_pixels,
           'Preferred aspect ratio': desc.preferred_aspect_ratio,
-          'Preferred vertical refresh': desc.preferred_vert_refresh
+          'Preferred vertical refresh (Hz)': desc.preferred_vert_refresh
       })
 
     elif desc.subtype == descriptor.SUBTYPE_DISPLAY_RANGE_2ND_GTF:
@@ -567,22 +567,37 @@ def ParseEdid(filename):
     A dictionary of information about the EDID object.
   """
   # Fill the edid list with bytes from binary blob
-  e = edid.Edid(BytesFromFile(filename))
-  if e.GetErrors():
-    print e.GetErrors()
+  edid_obj = edid.Edid(BytesFromFile(filename))
+  errors = edid_obj.GetErrors()
+  if not errors:
+    return {
+        'Base': BuildBase(edid_obj),
+        'Extensions': BuildExtensions(edid_obj),
+        'Version': edid_obj.edid_version
+    }
+  else:
+    print 'Found %d errors\n' % len(errors)
+    for error in errors:
+      print 'At %s: %s' % (error.location, error.message)
+      if error.expected:
+        print '\tExpected\t%s' % error.expected
+        print '\tFound\t\t\t%s' % error.found
 
-  return {
-      'Base': BuildBase(e),
-      'Extensions': BuildExtensions(e),
-      'Version': e.edid_version
-  }
 
+_USAGE = """
+Usage: %s <inputfile>
+
+The program takes an EDID file, organizes it into a JSON object and prints
+it out in the stdout.
+"""
 
 ####################
 # CODE STARTS HERE #
 ####################
 if __name__ == '__main__':
   if len(sys.argv) < 2:
-    print 'Usage: ./jsonedid <inputfile>'
+    print _USAGE % sys.argv[0]
   else:
-    print json.dumps(ParseEdid(sys.argv[1]), sort_keys=True, indent=4)
+    edid_json = ParseEdid(sys.argv[1])
+    if edid_json:
+      print json.dumps(edid_json, sort_keys=True, indent=4)
