@@ -10,6 +10,7 @@
 
 """Creates an EDID binary blob out of a Json representation of an EDID."""
 
+from __future__ import print_function
 
 import itertools
 import json
@@ -1094,13 +1095,13 @@ def PrintHexEdid(data):
   """
   hex_rows = len(data) / 16
 
-  print '\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F'
+  print('\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F')
 
   for x in xrange(0, hex_rows):
 
     start = 0x10 * x
     row = '%02X%02X ' * 8 % tuple(data[start : start + 16])
-    print '0x%04X:\t\t%s' % (x, row)
+    print('0x%04X:\t\t%s' % (x, row))
 
 
 def JsonToBinary(in_file, out_file):
@@ -1122,12 +1123,12 @@ def JsonToBinary(in_file, out_file):
     if not invalid_bytes:
       edid_obj = edid_module.Edid(list_edid)
       if edid_obj.GetErrors():
-        print edid_obj.GetErrors()
+        print(edid_obj.GetErrors())
       edid_obj.ConvertToBinary(out_file)
     else:
       for i in invalid_bytes:
-        print 'Invalid byte at 0x%02X: %s' % (i, list_edid[i])
-      print 'Nothing is written to the output file due to errors'
+        print('Invalid byte at 0x%02X: %s' % (i, list_edid[i]))
+      print('Nothing is written to the output file due to errors')
 
 
 _USAGE = """
@@ -1139,7 +1140,7 @@ produces the EDID in the binary form.
 
 if __name__ == '__main__':
   if len(sys.argv) < 3:
-    print _USAGE % sys.argv[0]
+    print(_USAGE % sys.argv[0])
   else:
     input_file = sys.argv[1]
     output_file = sys.argv[2]

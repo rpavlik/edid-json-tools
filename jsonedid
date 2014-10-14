@@ -17,6 +17,8 @@
 
 """Parses EDID into python object and outputs Json form of EDID object."""
 
+from __future__ import print_function
+
 import json
 import sys
 
@@ -576,12 +578,12 @@ def ParseEdid(filename):
         'Version': edid_obj.edid_version
     }
   else:
-    print 'Found %d errors\n' % len(errors)
+    print('Found %d errors\n' % len(errors))
     for error in errors:
-      print 'At %s: %s' % (error.location, error.message)
+      print('At %s: %s' % (error.location, error.message))
       if error.expected:
-        print '\tExpected\t%s' % error.expected
-        print '\tFound\t\t\t%s' % error.found
+        print('\tExpected\t%s' % error.expected)
+        print('\tFound\t\t\t%s' % error.found)
 
 
 _USAGE = """
@@ -596,8 +598,8 @@ it out in the stdout.
 ####################
 if __name__ == '__main__':
   if len(sys.argv) < 2:
-    print _USAGE % sys.argv[0]
+    print(_USAGE % sys.argv[0])
   else:
     edid_json = ParseEdid(sys.argv[1])
     if edid_json:
-      print json.dumps(edid_json, sort_keys=True, indent=4)
+      print(json.dumps(edid_json, sort_keys=True, indent=4))

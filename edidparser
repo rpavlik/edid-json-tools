@@ -17,6 +17,8 @@
 
 """Parses EDID and establishes command line options for EDID analysis."""
 
+from __future__ import print_function
+
 import argparse
 import re
 
@@ -91,9 +93,9 @@ def PrintSpace(num=1):
     num: Denotes a smaller space (num = 0) or regular 3-line space (num = 1).
   """
   if num == 1 or num == 2:
-    print '\n\n\n'
+    print('\n\n\n')
   elif num == 0:
-    print '\n'
+    print('\n')
 
 
 def PrintList(alist, mode, print_format):
@@ -107,7 +109,7 @@ def PrintList(alist, mode, print_format):
   for x, s in alist:
     if mode == NORMAL_MODE and not s:
       continue
-    print print_format % (x, s)
+    print(print_format % (x, s))
 
 
 def GetManufacturerInfo(e, mode, raw_mode):
@@ -118,7 +120,7 @@ def GetManufacturerInfo(e, mode, raw_mode):
     mode: The level of verbosity for analysis.
     raw_mode: The type of raw data print out, if any.
   """
-  print '[Manufacturing/vendor info]'
+  print('[Manufacturing/vendor info]')
 
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x08, 0x12)
@@ -146,7 +148,7 @@ def GetBasicDisplay(e, mode, raw_mode):
     mode: The level of verbosity for analysis.
     raw_mode: The type of raw data print out, if any.
   """
-  print '[Basic Display Information]'
+  print('[Basic Display Information]')
 
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x14, 0x19)
@@ -159,7 +161,7 @@ def GetBasicDisplay(e, mode, raw_mode):
   # Video input definition
   # 0 = Analog, 1 = Digital
   if bd.video_input_type:  # Digital
-    print 'Digital Video Signal Interface'
+    print('Digital Video Signal Interface')
 
     dig_info = [
         ['Color Bit Depth:', bd.color_bit_depth],
@@ -170,7 +172,7 @@ def GetBasicDisplay(e, mode, raw_mode):
     PrintList(dig_info, mode, '  %-50s %s')
 
   elif not bd.video_input_type:  # Analog
-    print 'Analog Video Signal Interface'
+    print('Analog Video Signal Interface')
 
     analog_info = [
         ['Video white and sync levels:', bd.signal_level],
@@ -211,7 +213,7 @@ def GetBasicDisplay(e, mode, raw_mode):
 
   cfs = bd.cont_freq_support
   if mode == VERBOSE_MODE and cfs:
-    print '  %-50s %s' % ('Continuous frequency supported:', cfs)
+    print('  %-50s %s' % ('Continuous frequency supported:', cfs))
 
 
 def GetChromaticity(e, mode, raw_mode):
@@ -222,7 +224,7 @@ def GetChromaticity(e, mode, raw_mode):
     mode: The level of verbosity for analysis.
     raw_mode: The type of raw data print out, if any.
   """
-  print '[Chromaticity information]'
+  print('[Chromaticity information]')
 
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x19, 0x23)
@@ -240,7 +242,7 @@ def GetChromaticity(e, mode, raw_mode):
   ]
 
   for x in info:
-    print '%7s: (%3d, %3d)' % x
+    print('%7s: (%3d, %3d)' % x)
 
 
 def GetEstablishedTiming(e, mode, raw_mode):
@@ -251,7 +253,7 @@ def GetEstablishedTiming(e, mode, raw_mode):
     mode: The level of verbosity for analysis.
     raw_mode: The type of raw data print out, if any.
   """
-  print '[Established timing bitmap]'
+  print('[Established timing bitmap]')
 
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x23, 0x26)
@@ -263,16 +265,16 @@ def GetEstablishedTiming(e, mode, raw_mode):
   results = tools.ListTrueOnly(et.supported_timings)
 
   if not results:  # If empty list was returned
-    print '  None'
+    print('  None')
   else:
     for r in results:
 
       if '@' in r:
         res, hz = r.split('@')
-        print '  %-12s @%s' % (res, hz)
+        print('  %-12s @%s' % (res, hz))
 
       else:
-        print '  %-12s' % r
+        print('  %-12s' % r)
 
 
 def GetBaseStandardTiming(e, mode, raw_mode):
@@ -283,7 +285,7 @@ def GetBaseStandardTiming(e, mode, raw_mode):
     mode: The level of verbosity for analysis.
     raw_mode: The type of raw data print out, if any.
   """
-  print '[Standard timing information]'
+  print('[Standard timing information]')
 
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x26, 0x36)
@@ -296,7 +298,7 @@ def GetBaseStandardTiming(e, mode, raw_mode):
     for st in sts:
       PrintSt(st)
   elif mode == VERBOSE_MODE:
-    print '  None'
+    print('  None')
 
 
 def PrintSt(st):
@@ -314,7 +316,7 @@ def PrintSt(st):
   freq = st.vertical_freq
 
   form_rat = '(%s)' % rat
-  print '  %4d x %4d  %-8s @ %d Hz' % (x_res, y_res, form_rat, freq)
+  print('  %4d x %4d  %-8s @ %d Hz' % (x_res, y_res, form_rat, freq))
 
 
 def GetDescriptorBlocks(e, mode, raw_mode):
@@ -327,7 +329,7 @@ def GetDescriptorBlocks(e, mode, raw_mode):
     mode: The level of verbosity for analysis.
     raw_mode: The type of raw data print out, if any.
   """
-  print '[Descriptor blocks 1-4]'
+  print('[Descriptor blocks 1-4]')
 
   descs = e.descriptors
 
@@ -353,12 +355,12 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
     prefix: Optional string description of which (nth) descriptor this is within
         the EDID.
   """
-  print '%s%s' % (prefix, desc.type)
+  print('%s%s' % (prefix, desc.type))
 
   if mode == LAYOUT_MODE:
 
     if desc.type == descriptor.TYPE_DISPLAY_RANGE_LIMITS:
-      print '  Subtype: %s' % desc.subtype
+      print('  Subtype: %s' % desc.subtype)
 
   if raw_mode:
     base = 54
@@ -372,11 +374,11 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
       desc.type == descriptor.TYPE_ALPHANUM_DATA_STRING or
       desc.type == descriptor.TYPE_DISPLAY_PRODUCT_NAME):
 
-    print '  Data string:\t%s' % desc.string
+    print('  Data string:\t%s' % desc.string)
 
   elif desc.type == descriptor.TYPE_DISPLAY_RANGE_LIMITS:
 
-    print 'Subtype:', desc.subtype
+    print('Subtype:', desc.subtype)
 
     vert_rate = '%2d - %d' % (desc.min_vertical_rate,
                               desc.max_vertical_rate)
@@ -468,11 +470,11 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
 
   elif desc.type == descriptor.TYPE_ESTABLISHED_TIMINGS_III:
 
-    print tools.ListTrueOnly(desc.established_timings)
+    print(tools.ListTrueOnly(desc.established_timings))
 
   elif desc.type == descriptor.TYPE_MANUFACTURER_SPECIFIED:
     if raw_mode:
-      print desc.GetBlob()
+      print(desc.GetBlob())
 
   elif desc.type == descriptor.TYPE_DETAILED_TIMING:
     PrintDtd(desc)
@@ -485,7 +487,7 @@ def PrintCp(cp, num):
     cp: A descriptor.ColorPoint object.
     num: The index of the object (1st or 2nd).
   """
-  print 'Color Point %d' % num
+  print('Color Point %d' % num)
 
   wht = '(%d, %d)' % (cp.white_x, cp.white_y)
 
@@ -530,9 +532,9 @@ def PrintDtd(desc):
   PrintList(info, VERBOSE_MODE, '  %-17s %s')
 
   st = desc.sync_type
-  print '  Sync type:'
+  print('  Sync type:')
   for x in st:
-    print '    %-39s %s' % ('%s:' % x, st[x])
+    print('    %-39s %s' % ('%s:' % x, st[x]))
 
 
 def AnalyzeExtension(e, mode, raw_mode, block_num=1):
@@ -545,10 +547,10 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     block_num: The index of the extension being analyzed (default: 1st ext).
   """
   ext = e.GetExtension(block_num)
-  print 'EXTENSION NUMBER %d: %s' % (block_num, ext.type)
+  print('EXTENSION NUMBER %d: %s' % (block_num, ext.type))
 
   if mode == VERBOSE_MODE:
-    print 'Tag: %d' % ext.tag
+    print('Tag: %d' % ext.tag)
 
   if ext.type == extensions.TYPE_CEA_861:
 
@@ -556,18 +558,18 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     dtds = ext.dtds
 
     if mode == LAYOUT_MODE:
-      print 'Number of data blocks: %d' % len(dbs)
+      print('Number of data blocks: %d' % len(dbs))
       for x in xrange(0, len(dbs)):
-        print '%d. %s' % (x+1, dbs[x].type)
+        print('%d. %s' % (x+1, dbs[x].type))
 
         # Calls PrintRawRange, but it'll only print if raw_mode on
         PrintRawRange(dbs[x].GetBlock(), raw_mode)
 
       PrintSpace(mode)
 
-      print 'Number of detailed timing descriptors: %d' % len(dtds)
+      print('Number of detailed timing descriptors: %d' % len(dtds))
       for x in xrange(0, len(dtds)):
-        print '%d. %s' % (x+1, dtds[x].type)
+        print('%d. %s' % (x+1, dtds[x].type))
 
         # Calls PrintRawRange, but it'll only print if raw_mode on
         PrintRawRange(dtds[x].GetBlock(), raw_mode)
@@ -599,7 +601,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
     for db in dbs:
 
-      print 'Data Block %s' % db.type
+      print('Data Block %s' % db.type)
 
       if raw_mode:
         PrintRawRange(db.GetBlock(), raw_mode)
@@ -612,20 +614,20 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
       if mode == VERBOSE_MODE:
         PrintList(db_basic, mode, '  %-19s %s')
-        print '\n'
+        print('\n')
 
       if (db.type == data_block.DB_TYPE_VIDEO or
           db.type == data_block.DB_TYPE_YCBCR420_VIDEO):
         svds = db.short_video_descriptors
         for svd in svds:
-          print '  %-20s%s' % (svd.nativity, video_block.GetSvd(svd.vic))
+          print('  %-20s%s' % (svd.nativity, video_block.GetSvd(svd.vic)))
 
       elif db.type == data_block.DB_TYPE_AUDIO:
         ads = db.short_audio_descriptors
         for x in xrange(0, len(ads)):
 
           ad = ads[x]
-          print 'Short audio descriptor #%d' % (x + 1)
+          print('Short audio descriptor #%d' % (x + 1))
 
           ssf = tools.ListTrueOnly(ad.supported_sampling_freqs)
 
@@ -641,39 +643,39 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           PrintList(ad_basic, mode, '  %-19s %s')
 
           if ad.type == data_block.AUDIO_TYPE_LPCM:
-            print '  %-19s %s' % ('Bit depth:',
-                                  tools.ListTrueOnly(ad.bit_depth))
+            print('  %-19s %s' % ('Bit depth:',
+                                  tools.ListTrueOnly(ad.bit_depth)))
           elif ad.type == data_block.AUDIO_TYPE_DRA:
-            print '  %-19s %s' % ('DRA value:', ad.value)
+            print('  %-19s %s' % ('DRA value:', ad.value))
           elif ad.format_code <= 8 and ad.format_code >= 2:
-            print '  %-19s %s' % ('Max bit rate:', ad.max_bit_rate)
+            print('  %-19s %s' % ('Max bit rate:', ad.max_bit_rate))
           elif ad.format_code <= 14 and ad.format_code <= 9:
-            print '  %-19s %s' % ('Value:', ad.value)
+            print('  %-19s %s' % ('Value:', ad.value))
           else:
-            print '  %-19s %s' % ('Extension code:', ad.ext_code)
-            print '  %-19s %s' % ('Frame length:', ad.frame_length)
-            print '  %-19s %s' % ('MPS support:', ad.mps_support)
+            print('  %-19s %s' % ('Extension code:', ad.ext_code))
+            print('  %-19s %s' % ('Frame length:', ad.frame_length))
+            print('  %-19s %s' % ('MPS support:', ad.mps_support))
 
-          print '\n'
+          print('\n')
 
       elif db.type == data_block.DB_TYPE_SPEAKER_ALLOCATION:
 
-        print '  Speaker allocation:'
+        print('  Speaker allocation:')
         for a in tools.ListTrueOnly(db.allocation):
-          print '    %s' % a
+          print('    %s' % a)
 
       elif (db.type == data_block.DB_TYPE_VENDOR_SPECIFIC or
             db.type == data_block.DB_TYPE_VENDOR_SPECIFIC_AUDIO or
             db.type == data_block.DB_TYPE_VENDOR_SPECIFIC_VIDEO):
-        print '  %-20s %s' % ('IEEE:', db.ieee_oui)
-        print '  %-20s %s' % ('Data payload:', db.payload)
+        print('  %-20s %s' % ('IEEE:', db.ieee_oui))
+        print('  %-20s %s' % ('Data payload:', db.payload))
 
       elif db.type == data_block.DB_TYPE_COLORIMETRY:
 
-        print '  Colorimetry:'
+        print('  Colorimetry:')
         for c in tools.ListTrueOnly(db.colorimetry):
-          print '    %s' % c
-        print '  %-20s %s' % ('Metadata:', db.metadata)
+          print('    %s' % c)
+        print('  %-20s %s' % ('Metadata:', db.metadata))
 
       elif db.type == data_block.DB_TYPE_VIDEO_CAPABILITY:
 
@@ -693,19 +695,19 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
         if_proc = db.if_processing
         vsifs = db.vsifs
-        print '  %-25s %s' % ('VSIF count:', len(vsifs))
+        print('  %-25s %s' % ('VSIF count:', len(vsifs)))
 
         if if_proc.payload:
-          print '  %-25s %s' % ('InfoFrame Processing Descriptor Payload:',
-                                if_proc.payload)
+          print('  %-25s %s' % ('InfoFrame Processing Descriptor Payload:',
+                                if_proc.payload))
 
         for vsif in vsifs:
 
           if mode == NORMAL_MODE:
             v_type = vsif.type
-            print '  %-25s %s' % ('Type:', v_type)
+            print('  %-25s %s' % ('Type:', v_type))
             if v_type == data_block.INFO_FRAME_TYPE_VENDOR_SPECIFIC:
-              print '  %-25s %s' % ('IEEE:', vsif.ieee_oui)
+              print('  %-25s %s' % ('IEEE:', vsif.ieee_oui))
             continue
 
           vsif_info = [
@@ -718,29 +720,29 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           PrintList(vsif_info, mode, '  %-25s %s')
 
           if vsif.type == data_block.INFO_FRAME_TYPE_VENDOR_SPECIFIC:
-            print '  %-25s %s' % ('IEEE:', vsif.ieee_oui)
+            print('  %-25s %s' % ('IEEE:', vsif.ieee_oui))
 
       elif db.type == data_block.DB_TYPE_YCBCR420_CAPABILITY_MAP:
         sdis = db.supported_descriptor_indices
         for sdi in sdis:
-          print sdi
+          print(sdi)
 
       elif db.type == data_block.DB_TYPE_VIDEO_FORMAT_PREFERENCE:
         vps = db.video_preferences
         for vp in vps:
           if vp.type == data_block.VIDEO_PREFERENCE_VIC:
-            print video_block.GetSvd(vp.vic)
+            print(video_block.GetSvd(vp.vic))
           elif vp.type == data_block.VIDEO_PREFERENCE_DTD:
-            print '%d-th DTD in EDID' % vp.dtd_index
+            print('%d-th DTD in EDID' % vp.dtd_index)
           elif vp.type == data_block.VIDEO_PREFERENCE_RESERVED:
-            print 'Reserved: %d' % vp.svr
+            print('Reserved: %d' % vp.svr)
 
       PrintSpace()
 
     # DETAILED TIMING DESCRIPTORS
 
     for x in xrange(0, len(dtds)):
-      print 'Detailed Timing Descriptor #%d:' % (x + 1)
+      print('Detailed Timing Descriptor #%d:' % (x + 1))
 
       if raw_mode:
         PrintRawRange(dtds[x].GetBlock(), raw_mode)
@@ -755,21 +757,21 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     sts = ext.sts
 
     if mode == LAYOUT_MODE:
-      print 'Number of detailed timing descriptors: %d' % len(dtbs)
+      print('Number of detailed timing descriptors: %d' % len(dtbs))
       for x in xrange(0, len(dtbs)):
-        print '%d. %s' % (x+1, dtbs[x].type)
+        print('%d. %s' % (x+1, dtbs[x].type))
         this_dtb = dtbs[x].GetBlock()
         PrintRawRange(this_dtb, raw_mode)
 
-      print 'Number of coordinated video timing blocks: %d' % len(cvts)
+      print('Number of coordinated video timing blocks: %d' % len(cvts))
       for x in xrange(0, len(cvts)):
-        print '%d. Coordinated Video Timing Block' % (x + 1)
+        print('%d. Coordinated Video Timing Block' % (x + 1))
         this_cvt = cvts[x].GetBlock()
         PrintRawRange(this_cvt, raw_mode)
 
-      print 'Number of standard timing blocks: %d' % len(sts)
+      print('Number of standard timing blocks: %d' % len(sts))
       for x in xrange(0, len(sts)):
-        print '%d. Standard Timing Block' % (x + 1)
+        print('%d. Standard Timing Block' % (x + 1))
         this_st = sts[x].GetBlock()
         PrintRawRange(this_st, raw_mode)
 
@@ -790,19 +792,19 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
     for dtb in dtbs:
 
-      print '\n\nDTD'
+      print('\n\nDTD')
       if raw_mode:
         PrintRawRange(dtb.GetBlock(), raw_mode)
       PrintDtd(dtb)
 
     for cvt in cvts:
-      print '\n\nCVT'
+      print('\n\nCVT')
       if raw_mode:
         PrintRawRange(cvt.GetBlock(), raw_mode)
       PrintCvt(cvt)
 
     for st in sts:
-      print '\n\nSTs'
+      print('\n\nSTs')
       if raw_mode:
         PrintRawRange(st.GetBlock(), raw_mode)
       PrintSt(st)
@@ -819,7 +821,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
     for x in xrange(0, len(tags)):
       if tags[x]:  # Not 0, bc 0 indicates unused block
-        print 'Block %d: %d' % (x + block_num + 1, tags[x])
+        print('Block %d: %d' % (x + block_num + 1, tags[x]))
 
 
 def PrintCvt(cvt):
@@ -842,7 +844,7 @@ def PrintCvt(cvt):
   if cvt:
     PrintList(cvt_info, VERBOSE_MODE, '  %-35s %s')
   else:
-    print 'UNUSED FIELD'
+    print('UNUSED FIELD')
 
 
 def PrintBase(e, mode, raw_mode, types):
@@ -854,7 +856,7 @@ def PrintBase(e, mode, raw_mode, types):
     raw_mode: The type of raw data print out, if any.
     types: The list of types being analyzed.
   """
-  print 'BASE EDID:'
+  print('BASE EDID:')
   if TYPE_BASE in types:  # If TYPE_ALL was specified, BASE would be added in
     types = [TYPE_VENDOR, TYPE_BD, TYPE_DCC, TYPE_ET, TYPE_ST, TYPE_DP]
 
@@ -934,9 +936,9 @@ def PrintRawRange(e, raw_mode, start=0, end=None):
       my_format = '  Byte %04d:\t%04d'
 
     for x in xrange(0, len(data)):
-      print my_format % (x + start, data[x])
+      print(my_format % (x + start, data[x]))
 
-    print '\n'
+    print('\n')
 
 
 def PrintHexEdid(e):
@@ -948,13 +950,13 @@ def PrintHexEdid(e):
   data = e.GetData()
   hex_rows = len(data) / 16
 
-  print '\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F'
+  print('\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F')
 
   for x in xrange(0, hex_rows):
 
     start = 0x10 * x
     row = '%02X%02X ' * 8 % tuple(data[start : start + 16])
-    print '0x%04X:\t\t%s' % (x, row)
+    print('0x%04X:\t\t%s' % (x, row))
 
 
 def PrintDecEdid(e):
@@ -971,7 +973,7 @@ def PrintDecEdid(e):
     start = 8 * x
     row = '%04d %04d  ' * 4 % tuple(data[start : start + 8])
     line_range = '%d-%d:' % (start, start + 7)
-    print '%9s\t%s' % (line_range, row)
+    print('%9s\t%s' % (line_range, row))
 
 
 def Verify(e):
@@ -982,18 +984,18 @@ def Verify(e):
   """
   errors = e.GetErrors()
 
-  print 'Found %d errors\n\n' % len(errors)
+  print('Found %d errors\n\n' % len(errors))
 
   # Can format this better later
   for x in xrange(0, len(errors)):
-    print 'ERROR %d' % (x + 1)
-    print errors[x].location
-    print errors[x].message
+    print('ERROR %d' % (x + 1))
+    print(errors[x].location)
+    print(errors[x].message)
 
     if errors[x].expected:
-      print '\tExpected\t%s' % errors[x].expected
+      print('\tExpected\t%s' % errors[x].expected)
     if errors[x].found:
-      print '\tFound\t\t\t%s' % errors[x].found
+      print('\tFound\t\t\t%s' % errors[x].found)
 
     PrintSpace(0)
 
@@ -1004,7 +1006,7 @@ def Version(e):
   Args:
     e: The EDID being analyzed.
   """
-  print 'EDID version: %s' % e.edid_version
+  print('EDID version: %s' % e.edid_version)
 
 
 def Xc(e):
@@ -1013,7 +1015,7 @@ def Xc(e):
   Args:
     e: The EDID being analyzed.
   """
-  print 'Extension count: %d' % e.extension_count
+  print('Extension count: %d' % e.extension_count)
 
 
 def CheckInvalidTypes(types, exts):
@@ -1025,7 +1027,7 @@ def CheckInvalidTypes(types, exts):
   """
   for t in types:
     if t not in VALID_TYPES and t not in exts:
-      print ('Error: %s is not a valid type. %s'
+      print(('Error: %s is not a valid type. %s')
              % (t, VALID_TYPE_MESSAGE))
       PrintSpace()
 
@@ -1078,7 +1080,7 @@ def ParseEdid():
   # Fill the edid list with bytes from binary blob
   e = edid.Edid(BytesFromFile(args.edid_name))
 
-  print 'Parsing %s' % args.edid_name
+  print('Parsing %s' % args.edid_name)
 
   if hasattr(args, 'func'):  # Not the 'parse' subcommand
     args.func(e)
@@ -1115,7 +1117,7 @@ def ParseEdid():
     ext_types = [m.group(0) for t in base_types for m in [regex.search(t)] if m]
     CheckInvalidTypes(base_types, ext_types)
 
-  print 'EDID version: %s' % e.edid_version
+  print('EDID version: %s' % e.edid_version)
   PrintSpace()
 
   PrintBase(e, mode, raw_mode, base_types)
