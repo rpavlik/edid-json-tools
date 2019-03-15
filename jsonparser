@@ -869,7 +869,7 @@ def BuildDataBlock(db_json):
     extended_tag = 0x32
 
     if_proc = db_json['InfoFrame Processing Descriptor']
-    if_pro_payload = if_proc['Data payload']
+    if_proc_payload = if_proc['Data payload']
     vsifs = db_json['Vendor-Specific Info Frames']
     blob = [len(if_proc_payload) << 5, len(vsifs)] + if_proc_payload
 
@@ -895,7 +895,7 @@ def BuildDataBlock(db_json):
     tag = 0x07
     extended_tag = 0x13
 
-    prefs = db['Video preferences']
+    prefs = db_json['Video preferences']
     blob = []
     for pref in prefs:
       if pref['Type'] == 'Video Preference VIC':
