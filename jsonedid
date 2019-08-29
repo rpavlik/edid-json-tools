@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Copyright 2014 The Chromium OS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -17,7 +17,7 @@
 
 """Parses EDID into python object and outputs Json form of EDID object."""
 
-from __future__ import print_function
+
 
 import json
 import sys
@@ -39,7 +39,7 @@ def BytesFromFile(filename):
   """
   with open(filename, 'rb') as f:
     chunk = f.read()
-    return map(ord, chunk)
+    return [int(x) for x in bytes(chunk)]
 
 
 def _XYDict(x_value, y_value, first='x', second='y'):
@@ -555,7 +555,7 @@ def BuildExtensions(e):
   Returns:
     A list of extension information.
   """
-  return [AnalyzeExtension(e, x + 1) for x in list(xrange(0,
+  return [AnalyzeExtension(e, x + 1) for x in list(range(0,
                                                           e.extension_count))]
 
 

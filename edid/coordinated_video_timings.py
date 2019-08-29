@@ -7,8 +7,8 @@
 CoordinatedVideoTiming info is stored in Video Timing Block extensions.
 """
 
-import error
-import tools
+from . import error
+from . import tools
 
 
 def GetCoordinatedVideoTiming(edid, start_index):

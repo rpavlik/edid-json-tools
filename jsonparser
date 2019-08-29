@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Copyright 2014 The Chromium OS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -10,7 +10,7 @@
 
 """Creates an EDID binary blob out of a Json representation of an EDID."""
 
-from __future__ import print_function
+
 
 import itertools
 import json
@@ -103,7 +103,7 @@ def BuildBasicDisplay(edid, bd_json):
       cbd = 0x07
     else:
       x, _ = bd_json['Color Bit Depth'].split(' Bits')
-      cbd = int(x) / 2 - 2
+      cbd = int(x) // 2 - 2
 
     dig_supp = {
         None: 0x00,
@@ -249,7 +249,7 @@ def BuildStandardTimings(edid, sts_json):
   base = 0x26
   edid[base:(base + 16)] = [0x01] * 16
 
-  for x in xrange(0, num_st):
+  for x in range(0, num_st):
     edid[base + (x * 2):base + 2 + (x * 2)] = BuildSt(sts_json[x])
 
 
@@ -262,7 +262,7 @@ def BuildSt(one_st_json):
   Returns:
     A list of two bytes representing a single standard timing object.
   """
-  x = (one_st_json['X resolution'] / 8) - 31
+  x = (one_st_json['X resolution'] // 8) - 31
 
   ratios = {
       '1:1': 0x00,
@@ -286,7 +286,7 @@ def BuildDescriptors(edid, descs_json):
     descs_json: The list of dictionaries of descriptor info.
   """
   base = 0x36
-  for x in xrange(0, 4):
+  for x in range(0, 4):
     edid[base + (x * 18):base + ((x + 1) * 18)] = BuildDescriptor(descs_json[x])
 
 
@@ -418,7 +418,7 @@ def BuildDescriptor(desc_json):
       d[5:18] = [0x20] * 13  # Padding with 0x20
       data = desc_json['Data string']
       str_len = len(data)
-      d[5:(5 + str_len)] = map(ord, data)
+      d[5:(5 + str_len)] = list(map(ord, data))
       if str_len < 13:
         d[5 + str_len] = 0x0A
 
@@ -440,10 +440,10 @@ def BuildDescriptor(desc_json):
       hmin = int(desc_json['Horizontal rate (kHz)']['Minimum'])
       hmax = int(desc_json['Horizontal rate (kHz)']['Maximum'])
 
-      h = hmax / 256
-      i = hmin / 256
-      j = vmax / 256
-      k = vmin / 256
+      h = hmax // 256
+      i = hmin // 256
+      j = vmax // 256
+      k = vmin // 256
 
       d[4] = (h << 3) + (i << 2) + (j << 1) + k
       d[5] = vmin % 256
@@ -454,7 +454,7 @@ def BuildDescriptor(desc_json):
       d[9] = int(desc_json['Pixel clock (MHz)'] / 10)
 
       if asubtype == 'Secondary GTF supported - requires default too':
-        d[12] = desc_json['Start break frequency'] / 2
+        d[12] = desc_json['Start break frequency'] // 2
         d[13] = desc_json['C'] * 2
         d[14] = desc_json['M'] & 0xFF
         d[15] = desc_json['M'] >> 8
@@ -468,7 +468,7 @@ def BuildDescriptor(desc_json):
         apc = int(desc_json['Additional Pixel Clock (MHz)'] / 0.25)
 
         maxap = desc_json['Maximum active pixels']
-        maxap = int(maxap) / 8 if maxap else 0
+        maxap = int(maxap) // 8 if maxap else 0
 
         d[12] = (apc << 2) + (maxap >> 8)
         d[13] = maxap & 0xFF
@@ -594,7 +594,7 @@ def BuildDescriptor(desc_json):
     elif atype == 'Standard Timing Identifiers':
 
       sts = desc_json['Standard Timings']
-      for x in xrange(0, 6):
+      for x in range(0, 6):
         d[5 + (x * 2):7 + (x * 2)] = BuildSt(sts[x])
 
       d[17] = 0x0A
@@ -619,7 +619,7 @@ def BuildDescriptor(desc_json):
 
       d[5] = 0x01
       cvts = desc_json['Coordinated Video Timings']
-      for x in xrange(0, len(cvts)):  # Up to 4
+      for x in range(0, len(cvts)):  # Up to 4
         d[6 + (x * 3):9 + (x * 3)] = BuildCvt(cvts[x])
 
   return d
@@ -635,7 +635,7 @@ def BuildCvt(cvt_json):
     A list of bytes representing a single CVT object.
   """
   edid = [0] * 3
-  avl = (cvt_json['Active vertical lines'] / 2) - 1
+  avl = (cvt_json['Active vertical lines'] // 2) - 1
   edid[0] = avl & 0xFF
 
   ratios = {
@@ -1005,7 +1005,7 @@ def BuildSad(sad_json):
     sad[2] = _BuildBitsFromOptions(bits, sad_json['Bit depth'])
 
   elif tag <= 0x08 and tag >= 0x02:
-    sad[2] = sad_json['Max bit rate'] / 8
+    sad[2] = sad_json['Max bit rate'] // 8
 
   elif tag <= 0x0E and tag <= 0x09:
     sad[2] = sad_json['Value']
@@ -1080,7 +1080,7 @@ def BuildEdid(edid_json):
   edid[126] = ext_count
 
   # Set checksums for each 128-byte block
-  for x in xrange(0, len(edid), 128):
+  for x in range(0, len(edid), 128):
     current_sum = sum(edid[x:127 + x])
     edid[127 + x] = 256 - (current_sum % 256)
 
@@ -1093,11 +1093,11 @@ def PrintHexEdid(data):
   Args:
     data: The EDID to be printed.
   """
-  hex_rows = len(data) / 16
+  hex_rows = len(data) // 16
 
   print('\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F')
 
-  for x in xrange(0, hex_rows):
+  for x in range(0, hex_rows):
 
     start = 0x10 * x
     row = '%02X%02X ' * 8 % tuple(data[start : start + 16])
@@ -1115,10 +1115,10 @@ def JsonToBinary(in_file, out_file):
     json_data = json.load(json_file)
     list_edid = BuildEdid(json_data)
 
-    list_edid = map(int, list_edid) # make sure every byte is an int
+    list_edid = list(map(int, list_edid)) # make sure every byte is an int
     PrintHexEdid(list_edid)
 
-    invalid_bytes = [i for i in xrange(0, len(list_edid)) if not 0 <=
+    invalid_bytes = [i for i in range(0, len(list_edid)) if not 0 <=
                      list_edid[i] < 256]
     if not invalid_bytes:
       edid_obj = edid_module.Edid(list_edid)

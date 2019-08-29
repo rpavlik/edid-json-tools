@@ -9,7 +9,7 @@ DataBlock objects are found in CEA extensions and appear in varying length.
 The various types of DataBlocks all inherit the basic DataBlock object.
 """
 
-import tools
+from . import tools
 
 
 DB_TYPE_AUDIO = 'Audio Data Block'
@@ -324,7 +324,7 @@ class AudioBlock(DataBlock):
     """
     sads = []
 
-    for x in xrange(1, len(self._block) - 2, 3):
+    for x in range(1, len(self._block) - 2, 3):
       # Create a 3-byte chunk and send to ShortAudioDescriptor
       # TODO(chromium:395947): Double check number of SADs in audio block.
       sads.append(self._GetSad(self._block[x : (x + 3)]))
@@ -625,7 +625,7 @@ class VideoBlock(DataBlock):
     """
     svds = []
 
-    for x in xrange(self._offset + 1, len(self._block)):
+    for x in range(self._offset + 1, len(self._block)):
       svds.append(ShortVideoDescriptor(self._block[x]))
 
     return svds
@@ -870,7 +870,7 @@ class VideoFormatPrefBlock(DataBlock):
     """
     prefs = []
 
-    for x in xrange(2, len(self._block)):
+    for x in range(2, len(self._block)):
       svr = self._block[x]
       if (svr in [0, 128, 254, 255]) or (svr >= 145 and svr <= 192):
         prefs.append(VideoPreferenceReserved(svr))
@@ -1001,7 +1001,7 @@ class YCBCR420CapabilityMapBlock(DataBlock):
     supported = []
     index = 0
 
-    for x in xrange(2, len(self._block)):
+    for x in range(2, len(self._block)):
       byte = self._block[x]
       for _ in range(0, 8):
         if byte & 0x01:

@@ -8,10 +8,10 @@ If errors are found, returns error.Error objects that store information about
 each error's location, message, expected data, and what data is found.
 """
 
-import descriptor
-import error
-import extensions
-import standard_timings
+from . import descriptor
+from . import error
+from . import extensions
+from . import standard_timings
 
 
 def _LengthError(e):
@@ -76,7 +76,7 @@ def _ChecksumError(e):
   """
   cs_errors = []
 
-  for x in xrange(0, len(e), 128):
+  for x in range(0, len(e), 128):
 
     my_sum = sum(e[x : x + 128])
     if my_sum % 256:
@@ -102,7 +102,7 @@ def _DescriptorErrors(edid, version):
 
   errors = []
 
-  for x in xrange(0, 4):
+  for x in range(0, 4):
 
     desc = descriptor.GetDescriptor(edid, base + (x * 18), version)
 
@@ -128,7 +128,7 @@ def _BaseStErrors(edid, version):
 
   errors = []
 
-  for x in xrange(0, 8):
+  for x in range(0, 8):
     st = standard_timings.GetStandardTiming(edid, base + (x * 2), version)
     if st:
       err = st.CheckErrors(x + 1)
@@ -157,7 +157,7 @@ def _ExtensionErrors(edid, version):
                               'EDID length', '%d extensions' % num_ext,
                               '%d extensions' % ((len(edid) / 128) - 1)))
 
-  for x in xrange(1, num_ext + 1):
+  for x in range(1, num_ext + 1):
     ext = extensions.GetExtension(edid, x, version)
 
     err = ext.CheckErrors(x)

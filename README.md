@@ -8,3 +8,4 @@ Original code is at <https://chromium.googlesource.com/chromiumos/platform/chame
 ## Changes
 
 - Bugfixes (typo fixes)
+- Port to Python 3

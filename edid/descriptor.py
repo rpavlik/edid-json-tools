@@ -9,10 +9,10 @@ The various types of Descriptor all inherit the basic Descriptor object.
 """
 import collections
 
-import coordinated_video_timings as cvt_module
-import error
-import standard_timings
-import tools
+from . import coordinated_video_timings as cvt_module
+from . import error
+from . import standard_timings
+from . import tools
 
 
 TYPE_PRODUCT_SERIAL_NUMBER = 'Display Product Serial Number'
@@ -161,7 +161,7 @@ class StringDescriptor(Descriptor):
     """
     alphanum_data = ''
 
-    for x in xrange(5, 18):
+    for x in range(5, 18):
       if self._block[x] == 0x0A:
         break
       else:
@@ -409,7 +409,7 @@ class DisplayRangeGTF(DisplayRangeDescriptor):
     Returns:
       An integer that is the value of c.
     """
-    return self._block[13] / 2
+    return self._block[13] // 2
 
   @property
   def m(self):
@@ -436,7 +436,7 @@ class DisplayRangeGTF(DisplayRangeDescriptor):
     Returns:
       An integer that is the value of j.
     """
-    return self._block[17] / 2
+    return self._block[17] // 2
 
 
 class DisplayRangeCVT(DisplayRangeDescriptor):
@@ -691,7 +691,7 @@ class StandardTimingDescriptor(Descriptor):
     """
     sts = []
 
-    for x in xrange(0, 7):
+    for x in range(0, 7):
       st = standard_timings.GetStandardTiming(self._block, 5 + (x*2),
                                               self._version)
       if st:
@@ -786,7 +786,7 @@ class CoordinatedVideoTimingsDescriptor(Descriptor):
     """
     cvts = []
 
-    for x in xrange(0, 4):
+    for x in range(0, 4):
       cvt = cvt_module.GetCoordinatedVideoTiming(self._block, 6 + (x*3))
       if cvt:
         cvts.append(cvt)
@@ -805,7 +805,7 @@ class CoordinatedVideoTimingsDescriptor(Descriptor):
     errors = []
     cvts = self.coordinated_video_timings
 
-    for x in xrange(0, len(cvts)):
+    for x in range(0, len(cvts)):
       err = cvts[x].CheckErrors(x + 1)
       if err:
         errors.append(err)

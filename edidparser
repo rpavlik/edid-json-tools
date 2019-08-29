@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Copyright 2014 The Chromium OS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -17,7 +17,7 @@
 
 """Parses EDID and establishes command line options for EDID analysis."""
 
-from __future__ import print_function
+
 
 import argparse
 import re
@@ -83,7 +83,7 @@ def BytesFromFile(filename):
   """
   with open(filename, 'rb') as f:
     chunk = f.read()
-    return map(ord, chunk)
+    return [int(x) for x in bytes(chunk)]
 
 
 def PrintSpace(num=1):
@@ -310,7 +310,7 @@ def PrintSt(st):
   x_res = st.x_resolution
   rat = st.xy_pixel_ratio
 
-  num, denum = map(int, rat.split(':'))
+  num, denum = list(map(int, rat.split(':')))
 
   y_res = (x_res * denum) / num
   freq = st.vertical_freq
@@ -333,7 +333,7 @@ def GetDescriptorBlocks(e, mode, raw_mode):
 
   descs = e.descriptors
 
-  for x in xrange(0, len(descs)):
+  for x in range(0, len(descs)):
 
     prefix = 'Block #%d: ' % (x+1)
     PrintBlockAnalysis(e, descs[x], mode, raw_mode, x, prefix)
@@ -559,7 +559,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
     if mode == LAYOUT_MODE:
       print('Number of data blocks: %d' % len(dbs))
-      for x in xrange(0, len(dbs)):
+      for x in range(0, len(dbs)):
         print('%d. %s' % (x+1, dbs[x].type))
 
         # Calls PrintRawRange, but it'll only print if raw_mode on
@@ -568,7 +568,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
       PrintSpace(mode)
 
       print('Number of detailed timing descriptors: %d' % len(dtds))
-      for x in xrange(0, len(dtds)):
+      for x in range(0, len(dtds)):
         print('%d. %s' % (x+1, dtds[x].type))
 
         # Calls PrintRawRange, but it'll only print if raw_mode on
@@ -624,7 +624,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
       elif db.type == data_block.DB_TYPE_AUDIO:
         ads = db.short_audio_descriptors
-        for x in xrange(0, len(ads)):
+        for x in range(0, len(ads)):
 
           ad = ads[x]
           print('Short audio descriptor #%d' % (x + 1))
@@ -741,7 +741,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
     # DETAILED TIMING DESCRIPTORS
 
-    for x in xrange(0, len(dtds)):
+    for x in range(0, len(dtds)):
       print('Detailed Timing Descriptor #%d:' % (x + 1))
 
       if raw_mode:
@@ -758,19 +758,19 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
     if mode == LAYOUT_MODE:
       print('Number of detailed timing descriptors: %d' % len(dtbs))
-      for x in xrange(0, len(dtbs)):
+      for x in range(0, len(dtbs)):
         print('%d. %s' % (x+1, dtbs[x].type))
         this_dtb = dtbs[x].GetBlock()
         PrintRawRange(this_dtb, raw_mode)
 
       print('Number of coordinated video timing blocks: %d' % len(cvts))
-      for x in xrange(0, len(cvts)):
+      for x in range(0, len(cvts)):
         print('%d. Coordinated Video Timing Block' % (x + 1))
         this_cvt = cvts[x].GetBlock()
         PrintRawRange(this_cvt, raw_mode)
 
       print('Number of standard timing blocks: %d' % len(sts))
-      for x in xrange(0, len(sts)):
+      for x in range(0, len(sts)):
         print('%d. Standard Timing Block' % (x + 1))
         this_st = sts[x].GetBlock()
         PrintRawRange(this_st, raw_mode)
@@ -819,7 +819,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
     tags = ext.all_tags
 
-    for x in xrange(0, len(tags)):
+    for x in range(0, len(tags)):
       if tags[x]:  # Not 0, bc 0 indicates unused block
         print('Block %d: %d' % (x + block_num + 1, tags[x]))
 
@@ -911,7 +911,7 @@ def GetXall(e, mode, raw_mode):
   """
   num_ext = e.extension_count
 
-  for x in xrange(1, num_ext + 1):
+  for x in range(1, num_ext + 1):
     AnalyzeExtension(e, mode, raw_mode, x)
     PrintSpace(mode)
 
@@ -935,7 +935,7 @@ def PrintRawRange(e, raw_mode, start=0, end=None):
     else:  # Decimal
       my_format = '  Byte %04d:\t%04d'
 
-    for x in xrange(0, len(data)):
+    for x in range(0, len(data)):
       print(my_format % (x + start, data[x]))
 
     print('\n')
@@ -948,11 +948,11 @@ def PrintHexEdid(e):
     e: The EDID to be printed.
   """
   data = e.GetData()
-  hex_rows = len(data) / 16
+  hex_rows = len(data) // 16
 
   print('\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F')
 
-  for x in xrange(0, hex_rows):
+  for x in range(0, hex_rows):
 
     start = 0x10 * x
     row = '%02X%02X ' * 8 % tuple(data[start : start + 16])
@@ -967,8 +967,8 @@ def PrintDecEdid(e):
   """
   # Decimal
   data = e.GetData()
-  dec_rows = len(data) / 8
-  for x in xrange(0, dec_rows):
+  dec_rows = len(data) // 8
+  for x in range(0, dec_rows):
 
     start = 8 * x
     row = '%04d %04d  ' * 4 % tuple(data[start : start + 8])
@@ -987,7 +987,7 @@ def Verify(e):
   print('Found %d errors\n\n' % len(errors))
 
   # Can format this better later
-  for x in xrange(0, len(errors)):
+  for x in range(0, len(errors)):
     print('ERROR %d' % (x + 1))
     print(errors[x].location)
     print(errors[x].message)

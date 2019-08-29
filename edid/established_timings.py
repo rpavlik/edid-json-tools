@@ -8,7 +8,7 @@
 EstablishedTimings information is found in bytes 23h-25h of the base EDID.
 """
 
-import tools
+from . import tools
 
 
 _timings = [

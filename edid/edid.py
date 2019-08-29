@@ -7,13 +7,13 @@
 
 import array
 
-import basic_display
-import chromaticity
-import descriptor
-import error_check
-import established_timings
-import extensions
-import standard_timings
+from . import basic_display
+from . import chromaticity
+from . import descriptor
+from . import error_check
+from . import established_timings
+from . import extensions
+from . import standard_timings
 
 
 class Edid(object):
@@ -186,7 +186,7 @@ class Edid(object):
     """
     base = 38
     sts = []
-    for x in xrange(0, 8):
+    for x in range(0, 8):
       st = standard_timings.GetStandardTiming(self._edid, (base + (x * 2)),
                                               self.edid_version)
       if st:
@@ -217,7 +217,7 @@ class Edid(object):
       A list of descriptor.Descriptor objects.
     """
     descs = []
-    for x in xrange(0, 4):
+    for x in range(0, 4):
       desc = self.GetDescriptor(x)
       if desc:
         descs.append(desc)
@@ -249,5 +249,5 @@ class Edid(object):
       filename: The string filename of the text file.
     """
     with open(filename, 'wb') as myfile:
-      blob = array.array('B', self._edid).tostring()
+      blob = array.array('B', self._edid).tobytes()
       myfile.write(blob)

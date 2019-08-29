@@ -9,7 +9,7 @@ StandardTiming objects are found in bytes 26h-35h of the base EDID, as well as
 in StandardTimingDescriptor objects.
 """
 
-import error
+from . import error
 
 
 def GetStandardTiming(edid, start_index, version):
