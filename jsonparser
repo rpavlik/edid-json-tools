@@ -18,6 +18,7 @@ import sys
 
 import edid.edid as edid_module
 import options as options_module
+from edid.tools import PrintHexData
 
 
 def _BuildBitsFromOptions(options, json_map):
@@ -1087,23 +1088,6 @@ def BuildEdid(edid_json):
   return edid
 
 
-def PrintHexEdid(data):
-  """Prints the entire EDID in hexadecimal form.
-
-  Args:
-    data: The EDID to be printed.
-  """
-  hex_rows = len(data) // 16
-
-  print('\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F')
-
-  for x in range(0, hex_rows):
-
-    start = 0x10 * x
-    row = '%02X%02X ' * 8 % tuple(data[start : start + 16])
-    print('0x%04X:\t\t%s' % (x, row))
-
-
 def JsonToBinary(in_file, out_file):
   """Reads text file in as Json and converts information into binary blob.
 
@@ -1116,7 +1100,7 @@ def JsonToBinary(in_file, out_file):
     list_edid = BuildEdid(json_data)
 
     list_edid = list(map(int, list_edid)) # make sure every byte is an int
-    PrintHexEdid(list_edid)
+    PrintHexData(list_edid)
 
     invalid_bytes = [i for i in range(0, len(list_edid)) if not 0 <=
                      list_edid[i] < 256]

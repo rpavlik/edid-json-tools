@@ -26,20 +26,7 @@ import edid.data_block as data_block
 import edid.descriptor as descriptor
 import edid.edid as edid
 import edid.extensions as extensions
-
-
-def BytesFromFile(filename):
-  """Reads the EDID from binary blob form into list form.
-
-  Args:
-    filename: The name of the binary blob.
-
-  Returns:
-    The list of bytes that make up the EDID.
-  """
-  with open(filename, 'rb') as f:
-    chunk = f.read()
-    return [int(x) for x in bytes(chunk)]
+from edid.tools import BytesFromFile
 
 
 def _XYDict(x_value, y_value, first='x', second='y'):
