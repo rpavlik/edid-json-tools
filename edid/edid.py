@@ -20,7 +20,7 @@ class Edid(object):
   """Defines methods and properties for accesing an EDID object's content."""
 
   def __init__(self, e):
-    """Creates an Edid object with a list of bytes.
+    """Create an Edid object with a list of bytes.
 
     Args:
       e: The list of bytes that make up this EDID.
@@ -28,7 +28,7 @@ class Edid(object):
     self._edid = e
 
   def GetData(self, start=None, end=None):
-    """Fetches the raw data for the entire or part of the EDID.
+    """Fetch the raw data for the entire or part of the EDID.
 
     Args:
       start: The index of the first element to include.
@@ -41,7 +41,7 @@ class Edid(object):
 
   @property
   def manufacturer_id(self):
-    """Fetches the manufacturer ID.
+    """Fetch the manufacturer ID.
 
     Returns:
       A three letter string that represents the manufacturer ID.
@@ -56,7 +56,7 @@ class Edid(object):
 
   @property
   def product_code(self):
-    """Fetches the ID Product code.
+    """Fetch the ID Product code.
 
     This code is used to differentiate between different models from the same
     manufacturer (i.e., a model number). Bytes 10-11, little endian.
@@ -64,12 +64,11 @@ class Edid(object):
     Returns:
       An integer denoting the product code.
     """
-
     return (self._edid[0x0B] << 8) + self._edid[0x0A]
 
   @property
   def serial_number(self):
-    """Fetches the serial number.
+    """Fetch the serial number.
 
     Used to differentiate between instances of the same display model.
 
@@ -83,7 +82,7 @@ class Edid(object):
 
   @property
   def manufacturing_week(self):
-    """Fetches the week of manufacturing.
+    """Fetch the week of manufacturing.
 
     Returns:
       None, if unspecified, or an integer indicating the week number.
@@ -95,7 +94,7 @@ class Edid(object):
 
   @property
   def manufacturing_year(self):
-    """Fetches the year of manufacturing.
+    """Fetch the year of manufacturing.
 
     Returns:
       None, if unspecified, or an integer indicating the year.
@@ -107,7 +106,7 @@ class Edid(object):
 
   @property
   def model_year(self):
-    """Fetches the model year.
+    """Fetch the model year.
 
     Model year is only specified if week is set to 255.
 
@@ -121,7 +120,7 @@ class Edid(object):
 
   @property
   def extension_count(self):
-    """Fetches the number of extensions in this EDID.
+    """Fetch the number of extensions in this EDID.
 
     Returns:
       An integer denoting the number of extensions.
@@ -129,7 +128,7 @@ class Edid(object):
     return self._edid[0x7E]
 
   def _ConvertToLetter(self, b):
-    """Converts a 5-digit binary number into a letter.
+    """Convert a 5-digit binary number into a letter.
 
     Called when printing manufacturing info.
 
@@ -143,7 +142,7 @@ class Edid(object):
 
   @property
   def edid_version(self):
-    """Fetches the EDID version (1.3 or 1.4).
+    """Fetch the EDID version (1.3 or 1.4).
 
     Returns:
       A string indicating the EDID version.
@@ -152,7 +151,7 @@ class Edid(object):
 
   @property
   def basic_display(self):
-    """Fetches the Basic Display information in this EDID.
+    """Fetch the Basic Display information in this EDID.
 
     Returns:
       A basic_display.BasicDisplay object.
@@ -161,7 +160,7 @@ class Edid(object):
 
   @property
   def chromaticity(self):
-    """Fetches the Chromaticity information in this EDID.
+    """Fetch the Chromaticity information in this EDID.
 
     Returns:
       A chromaticity.Chromaticity object.
@@ -170,7 +169,7 @@ class Edid(object):
 
   @property
   def established_timings(self):
-    """Fetches the Established Timings information in this EDID.
+    """Fetch the Established Timings information in this EDID.
 
     Returns:
       An established_timings.EstablishedTimings object.
@@ -179,7 +178,7 @@ class Edid(object):
 
   @property
   def standard_timings(self):
-    """Fetches the Standard Timing information in this EDID.
+    """Fetch the Standard Timing information in this EDID.
 
     Returns:
       A standard_timings.StandardTiming object.
@@ -194,7 +193,7 @@ class Edid(object):
     return sts
 
   def GetDescriptor(self, index):
-    """Fetches a single Descriptor's information in this EDID.
+    """Fetch a single Descriptor's information in this EDID.
 
     Args:
       index: The descriptor index (0-3) within the EDID.
@@ -211,7 +210,7 @@ class Edid(object):
 
   @property
   def descriptors(self):
-    """Fetches all descriptors in a base EDID.
+    """Fetch all descriptors in a base EDID.
 
     Returns:
       A list of descriptor.Descriptor objects.
@@ -224,7 +223,7 @@ class Edid(object):
     return descs
 
   def GetExtension(self, index):
-    """Fetches an Extension's information in this EDID.
+    """Fetch an Extension's information in this EDID.
 
     Args:
       index: The index of the extension (starting at 1).
@@ -235,7 +234,7 @@ class Edid(object):
     return extensions.GetExtension(self._edid, index, self.edid_version)
 
   def GetErrors(self):
-    """Checks an EDID for errors by calling error_check module.
+    """Check an EDID for errors by calling error_check module.
 
     Returns:
       A list of error.Error objects.
@@ -243,7 +242,7 @@ class Edid(object):
     return error_check.GetErrors(self.GetData(), self.edid_version)
 
   def ConvertToBinary(self, filename):
-    """Converts an EDID object into a binary blob.
+    """Convert an EDID object into a binary blob.
 
     Args:
       filename: The string filename of the text file.

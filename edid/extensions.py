@@ -29,7 +29,7 @@ TYPE_UNKNOWN = 'Unknown Extension type'
 
 
 def GetExtension(edid, index, version):
-  """Fetches an extension to an EDID.
+  """Fetch an extension to an EDID.
 
   Args:
     edid: The list form of the EDID being analyzed.
@@ -67,7 +67,7 @@ class Extension(object):
   """Defines a basic extension."""
 
   def __init__(self, block, my_type, version=None):
-    """Creates an Extension object.
+    """Create an Extension object.
 
     Args:
       block: A list of bytes that make up the extension.
@@ -80,7 +80,7 @@ class Extension(object):
 
   @property
   def tag(self):
-    """Fetches the tag of the extension.
+    """Fetch the tag of the extension.
 
     Returns:
       An integer indicating the tag of the extension.
@@ -89,7 +89,7 @@ class Extension(object):
 
   @property
   def type(self):
-    """Fetches the type of the extension.
+    """Fetch the type of the extension.
 
     Returns:
       A string indicating the type of the extension.
@@ -97,7 +97,7 @@ class Extension(object):
     return self._type
 
   def GetBlock(self):
-    """Fetches the bytes that make up the extension.
+    """Fetch the bytes that make up the extension.
 
     Returns:
       A list of bytes that make up the extension.
@@ -105,19 +105,18 @@ class Extension(object):
     return self._block
 
   def CheckErrors(self, index=None):
-    """Creates a method for error checking to define in other Extensions.
+    """Create a method for error checking to define in other Extensions.
 
     Args:
       index: The integer index of the extension being checked.
     """
-    pass
 
 
 class TimingExtension(Extension):
   """Defines a Timing Extension."""
 
   def __init__(self, block):
-    """Creates a TimingExtension object.
+    """Create a TimingExtension object.
 
     Args:
       block: The list of bytes that make up the extension.
@@ -129,7 +128,7 @@ class CEAExtension(Extension):
   """Defines a CEA Extension, perhaps the most common type."""
 
   def __init__(self, block, version):
-    """Creates a CEAExtension object.
+    """Create a CEAExtension object.
 
     Args:
       block: The list of bytes that make up the extension.
@@ -140,7 +139,7 @@ class CEAExtension(Extension):
 
   @property
   def dtd_offset(self):
-    """Fetches the start index of the Detailed Timing Descriptors.
+    """Fetch the start index of the Detailed Timing Descriptors.
 
     Returns:
       An integer indicating the start index of Detailed Timing Descriptors.
@@ -149,7 +148,7 @@ class CEAExtension(Extension):
 
   @property
   def version(self):
-    """Fetches the extension version.
+    """Fetch the extension version.
 
     Returns:
       An integer indicating the extension version.
@@ -158,7 +157,7 @@ class CEAExtension(Extension):
 
   @property
   def underscan_support(self):
-    """Fetches whether underscan is supported.
+    """Fetch whether underscan is supported.
 
     Returns:
       A boolean indicating whether underscan is supported.
@@ -167,7 +166,7 @@ class CEAExtension(Extension):
 
   @property
   def basic_audio_support(self):
-    """Fetches whether basic audio is supported.
+    """Fetch whether basic audio is supported.
 
     Returns:
       A boolean indicating whether basic audio is supported.
@@ -176,7 +175,7 @@ class CEAExtension(Extension):
 
   @property
   def ycbcr444_support(self):
-    """Fetches whether YCbCr 4:4:4 is supported.
+    """Fetch whether YCbCr 4:4:4 is supported.
 
     Returns:
       A boolean indicating whether YCbCr 4:4:4 is supported.
@@ -185,7 +184,7 @@ class CEAExtension(Extension):
 
   @property
   def ycbcr422_support(self):
-    """Fetches whether YCbCr 4:2:2 is supported.
+    """Fetch whether YCbCr 4:2:2 is supported.
 
     Returns:
       A boolean indicating whether YCbCr 4:2:2 is supported.
@@ -194,7 +193,7 @@ class CEAExtension(Extension):
 
   @property
   def native_dtd_count(self):
-    """Fetches the number of native Detailed Timing Descriptors.
+    """Fetch the number of native Detailed Timing Descriptors.
 
     Returns:
       An integer indicating the number of native Detailed Timing Descriptors.
@@ -203,7 +202,7 @@ class CEAExtension(Extension):
 
   @property
   def data_blocks(self):
-    """Fetches the Data Block objects.
+    """Fetch the Data Block objects.
 
     Returns:
       A list of Data Block objects.
@@ -226,7 +225,7 @@ class CEAExtension(Extension):
 
   @property
   def dtds(self):
-    """Fetches the descriptor.DetailedTimingDescriptor objects.
+    """Fetch the descriptor.DetailedTimingDescriptor objects.
 
     Returns:
       A list of descriptor.DetailedTimingDescriptor objects.
@@ -240,7 +239,7 @@ class CEAExtension(Extension):
     return dtds
 
   def _GetPadIndex(self):
-    """Fetches the start index of post-DTD padding.
+    """Fetch the start index of post-DTD padding.
 
     Returns:
       An integer indicating the start index of post-DTD padding.
@@ -251,7 +250,7 @@ class CEAExtension(Extension):
     return 127 - (127 - self._dtd_start) % 18
 
   def CheckErrors(self, index=None):
-    """Checks the extension for errors.
+    """Check the extension for errors.
 
     All bytes after the end of DTDs should be 0x00.
 
@@ -277,7 +276,7 @@ class VTBExtension(Extension):
   """Defines a VTB Extension."""
 
   def __init__(self, block, version):
-    """Creates a VTBExtension object.
+    """Create a VTBExtension object.
 
     Args:
       block: The list of bytes that make up the extension.
@@ -290,7 +289,7 @@ class VTBExtension(Extension):
 
   @property
   def version(self):
-    """Fetches the VTB extension version.
+    """Fetch the VTB extension version.
 
     Returns:
       An integer indicating the version.
@@ -299,7 +298,7 @@ class VTBExtension(Extension):
 
   @property
   def dtb_count(self):
-    """Fetches the number of DetailedTimingDescriptor objects.
+    """Fetch the number of DetailedTimingDescriptor objects.
 
     Returns:
       An integer indicating the number of DetailedTimingDescriptor objects.
@@ -308,7 +307,7 @@ class VTBExtension(Extension):
 
   @property
   def cvt_count(self):
-    """Fetches the number of CoordinatedVideoTiming objects.
+    """Fetch the number of CoordinatedVideoTiming objects.
 
     Returns:
       An integer indicating the number of CoordinatedVideoTiming objects.
@@ -317,7 +316,7 @@ class VTBExtension(Extension):
 
   @property
   def st_count(self):
-    """Fetches the number of StandardTiming objects.
+    """Fetch the number of StandardTiming objects.
 
     Returns:
       An integer indicating the number of StandardTiming objects.
@@ -326,7 +325,7 @@ class VTBExtension(Extension):
 
   @property
   def dtbs(self):
-    """Fetches the descriptor.DetailedTimingDescriptors.
+    """Fetch the descriptor.DetailedTimingDescriptors.
 
     Returns:
       A list of descriptor.DetailedTimingDescriptors.
@@ -343,7 +342,7 @@ class VTBExtension(Extension):
 
   @property
   def cvts(self):
-    """Fetches the coordinated_video_timings.CoordinatedVideoTiming objects.
+    """Fetch the coordinated_video_timings.CoordinatedVideoTiming objects.
 
     Returns:
       A list of coordinated_video_timings.CoordinatedVideoTiming objects.
@@ -360,7 +359,7 @@ class VTBExtension(Extension):
 
   @property
   def sts(self):
-    """Fetches the standard_timings.StandardTiming objects.
+    """Fetch the standard_timings.StandardTiming objects.
 
     Returns:
       A list of standard_timings.StandardTiming objects.
@@ -376,7 +375,7 @@ class VTBExtension(Extension):
     return sts
 
   def CheckErrors(self, index=None):
-    """Checks the extension for errors.
+    """Check the extension for errors.
 
     Args:
       index: The integer index of the extension.
@@ -416,7 +415,7 @@ class DisplayInformationExtension(Extension):
   """Analyzes a Display Information Extension."""
 
   def __init__(self, block):
-    """Creates a DisplayInformationExtension object.
+    """Create a DisplayInformationExtension object.
 
     Args:
       block: The list of bytes that make up the extension.
@@ -428,7 +427,7 @@ class LocalizedStringExtension(Extension):
   """Analyzes a Localized String Extension."""
 
   def __init__(self, block):
-    """Creates a LocalizedStringExtension object.
+    """Create a LocalizedStringExtension object.
 
     Args:
       block: The list of bytes that make up the extension.
@@ -440,7 +439,7 @@ class DPVLExtension(Extension):
   """Analyzes a Digital Packet Video Link Extension."""
 
   def __init__(self, block):
-    """Creates a DPVLExtension object.
+    """Create a DPVLExtension object.
 
     Args:
       block: The list of bytes that make up the extension.
@@ -452,7 +451,7 @@ class ExtensionBlockMap(Extension):
   """Defines an Extension Block Map (which is also an extension)."""
 
   def __init__(self, block):
-    """Creates an ExtensionBlockMap object.
+    """Create an ExtensionBlockMap object.
 
     Args:
       block: The list of bytes that make up the extension.
@@ -461,7 +460,7 @@ class ExtensionBlockMap(Extension):
 
   @property
   def all_tags(self):
-    """Fetches all 126 tags in the block map.
+    """Fetch all 126 tags in the block map.
 
     Zeroes indicate unused blocks.
 
@@ -475,11 +474,9 @@ class ManufacturerExtension(Extension):
   """Defines a Manufacturer Extension."""
 
   def __init__(self, block):
-    """Creates a ManufacturerExtension object.
+    """Create a ManufacturerExtension object.
 
     Args:
       block: The list of bytes that make up the extension.
     """
     Extension.__init__(self, block, TYPE_MANUFACTURER_EXTENSION)
-
-

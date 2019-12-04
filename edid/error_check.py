@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-"""Checks EDID for errors, which could indicate invalid or faulty EDID.
+"""Check EDID for errors, which could indicate invalid or faulty EDID.
 
 If errors are found, returns error.Error objects that store information about
 each error's location, message, expected data, and what data is found.
@@ -15,7 +15,7 @@ from . import standard_timings
 
 
 def _LengthError(e):
-  """Checks if the length of the EDID is a multiple of 128.
+  """Check if the length of the EDID is a multiple of 128.
 
   Args:
     e: The list form of the EDID to be checked.
@@ -31,7 +31,7 @@ def _LengthError(e):
 
 
 def _HeaderError(e):
-  """Checks if header (bytes 0-7) is set up properly.
+  """Check if header (bytes 0-7) is set up properly.
 
   Header should be 0x00 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0x00.
 
@@ -64,7 +64,7 @@ def _HeaderError(e):
 
 
 def _ChecksumError(e):
-  """Checks if checksum is valid.
+  """Check if checksum is valid.
 
   Checksum for each 128-byte block should be divisible by 256.
 
@@ -89,7 +89,7 @@ def _ChecksumError(e):
 
 
 def _DescriptorErrors(edid, version):
-  """Checks the descriptor blocks for errors.
+  """Check the descriptor blocks for errors.
 
   Args:
     edid: The list form of the EDID to be checked.
@@ -115,7 +115,7 @@ def _DescriptorErrors(edid, version):
 
 
 def _BaseStErrors(edid, version):
-  """Checks the standard timing section for errors.
+  """Check the standard timing section for errors.
 
   Args:
     edid: The list form of the EDID to be checked.
@@ -139,7 +139,7 @@ def _BaseStErrors(edid, version):
 
 
 def _ExtensionErrors(edid, version):
-  """Checks all extensions for errors.
+  """Check all extensions for errors.
 
   Args:
     edid: The EDID being checked.
@@ -168,7 +168,7 @@ def _ExtensionErrors(edid, version):
 
 
 def _WeekError(edid):
-  """Checks if the manufacturer week is in the proper range of 1-54.
+  """Check if the manufacturer week is in the proper range of 1-54.
 
   Args:
     edid: The list form of the EDID being checked.
@@ -182,7 +182,7 @@ def _WeekError(edid):
 
 
 def GetErrors(edid, version):
-  """Checks EDID for all potential errors.
+  """Check EDID for all potential errors.
 
   Args:
     edid: The list form of the EDID being checked.
@@ -210,5 +210,3 @@ def GetErrors(edid, version):
       errors.extend(err)
 
   return errors
-
-

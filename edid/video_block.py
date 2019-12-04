@@ -118,7 +118,7 @@ _svds = [
 
 
 def GetSvd(code):
-  """Fetches the Short Video Descriptor for a given numerical code.
+  """Fetch the Short Video Descriptor for a given numerical code.
 
   Args:
     code: An integer indicating the short video descriptor.
@@ -130,5 +130,3 @@ def GetSvd(code):
     return _svds[code]
   else:
     return 'Reserved for Future'
-
-

@@ -9,7 +9,7 @@ import collections
 
 
 def DictFilter(alist, bits):
-  """Translates bits from EDID into a list of strings.
+  """Translate bits from EDID into a list of strings.
 
   Args:
     alist: A list of tuples, with the first being a number and second a string.
@@ -26,7 +26,7 @@ def DictFilter(alist, bits):
 
 
 def ListTrueOnly(adict):
-  """Returns a list of strings for which their values were True in the dict.
+  """Return a list of strings for which their values were True in the dict.
 
   Args:
     adict: The original dictionary, with string keys and boolean values.
@@ -38,7 +38,7 @@ def ListTrueOnly(adict):
 
 
 def BytesFromFile(filename):
-  """Reads the EDID from binary blob form into list form.
+  """Read the EDID from binary blob form into list form.
 
   Args:
     filename: The name of the binary blob.
@@ -52,7 +52,7 @@ def BytesFromFile(filename):
 
 
 def PrintHexData(data):
-  """Prints an array of values in hexadecimal form.
+  """Print an array of values in hexadecimal form.
 
   Args:
     data: The data to be printed.

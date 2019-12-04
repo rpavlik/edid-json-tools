@@ -10,7 +10,7 @@ class Error(object):
   """Defines an Error object, with location, message, etc."""
 
   def __init__(self, location, msg, expected=None, found=None):
-    """Creates an Error object.
+    """Create an Error object.
 
     Args:
       location: A string describing the location of the Error.
@@ -25,7 +25,7 @@ class Error(object):
 
   @property
   def location(self):
-    """Fetches the location of the error.
+    """Fetch the location of the error.
 
     Returns:
       A string describing the location of the error.
@@ -34,7 +34,7 @@ class Error(object):
 
   @property
   def message(self):
-    """Fetches the message of the error.
+    """Fetch the message of the error.
 
     Returns:
       A string describing the message of the error.
@@ -43,7 +43,7 @@ class Error(object):
 
   @property
   def expected(self):
-    """Fetches the expected value.
+    """Fetch the expected value.
 
     Returns:
       A string describing the expected value.
@@ -52,11 +52,9 @@ class Error(object):
 
   @property
   def found(self):
-    """Fetches the value found instead of what was expected.
+    """Fetch the value found instead of what was expected.
 
     Returns:
       A string describing the value found in the EDID.
     """
     return self._found
-
-

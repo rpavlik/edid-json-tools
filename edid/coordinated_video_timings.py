@@ -12,7 +12,7 @@ from . import tools
 
 
 def GetCoordinatedVideoTiming(edid, start_index):
-  """Returns a CoordinatedVideoTiming object if valid block exists.
+  """Return a CoordinatedVideoTiming object if valid block exists.
 
   Args:
     edid: The list form of the EDID being parsed.
@@ -21,15 +21,13 @@ def GetCoordinatedVideoTiming(edid, start_index):
   Returns:
     A CoordinatedVideoTiming object, if valid; or else None.
   """
-  if not(edid[start_index] == edid[start_index + 1] == edid[start_index + 2]
-         == 0x00):
+  if not all(x == 0x00 for x in edid[start_index:start_index + 3]):
     return CoordinatedVideoTiming(edid, start_index)
-  else:
-    return None
+  return None
 
 
 class CoordinatedVideoTiming(object):
-  """Returns a CoordinatedVideoTiming object and its properties."""
+  """Return a CoordinatedVideoTiming object and its properties."""
 
   _ref_rates = [
       [0x10, '50Hz'],
@@ -40,7 +38,7 @@ class CoordinatedVideoTiming(object):
   ]
 
   def __init__(self, edid, start_index):
-    """Creates a CoordinatedVideoTiming object.
+    """Create a CoordinatedVideoTiming object.
 
     Args:
       edid: The edid (in list form).
@@ -50,7 +48,7 @@ class CoordinatedVideoTiming(object):
     self._block = edid[start_index:(start_index + 3)]
 
   def GetBlock(self):
-    """Fetches the bytes that constitute the coordinated video timing block.
+    """Fetch the bytes that constitute the coordinated video timing block.
 
     Returns:
       The list of bytes of the coordinated video timing block.
@@ -59,7 +57,7 @@ class CoordinatedVideoTiming(object):
 
   @property
   def active_vertical_lines(self):
-    """Fetches the number of active vertical lines.
+    """Fetch the number of active vertical lines.
 
     Returns:
       An integer indicating the number of active vertical lines.
@@ -69,7 +67,7 @@ class CoordinatedVideoTiming(object):
 
   @property
   def aspect_ratio(self):
-    """Fetches the aspect ratio.
+    """Fetch the aspect ratio.
 
     Returns:
       A string indicating the aspect ratio.
@@ -90,7 +88,7 @@ class CoordinatedVideoTiming(object):
 
   @property
   def preferred_vertical_rate(self):
-    """Fetches the preferred refresh rate (byte 3).
+    """Fetch the preferred refresh rate (byte 3).
 
     Returns:
       A string indicating the preferred refresh rate; the returned value should
@@ -105,7 +103,7 @@ class CoordinatedVideoTiming(object):
 
   @property
   def supported_vertical_rates(self):
-    """Fetches the list of supported refresh rates.
+    """Fetch the list of supported refresh rates.
 
     Returns:
       A dict of strings and booleans, each representing a refresh rate and
@@ -115,7 +113,7 @@ class CoordinatedVideoTiming(object):
     return tools.DictFilter(self._ref_rates, supp_code)
 
   def CheckErrors(self, index=None):
-    """Checks for errors in the coordinated video timing block.
+    """Check for errors in the coordinated video timing block.
 
     Args:
       index: The index of the CoordinatedVideoTiming object within the EDID.

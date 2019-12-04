@@ -13,7 +13,7 @@ class BasicDisplay(object):
   """Class for parsing basic display block info from base EDID."""
 
   def __init__(self, e, version):
-    """Creates a BasicDisplay object.
+    """Create a BasicDisplay object.
 
     Args:
       e: The edid (in list form).
@@ -24,7 +24,7 @@ class BasicDisplay(object):
 
   @property
   def video_input_type(self):
-    """Checks 20th (0x14) byte of EDID for digital or analog input.
+    """Check 20th (0x14) byte of EDID for digital or analog input.
 
     Part of video input definition in base EDID.
     0 denotes Analog; 1 denotes Digital.
@@ -40,7 +40,7 @@ class BasicDisplay(object):
 
   @property
   def color_bit_depth(self):
-    """Fetches color bit depth.
+    """Fetch color bit depth.
 
     For digital video signal interface only (not applicable for analog).
 
@@ -72,7 +72,7 @@ class BasicDisplay(object):
 
   @property
   def digital_supports(self):
-    """Checks digital supports.
+    """Check digital supports.
 
     For digital video signal interface only (not applicable for analog).
 
@@ -102,7 +102,7 @@ class BasicDisplay(object):
 
   @property
   def signal_level(self):
-    """Checks video white and sync levels.
+    """Check video white and sync levels.
 
     For analog video signal interface only (not applicable for digital).
     Relative to blank.
@@ -123,7 +123,7 @@ class BasicDisplay(object):
 
   @property
   def blank_black(self):
-    """Checks blank-to-black set up (pedestal) expected.
+    """Check blank-to-black set up (pedestal) expected.
 
     For analog video signal interface only (not applicable for digital).
 
@@ -134,7 +134,7 @@ class BasicDisplay(object):
 
   @property
   def separate_sync(self):
-    """Checks if separate sync is supported (bit 3).
+    """Check if separate sync is supported (bit 3).
 
     For analog video signal interface only (not applicable for digital).
 
@@ -145,7 +145,7 @@ class BasicDisplay(object):
 
   @property
   def composite_sync(self):
-    """Checks if composite sync (on HSync) is supported (bit 2).
+    """Check if composite sync (on HSync) is supported (bit 2).
 
     For analog video signal interface only (not applicable for digital).
 
@@ -156,7 +156,7 @@ class BasicDisplay(object):
 
   @property
   def green_sync(self):
-    """Checks if green sync is supported (bit 1).
+    """Check if green sync is supported (bit 1).
 
     For analog video signal interface only (not applicable for digital).
 
@@ -167,7 +167,7 @@ class BasicDisplay(object):
 
   @property
   def vsync_pulse(self):
-    """Checks if VSync pulse serration is supported.
+    """Check if VSync pulse serration is supported.
 
     Specifically, when composite or sync-on-green (bit 0).
     For analog video signal interface only (not applicable for digital).
@@ -183,7 +183,7 @@ class BasicDisplay(object):
 
   @property
   def horizontal_dim(self):
-    """Checks maximum horizontal dimensions.
+    """Check maximum horizontal dimensions.
 
     Returns:
       An integer that represents the maximum horizontal dimensions, or None.
@@ -195,7 +195,7 @@ class BasicDisplay(object):
 
   @property
   def vertical_dim(self):
-    """Checks maximum vertical dimensions.
+    """Check maximum vertical dimensions.
 
     Returns:
       An integer that represents the maximum vertical dimensions, or None.
@@ -207,7 +207,7 @@ class BasicDisplay(object):
 
   @property
   def aspect_ratio_portrait(self):
-    """Checks for aspect ratio (portrait) if defined.
+    """Check for aspect ratio (portrait) if defined.
 
     Returns:
       A float indicating aspect ratio (portrait), or None.
@@ -220,7 +220,7 @@ class BasicDisplay(object):
 
   @property
   def aspect_ratio_landscape(self):
-    """Checks for aspect ratio (landscape) if defined.
+    """Check for aspect ratio (landscape) if defined.
 
     Returns:
       A float indicating aspect ratio (landscape), or None.
@@ -233,7 +233,7 @@ class BasicDisplay(object):
 
   @property
   def display_gamma(self):
-    """Checks display gamma (byte 23).
+    """Check display gamma (byte 23).
 
     Data value in EDID = (gamma * 100) - 100.
     Gamma is in range 1.00-3.54.
@@ -247,7 +247,7 @@ class BasicDisplay(object):
 
   @property
   def dpm_standby(self):
-    """Checks if DPM standby is supported.
+    """Check if DPM standby is supported.
 
     Returns:
       A boolean that indicates whether DPM standby is supported.
@@ -256,7 +256,7 @@ class BasicDisplay(object):
 
   @property
   def dpm_suspend(self):
-    """Checks if DPM suspend is supported.
+    """Check if DPM suspend is supported.
 
     Returns:
       A boolean that indicates whether DPM suspend is supported.
@@ -265,7 +265,7 @@ class BasicDisplay(object):
 
   @property
   def active_off(self):
-    """Checks if DPM active-off is supported (bit 5).
+    """Check if DPM active-off is supported (bit 5).
 
     Returns:
       A boolean that indicates whether DPM active-off is supported.
@@ -274,7 +274,7 @@ class BasicDisplay(object):
 
   @property
   def display_type(self):
-    """Checks color display type (bits 4-3).
+    """Check color display type (bits 4-3).
 
     Returns:
       A string that indicates display type.
@@ -304,7 +304,7 @@ class BasicDisplay(object):
 
   @property
   def srgb_as_default(self):
-    """Checks if standard sRGB color space is supported.
+    """Check if standard sRGB color space is supported.
 
     Returns:
       A boolean that indicates whether standard sRGB color space is supported.
@@ -313,7 +313,7 @@ class BasicDisplay(object):
 
   @property
   def native_preferred_timing_mode(self):
-    """Checks preferred timing mode (bit 1).
+    """Check preferred timing mode (bit 1).
 
     Specifically, if it includes native timing pixel format and refresh rate.
 
@@ -325,10 +325,9 @@ class BasicDisplay(object):
 
   @property
   def cont_freq_support(self):
-    """Checks if continuous frequency is supported.
+    """Check if continuous frequency is supported.
 
     Returns:
       A boolean that indicates whether continuous frequency is supported.
     """
     return self._edid[0x18] & 0x01 != 0
-

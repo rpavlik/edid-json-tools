@@ -14,7 +14,7 @@ class Chromaticity(object):
   """Class for parsing chromaticity section of base EDID."""
 
   def __init__(self, edid):
-    """Creates a Chromaticity object.
+    """Create a Chromaticity object.
 
     Args:
       edid: The edid (in list form).
@@ -23,7 +23,7 @@ class Chromaticity(object):
 
   @property
   def red_x(self):
-    """Fetches 10-bit CIE Red X coordinate.
+    """Fetch 10-bit CIE Red X coordinate.
 
     Returns:
       An integer representing the Red X coordinate.
@@ -32,7 +32,7 @@ class Chromaticity(object):
 
   @property
   def red_y(self):
-    """Fetches 10-bit CIE Red Y coordinate.
+    """Fetch 10-bit CIE Red Y coordinate.
 
     Returns:
       An integer representing the Red Y coordinate.
@@ -41,7 +41,7 @@ class Chromaticity(object):
 
   @property
   def grn_x(self):
-    """Fetches 10-bit CIE Green X coordinate.
+    """Fetch 10-bit CIE Green X coordinate.
 
     Returns:
       An integer representing the Green X coordinate.
@@ -50,7 +50,7 @@ class Chromaticity(object):
 
   @property
   def grn_y(self):
-    """Fetches 10-bit CIE Green Y coordinate.
+    """Fetch 10-bit CIE Green Y coordinate.
 
     Returns:
       An integer representing the Green Y coordinate.
@@ -59,7 +59,7 @@ class Chromaticity(object):
 
   @property
   def blue_x(self):
-    """Fetches 10-bit CIE Blue X coordinate.
+    """Fetch 10-bit CIE Blue X coordinate.
 
     Returns:
       An integer representing the Blue X coordinate.
@@ -68,7 +68,7 @@ class Chromaticity(object):
 
   @property
   def blue_y(self):
-    """Fetches 10-bit CIE Blue Y coordinate.
+    """Fetch 10-bit CIE Blue Y coordinate.
 
     Returns:
       An integer representing the Blue Y coordinate.
@@ -77,7 +77,7 @@ class Chromaticity(object):
 
   @property
   def wht_x(self):
-    """Fetches 10-bit CIE White X coordinate.
+    """Fetch 10-bit CIE White X coordinate.
 
     Returns:
       An integer representing the White X coordinate.
@@ -86,7 +86,7 @@ class Chromaticity(object):
 
   @property
   def wht_y(self):
-    """Fetches 10-bit CIE White Y coordinate.
+    """Fetch 10-bit CIE White Y coordinate.
 
     Returns:
       An integer representing the White Y coordinate.

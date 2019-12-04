@@ -13,7 +13,7 @@ from . import error
 
 
 def GetStandardTiming(edid, start_index, version):
-  """Checks if a potential standard timing block is valid.
+  """Check if a potential standard timing block is valid.
 
   Args:
     edid: The EDID being parsed.
@@ -34,7 +34,7 @@ class StandardTiming(object):
   """Defines a single supported Standard Timing and its properties."""
 
   def __init__(self, edid, start_index, version):
-    """Creates a StandardTiming object.
+    """Create a StandardTiming object.
 
     Args:
       edid: The list form of the EDID being analyzed.
@@ -46,7 +46,7 @@ class StandardTiming(object):
     self._version = version
 
   def GetBlock(self):
-    """Fetches the data block of the StandardTiming object.
+    """Fetch the data block of the StandardTiming object.
 
     Returns:
       A list of bytes that make up this StandardTiming object.
@@ -55,7 +55,7 @@ class StandardTiming(object):
 
   @property
   def x_resolution(self):
-    """Fetches x resolution.
+    """Fetch x resolution.
 
     Returns:
       An integer indicating x resolution.
@@ -63,7 +63,7 @@ class StandardTiming(object):
     return (self._block[0] + 31) * 8
 
   def CheckErrors(self, index=None):
-    """Checks if the x resolution is faulty.
+    """Check if the x resolution is faulty.
 
     Args:
       index: The integer index of this StandardTiming object.
@@ -82,7 +82,7 @@ class StandardTiming(object):
 
   @property
   def xy_pixel_ratio(self):
-    """Fetches the xy pixel ratio.
+    """Fetch the xy pixel ratio.
 
     Returns:
       A string that indicates xy pixel ratio.
@@ -102,7 +102,7 @@ class StandardTiming(object):
 
   @property
   def vertical_freq(self):
-    """Fetches the vertical frequency.
+    """Fetch the vertical frequency.
 
     Actual frequency is 60 more than the value stored in the EDID.
 
@@ -110,4 +110,3 @@ class StandardTiming(object):
       An integer indicating vertical frequency (in Hz).
     """
     return (self._block[1] & 0x3F) + 60
-
