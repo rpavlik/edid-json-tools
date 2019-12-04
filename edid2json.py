@@ -423,11 +423,11 @@ def AnalyzeExtension(e, block_num):
       elif db.type == data_block.DB_TYPE_VIDEO_CAPABILITY:
 
         dbdict.update({
-            'YCC Quantization range', db.selectable_quantization_range_ycc,
-            'RGB Quantization range', db.selectable_quantization_range_rgb,
-            'PT behavior', db.pt_behavior,
-            'IT behavior', db.it_behavior,
-            'CE behavior', db.ce_behavior
+            'YCC Quantization range': db.selectable_quantization_range_ycc,
+            'RGB Quantization range': db.selectable_quantization_range_rgb,
+            'PT behavior': db.pt_behavior,
+            'IT behavior': db.it_behavior,
+            'CE behavior': db.ce_behavior,
         })
 
       elif db.type == data_block.DB_TYPE_INFO_FRAME:
