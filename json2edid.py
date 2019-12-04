@@ -913,6 +913,13 @@ def BuildDataBlock(db_json):
       else:  # Reserved
         blob.append(pref['SVR'])
 
+  elif atype == data_block.DB_TYPE_RESERVED:
+    tag = db_json['Tag']
+    blob = db_json['Data payload']
+
+  else:
+    raise RuntimeError("Got a data block we can't turn back into EDID")
+
   length = len(blob) if not extended_tag else len(blob) + 1
   header = [(tag << 5) + length]
 

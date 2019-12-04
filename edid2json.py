@@ -471,6 +471,13 @@ def AnalyzeExtension(e, block_num):
 
         dbdict['Video preferences'] = vps_list
 
+      elif db.type == data_block.DB_TYPE_RESERVED:
+        dbdict['Tag'] = db.tag
+        dbdict['Data payload'] = db.GetBlob()
+
+      else:
+        raise RuntimeError("Dropping the contents of a datablock of type {}, tag {} on the floor!".format(db.type, db.tag))
+
       dblist.append(dbdict)
 
     mydict['Data blocks'] = dblist
