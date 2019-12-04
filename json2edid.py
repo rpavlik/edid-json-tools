@@ -17,6 +17,7 @@ import json
 import sys
 
 import edid.edid as edid_module
+import edid.data_block as data_block
 import options as options_module
 from edid.tools import PrintHexData
 
@@ -855,7 +856,13 @@ def BuildDataBlock(db_json):
         'Not supported': 0x00,
         'Overscan': 0x01,
         'Underscan': 0x02,
-        'Both': 0x03
+        'Both': 0x03,
+        # the following are the entries as created by edid2json
+        data_block.OU_UNDEFINED : 0x00,
+        data_block.OU_NOT_SUPPORTED: 0x00,
+        data_block.OU_OVERSCAN: 0x01,
+        data_block.OU_UNDERSCAN: 0x02,
+        data_block.OU_BOTH: 0x03
     }
 
     pt = ou[db_json['PT behavior']]
