@@ -398,8 +398,10 @@ class VTBExtension(Extension):
         errors.extend(err)
 
     # Check that all bytes after standard timing blocks end are 0x00
-    unused_start = (5 + (18 * self._dtb_count) + (3 * self._cvt_count) +
-                    (2 * self._st_count))
+    unused_start = 5
+    unused_start += 18 * self._dtb_count
+    unused_start += 3 * self._cvt_count
+    unused_start += 2 * self._st_count
 
     ext_index = '(Extension #%d)' % index if index else ''
     padding = self._block[unused_start:127]

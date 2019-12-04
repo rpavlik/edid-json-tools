@@ -651,8 +651,7 @@ class ColorPoint(object):
     Returns:
       An integer that indicates the White Y coordinate in the Color Point.
     """
-    return ((self._block[3] << 2)
-            + (self._block[1] & 0x03))
+    return ((self._block[3] << 2) + (self._block[1] & 0x03))
 
   @property
   def gamma(self):

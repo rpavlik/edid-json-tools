@@ -75,8 +75,11 @@ class Edid(object):
     Returns:
       An integer denoting serial number or None.
     """
-    sn = ((self._edid[0x0F] << 24) + (self._edid[0x0E] << 16) +
-          (self._edid[0x0D] << 8) + (self._edid[0x0C]))
+    sn = 0
+    sn += self._edid[0x0F] << 24
+    sn += self._edid[0x0E] << 16
+    sn += self._edid[0x0D] << 8
+    sn += self._edid[0x0C]
 
     return sn if sn else None
 

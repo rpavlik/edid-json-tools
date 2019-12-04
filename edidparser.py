@@ -354,9 +354,9 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
   if mode == LAYOUT_MODE:
     return
 
-  if (desc.type == descriptor.TYPE_PRODUCT_SERIAL_NUMBER or
-      desc.type == descriptor.TYPE_ALPHANUM_DATA_STRING or
-      desc.type == descriptor.TYPE_DISPLAY_PRODUCT_NAME):
+  if desc.type in (descriptor.TYPE_PRODUCT_SERIAL_NUMBER,
+                   descriptor.TYPE_ALPHANUM_DATA_STRING,
+                   descriptor.TYPE_DISPLAY_PRODUCT_NAME):
 
     print('  Data string:\t%s' % desc.string)
 
@@ -600,8 +600,8 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
         PrintList(db_basic, mode, '  %-19s %s')
         print('\n')
 
-      if (db.type == data_block.DB_TYPE_VIDEO or
-          db.type == data_block.DB_TYPE_YCBCR420_VIDEO):
+      if db.type in (data_block.DB_TYPE_VIDEO,
+                     data_block.DB_TYPE_YCBCR420_VIDEO):
         svds = db.short_video_descriptors
         for svd in svds:
           print('  %-20s%s' % (svd.nativity, video_block.GetSvd(svd.vic)))
@@ -648,9 +648,9 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
         for a in tools.ListTrueOnly(db.allocation):
           print('    %s' % a)
 
-      elif (db.type == data_block.DB_TYPE_VENDOR_SPECIFIC or
-            db.type == data_block.DB_TYPE_VENDOR_SPECIFIC_AUDIO or
-            db.type == data_block.DB_TYPE_VENDOR_SPECIFIC_VIDEO):
+      elif db.type in (data_block.DB_TYPE_VENDOR_SPECIFIC,
+                       data_block.DB_TYPE_VENDOR_SPECIFIC_AUDIO,
+                       data_block.DB_TYPE_VENDOR_SPECIFIC_VIDEO):
         print('  %-20s %s' % ('IEEE:', db.ieee_oui))
         print('  %-20s %s' % ('Data payload:', db.payload))
 
