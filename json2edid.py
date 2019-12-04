@@ -768,19 +768,19 @@ def BuildDataBlock(db_json):
     A list of bytes representing a single data block object.
   """
   atype = db_json['Type']
+  extended_tag = None
+  blob = []
 
-  if atype == 'Audio Data Block':
+  if atype == data_block.DB_TYPE_AUDIO:
     tag = 0x01
-    extended_tag = None
 
     sads = db_json['Short audio descriptors']
     blob = list(itertools.chain(*[BuildSad(sad) for sad in sads]))
 
-  elif 'Video Data Block' in atype:  # Regular Video Data Block or YCbCr 4:2:0
+  elif atype in (data_block.DB_TYPE_VIDEO, data_block.DB_TYPE_YCBCR420_VIDEO):
 
-    if atype == 'Video Data Block':
+    if atype == data_block.DB_TYPE_VIDEO:
       tag = 0x02
-      extended_tag = None
 
     else:  # YCbCr 4:2:0
       tag = 0x07
@@ -790,9 +790,8 @@ def BuildDataBlock(db_json):
 
   elif 'Vendor-Specific' in atype:
 
-    if atype == 'Vendor-Specific Data Block':
+    if atype == data_block.DB_TYPE_VENDOR_SPECIFIC:
       tag = 0x03
-      extended_tag = None
     else:
       tag = 0x07
       extended_tag = 0x01 if 'Video' in atype else 0x17  # Audio
@@ -800,10 +799,9 @@ def BuildDataBlock(db_json):
     x, y, z = db_json['IEEE OUI'].split('-')
     blob = [int(z, 16), int(y, 16), int(x, 16)] + db_json['Data payload']
 
-  elif atype == 'Speaker Allocation Block':
+  elif atype == data_block.DB_TYPE_SPEAKER_ALLOCATION:
 
     tag = 0x04
-    extended_tag = None
 
     speakers = [
         'Front Center High',
@@ -824,11 +822,12 @@ def BuildDataBlock(db_json):
 
     blob = [speaker_bits & 0xFF, speaker_bits >> 8, 0]
 
-  elif atype == 'Colorimetry Data Block':
+  elif atype == data_block.DB_TYPE_COLORIMETRY:
 
     tag = 0x07
     extended_tag = 0x05
 
+    # TODO is this reversed? I suspect so...
     colors = [
         'Standard Definition Colorimetry based on IEC 61966-2-4',
         'High Definition Colorimetry based on IEC 61966-2-4',
@@ -843,7 +842,7 @@ def BuildDataBlock(db_json):
     blob = [_BuildBitsFromOptions(colors, db_json['Colorimetry']),
             db_json['Metadata']]
 
-  elif atype == 'Video Capability Data Block':
+  elif atype == data_block.DB_TYPE_VIDEO_CAPABILITY:
 
     tag = 0x07
     extended_tag = 0x00
@@ -871,7 +870,7 @@ def BuildDataBlock(db_json):
 
     blob = [(qy << 7) + (qs << 6) + (pt << 4) + (it << 2) + ce]
 
-  elif atype == 'InfoFrame Data Block':
+  elif atype == data_block.DB_TYPE_INFO_FRAME:
 
     tag = 0x07
     extended_tag = 0x32
@@ -884,7 +883,7 @@ def BuildDataBlock(db_json):
     for vsif in vsifs:
       blob += BuildVsif(vsif)
 
-  elif atype == 'YCbCr 4:2:0 Capability Map Data Block':
+  elif atype == data_block.DB_TYPE_YCBCR420_CAPABILITY_MAP:
 
     tag = 0x07
     extended_tag = 0x15
@@ -893,18 +892,16 @@ def BuildDataBlock(db_json):
     bit_map = 0
     for index in indices:
       bit_map |= (1 << index)
-    blob = []
     while bit_map:
       blob.append(bit_map & 0xFF)
       bit_map >>= 8
 
-  elif atype == 'Video Format Preference Data Block':
+  elif atype == data_block.DB_TYPE_VIDEO_FORMAT_PREFERENCE:
 
     tag = 0x07
     extended_tag = 0x13
 
     prefs = db_json['Video preferences']
-    blob = []
     for pref in prefs:
       if pref['Type'] == 'Video Preference VIC':
         blob.append(pref['VIC'])
