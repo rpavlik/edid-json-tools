@@ -139,7 +139,7 @@ class Edid(object):
     Returns:
       A single character (upper-case letter).
     """
-    return chr(b+64)
+    return chr(b + 64)
 
   @property
   def edid_version(self):

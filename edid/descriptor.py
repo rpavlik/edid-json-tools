@@ -400,7 +400,7 @@ class DisplayRangeGTF(DisplayRangeDescriptor):
     Returns:
       A string that indicates start break frequency.
     """
-    return '%s kHz' % (self._block[12]*2)
+    return '%s kHz' % (self._block[12] * 2)
 
   @property
   def c(self):
@@ -625,7 +625,7 @@ class ColorPoint(object):
       block: A list of bytes that make up this descriptor.
       start: The start index of the ColorPoint.
     """
-    self._block = block[start : (start + 5)]
+    self._block = block[start:(start + 5)]
 
   @property
   def index_number(self):
@@ -692,7 +692,7 @@ class StandardTimingDescriptor(Descriptor):
     sts = []
 
     for x in range(0, 7):
-      st = standard_timings.GetStandardTiming(self._block, 5 + (x*2),
+      st = standard_timings.GetStandardTiming(self._block, 5 + (x * 2),
                                               self._version)
       if st:
         sts.append(st)
@@ -787,7 +787,7 @@ class CoordinatedVideoTimingsDescriptor(Descriptor):
     cvts = []
 
     for x in range(0, 4):
-      cvt = cvt_module.GetCoordinatedVideoTiming(self._block, 6 + (x*3))
+      cvt = cvt_module.GetCoordinatedVideoTiming(self._block, 6 + (x * 3))
       if cvt:
         cvts.append(cvt)
 

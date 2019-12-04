@@ -18,7 +18,6 @@
 """Parses EDID into python object and outputs Json form of EDID object."""
 
 
-
 import json
 import sys
 
@@ -30,7 +29,7 @@ from edid.tools import BytesFromFile
 
 
 def _XYDict(x_value, y_value, first='x', second='y'):
-  """Takes in x and y coordinates and returns in dictionary form.
+  """Take in x and y coordinates and return in dictionary form.
 
   Args:
     x_value: The value of the x coordinate.
@@ -45,7 +44,7 @@ def _XYDict(x_value, y_value, first='x', second='y'):
 
 
 def GetManufacturerInfo(e):
-  """Organizes the manufacturer information of an EDID.
+  """Organize the manufacturer information of an EDID.
 
   Args:
     e: The edid.Edid object.
@@ -206,9 +205,9 @@ def BuildBlockAnalysis(desc):
   """
   mydict = {'Type': desc.type}
 
-  if (desc.type == descriptor.TYPE_PRODUCT_SERIAL_NUMBER or
-      desc.type == descriptor.TYPE_ALPHANUM_DATA_STRING or
-      desc.type == descriptor.TYPE_DISPLAY_PRODUCT_NAME):
+  if desc.type in (descriptor.TYPE_PRODUCT_SERIAL_NUMBER,
+                   descriptor.TYPE_ALPHANUM_DATA_STRING,
+                   descriptor.TYPE_DISPLAY_PRODUCT_NAME):
 
     mydict['Data string'] = desc.string
 
@@ -367,8 +366,8 @@ def AnalyzeExtension(e, block_num):
 
       dbdict = {'Type': db.type}
 
-      if (db.type == data_block.DB_TYPE_VIDEO or
-          db.type == data_block.DB_TYPE_YCBCR420_VIDEO):
+      if db.type in (data_block.DB_TYPE_VIDEO,
+                     data_block.DB_TYPE_YCBCR420_VIDEO):
 
         svd_list = []
         for svd in db.short_video_descriptors:
@@ -409,9 +408,9 @@ def AnalyzeExtension(e, block_num):
 
         dbdict['Speaker allocation'] = db.allocation
 
-      elif (db.type == data_block.DB_TYPE_VENDOR_SPECIFIC or
-            db.type == data_block.DB_TYPE_VENDOR_SPECIFIC_AUDIO or
-            db.type == data_block.DB_TYPE_VENDOR_SPECIFIC_VIDEO):
+      elif db.type in (data_block.DB_TYPE_VENDOR_SPECIFIC,
+                       data_block.DB_TYPE_VENDOR_SPECIFIC_AUDIO,
+                       data_block.DB_TYPE_VENDOR_SPECIFIC_VIDEO):
         dbdict['IEEE OUI'] = db.ieee_oui
         dbdict['Data payload'] = db.payload
 
@@ -476,7 +475,9 @@ def AnalyzeExtension(e, block_num):
         dbdict['Data payload'] = db.GetBlob()
 
       else:
-        raise RuntimeError("Dropping the contents of a datablock of type {}, tag {} on the floor!".format(db.type, db.tag))
+        raise RuntimeError(
+            "Can't convert a datablock of type {}, tag {}!".format(
+                db.type, db.tag))
 
       dblist.append(dbdict)
 
@@ -541,7 +542,7 @@ def BuildBase(e):
 
 
 def BuildExtensions(e):
-  """Organizes all information of one or more extensions.
+  """Organize all information of one or more extensions.
 
   Args:
     e: The edid.Edid object.
@@ -549,12 +550,12 @@ def BuildExtensions(e):
   Returns:
     A list of extension information.
   """
-  return [AnalyzeExtension(e, x + 1) for x in list(range(0,
-                                                          e.extension_count))]
+  return [AnalyzeExtension(e, x + 1)
+          for x in list(range(0, e.extension_count))]
 
 
 def ParseEdid(filename):
-  """Creates an EDID object from binary blob and converts to dictionary form.
+  """Create an EDID object from binary blob and convert to dictionary form.
 
   Args:
     filename: The name of the file containing the binary blob.

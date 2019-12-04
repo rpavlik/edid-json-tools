@@ -36,6 +36,7 @@ def ListTrueOnly(adict):
   """
   return [x for x in adict if adict[x]]
 
+
 def BytesFromFile(filename):
   """Reads the EDID from binary blob form into list form.
 
@@ -48,6 +49,7 @@ def BytesFromFile(filename):
   with open(filename, 'rb') as f:
     chunk = f.read()
     return [int(x) for x in bytes(chunk)]
+
 
 def PrintHexData(data):
   """Prints an array of values in hexadecimal form.
@@ -62,5 +64,5 @@ def PrintHexData(data):
   for x in range(0, hex_rows):
 
     start = 0x10 * x
-    row = '%02X%02X ' * 8 % tuple(data[start : start + 16])
+    row = '%02X%02X ' * 8 % tuple(data[start:(start + 16)])
     print('0x%04X:\t\t%s' % (x, row))

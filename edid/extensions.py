@@ -39,7 +39,7 @@ def GetExtension(edid, index, version):
   Returns:
     An Extension object.
   """
-  block = edid[128 * index : 128 * (index + 1)]
+  block = edid[(128 * index):(128 * (index + 1))]
 
   tag = block[0]
 
@@ -263,7 +263,7 @@ class CEAExtension(Extension):
     """
     ext_index = '(Extension #%d)' % index if index else ''
     padding_start = self._GetPadIndex()
-    padding = self._block[padding_start : 127]
+    padding = self._block[padding_start:127]
 
     if padding != [0] * len(padding):
       found = '%02X ' * len(padding) % tuple(padding,)
@@ -403,7 +403,7 @@ class VTBExtension(Extension):
                     (2 * self._st_count))
 
     ext_index = '(Extension #%d)' % index if index else ''
-    padding = self._block[unused_start : 127]
+    padding = self._block[unused_start:127]
     if padding != [0] * len(padding):
       found = '0x%02X ' * len(padding) % tuple(padding,)
       errors.append(error.Error('VTB Extension %s' % ext_index,

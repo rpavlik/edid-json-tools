@@ -1,0 +1,8 @@
+[flake8]
+
+# E111, E114: I know the indent is weird
+# N802: I know the function names aren't recommended
+# D413: Not sure what "Missing blank line after last section" means but it's not important
+ignore = E111, E114, N802, D413
+
+max-line-length = 80

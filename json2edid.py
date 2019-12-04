@@ -8,8 +8,7 @@
 # TODO(chromium:395947): Add JSON validation
 
 
-"""Creates an EDID binary blob out of a Json representation of an EDID."""
-
+"""Create an EDID binary blob out of a Json representation of an EDID."""
 
 
 import itertools
@@ -23,7 +22,7 @@ from edid.tools import PrintHexData
 
 
 def _BuildBitsFromOptions(options, json_map):
-  """Encodes a list of options into bit form for an EDID binary blob.
+  """Encode a list of options into bit form for an EDID binary blob.
 
   The order of the options determines the bit position in the EDID. The first
   option corresponds to the most significant bit in the result, the last option
@@ -42,8 +41,9 @@ def _BuildBitsFromOptions(options, json_map):
     bits = (bits << 1) + int(json_map[option])
   return bits
 
+
 def _BuildBitsFromBitmaskList(options, json_map):
-  """Encodes a list of options into bit form for an EDID binary blob.
+  """Encode a list of options into bit form for an EDID binary blob.
 
   Args:
     options: The list of options (bitmask, string pairs).
@@ -61,7 +61,7 @@ def _BuildBitsFromBitmaskList(options, json_map):
 
 
 def BuildManufacturerInfo(edid, manu_json):
-  """Adds information from manufacturer info dictionary into the EDID list.
+  """Add information from manufacturer info dictionary into the EDID list.
 
   Args:
     edid: The full list form of the EDID.
@@ -107,7 +107,7 @@ def BuildManufacturerInfo(edid, manu_json):
 
 
 def BuildBasicDisplay(edid, bd_json):
-  """Adds information from basic display info dictionary into the EDID list.
+  """Add information from basic display info dictionary into the EDID list.
 
   Args:
     edid: The full list form of the EDID.
@@ -215,7 +215,7 @@ def BuildBasicDisplay(edid, bd_json):
 
 
 def BuildChromaticity(edid, chrom_json):
-  """Adds information from chromaticity info dictionary into the EDID list.
+  """Add information from chromaticity info dictionary into the EDID list.
 
   Args:
     edid: The full list form of the EDID.
@@ -243,7 +243,7 @@ def BuildChromaticity(edid, chrom_json):
 
 
 def BuildEstablishedTimings(edid, et_json):
-  """Adds information from established timings info dictionary into EDID list.
+  """Add information from established timings info dictionary into EDID list.
 
   Args:
     edid: The full list form of the EDID.
@@ -257,7 +257,7 @@ def BuildEstablishedTimings(edid, et_json):
 
 
 def BuildStandardTimings(edid, sts_json):
-  """Adds information from standard timings info dictionary into the EDID list.
+  """Add information from standard timings info dictionary into the EDID list.
 
   Args:
     edid: The full list form of the EDID.
@@ -273,7 +273,7 @@ def BuildStandardTimings(edid, sts_json):
 
 
 def BuildSt(one_st_json):
-  """Creates a list out of a single standard timing object's dictionary.
+  """Create a list out of a single standard timing object's dictionary.
 
   Args:
     one_st_json: The dictionary of a single standard timing object info.
@@ -298,7 +298,7 @@ def BuildSt(one_st_json):
 
 
 def BuildDescriptors(edid, descs_json):
-  """Adds information from descriptors info dictionary into the EDID list.
+  """Add information from descriptors info dictionary into the EDID list.
 
   Args:
     edid: The full list form of the EDID.
@@ -310,7 +310,7 @@ def BuildDescriptors(edid, descs_json):
 
 
 def BuildDtd(desc_json):
-  """Creates a list out of a single detailed timing descriptor dictionary.
+  """Create a list out of a single detailed timing descriptor dictionary.
 
   Args:
     desc_json: The dictionary of a single detailed timing descriptor info.
@@ -374,19 +374,18 @@ def BuildDtd(desc_json):
   if 'Digital' in sync_json['Type']:
     if 'Separate' in sync_json['Type']:
       x = 0x03
-      y = 1 if sync_json['Vertical sync'] == 'Positive' else 0
+      y = int(sync_json['Vertical sync'] == 'Positive')
 
     else:
       x = 0x02
-      y = 1 if sync_json['Serrations'] else 0
+      y = int(sync_json['Serrations'])
 
-    z = 1 if (sync_json['Horizontal sync (outside of V-sync)'] ==
-              'Positive') else 0
+    z = int(sync_json['Horizontal sync (outside of V-sync)'] == 'Positive')
 
   else:  # Analog
-    x = 0x01 if 'Bipolar' in sync_json['Type'] else 0x00
-    y = 1 if sync_json['Serrations'] else 0
-    z = 1 if sync_json['Sync on RGB'] else 0
+    x = int('Bipolar' in sync_json['Type'])
+    y = int(sync_json['Serrations'])
+    z = int(sync_json['Sync on RGB'])
 
   interlace = int(desc_json['Interlace'])
   sync_type = (x << 3) + (y << 2) + (z << 1)
@@ -397,7 +396,7 @@ def BuildDtd(desc_json):
 
 
 def BuildDescriptor(desc_json):
-  """Creates a list out of a single descriptor object's dictionary.
+  """Create a list out of a single descriptor object's dictionary.
 
   Args:
     desc_json: The dictionary of a single descriptor object info.
@@ -645,7 +644,7 @@ def BuildDescriptor(desc_json):
 
 
 def BuildCvt(cvt_json):
-  """Creates a list out of a single CVT object's dictionary.
+  """Create a list out of a single CVT object's dictionary.
 
   Args:
     cvt_json: The dictionary of a single CVT object info.
@@ -692,7 +691,7 @@ def BuildCvt(cvt_json):
 
 
 def BuildExtensions(edid, exts_json):
-  """Adds information from extensions dictionary into the EDID list.
+  """Add information from extensions dictionary into the EDID list.
 
   Args:
     edid: The full list form of the EDID.
@@ -705,7 +704,7 @@ def BuildExtensions(edid, exts_json):
 
 
 def BuildExtension(ext_json):
-  """Creates a list out of a single extension object's dictionary.
+  """Create a list out of a single extension object's dictionary.
 
   Args:
     ext_json: The dictionary of a single extension object info.
@@ -751,8 +750,8 @@ def BuildExtension(ext_json):
         'YCbCr 4:2:2'
     ]
 
-    e[3] = ((_BuildBitsFromOptions(supports, ext_json) << 4) +
-             ext_json['Native DTD count'])
+    supports_bits = _BuildBitsFromOptions(supports, ext_json)
+    e[3] = ((supports_bits << 4) + ext_json['Native DTD count'])
 
     index = 0x04
     for db in ext_json['Data blocks']:
@@ -776,7 +775,7 @@ def BuildExtension(ext_json):
 
 
 def BuildDataBlock(db_json):
-  """Creates a list out of a single data block object's dictionary.
+  """Create a list out of a single data block object's dictionary.
 
   Args:
     db_json: The dictionary of a single data block object info.
@@ -852,7 +851,7 @@ def BuildDataBlock(db_json):
         'Underscan': 0x02,
         'Both': 0x03,
         # the following are the entries as created by edid2json
-        data_block.OU_UNDEFINED : 0x00,
+        data_block.OU_UNDEFINED: 0x00,
         data_block.OU_NOT_SUPPORTED: 0x00,
         data_block.OU_OVERSCAN: 0x01,
         data_block.OU_UNDERSCAN: 0x02,
@@ -922,7 +921,7 @@ def BuildDataBlock(db_json):
 
 
 def BuildVsif(vsif_json):
-  """Creates a list out of a single VSIF object's dictionary.
+  """Create a list out of a single VSIF object's dictionary.
 
   Args:
     vsif_json: The dictionary of a single VSIF object info.
@@ -952,7 +951,7 @@ def BuildVsif(vsif_json):
 
 
 def BuildSad(sad_json):
-  """Creates a list out of a single SAD object's dictionary.
+  """Create a list out of a single SAD object's dictionary.
 
   Args:
     sad_json: The dictionary of a single SAD object info.
@@ -983,17 +982,19 @@ def BuildSad(sad_json):
       'DRA',
       'MPEG-4 HE AAC + MPEG Surround',
       'MPEG-4AAC LC + MPEG Surround',
-      'Unknown'  ### Necessary?
+      'Unknown'  # Necessary?
   ]
 
   tag = sad_types.index(sad_json['Type']) + 1
-  mcc = sad_json['Max channel count'] -1
+  mcc = sad_json['Max channel count'] - 1
   sad[0] = (tag << 3) + mcc
 
-  sad[1] = _BuildBitsFromBitmaskList(data_block.FREQS, sad_json['Supported sampling'])
+  sad[1] = _BuildBitsFromBitmaskList(data_block.FREQS,
+                                     sad_json['Supported sampling'])
 
   if sad_json['Type'] == 'Linear Pulse Code Modulation (LPCM)':
-    sad[2] = _BuildBitsFromBitmaskList(data_block.AUDIO_BITS, sad_json['Bit depth'])
+    sad[2] = _BuildBitsFromBitmaskList(data_block.AUDIO_BITS,
+                                       sad_json['Bit depth'])
 
   elif tag <= 0x08 and tag >= 0x02:
     sad[2] = sad_json['Max bit rate'] // 8
@@ -1014,15 +1015,14 @@ def BuildSad(sad_json):
         'Undefined': 0x00
     }
     fl = frame_len[sad_json['Frame length']]
-    mps = int('MPS support' in sad_json and sad_json['MPS support'] is
-              'MPS explicit')
+    mps = int(sad_json.get('MPS support') == 'MPS explicit')
     sad[2] = (ext << 3) + (fl << 1) + mps
 
   return sad
 
 
 def BuildSvd(svd_json):
-  """Creates a list out of a single SVD object's dictionary.
+  """Create a list out of a single SVD object's dictionary.
 
   Args:
     svd_json: The dictionary of a single SVD object info.
@@ -1038,7 +1038,7 @@ def BuildSvd(svd_json):
 
 
 def BuildEdid(edid_json):
-  """Creates an EDID (list of bytes) out of a dictionary.
+  """Create an EDID (list of bytes) out of a dictionary.
 
   Args:
     edid_json: The dictionary of EDID info.
@@ -1079,7 +1079,7 @@ def BuildEdid(edid_json):
 
 
 def JsonToBinary(in_file, out_file):
-  """Reads text file in as Json and converts information into binary blob.
+  """Read text file in as Json and convert information into binary blob.
 
   Args:
     in_file: The string name of the text file to read as Json input.
@@ -1089,11 +1089,11 @@ def JsonToBinary(in_file, out_file):
     json_data = json.load(json_file)
     list_edid = BuildEdid(json_data)
 
-    list_edid = list(map(int, list_edid)) # make sure every byte is an int
+    list_edid = list(map(int, list_edid))  # make sure every byte is an int
     PrintHexData(list_edid)
 
-    invalid_bytes = [i for i in range(0, len(list_edid)) if not 0 <=
-                     list_edid[i] < 256]
+    invalid_bytes = [i for i in range(0, len(list_edid))
+                     if not 0 <= list_edid[i] and not list_edid[i] < 256]
     if not invalid_bytes:
       edid_obj = edid_module.Edid(list_edid)
       if edid_obj.GetErrors():

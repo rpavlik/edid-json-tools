@@ -78,7 +78,7 @@ def _ChecksumError(e):
 
   for x in range(0, len(e), 128):
 
-    my_sum = sum(e[x : x + 128])
+    my_sum = sum(e[x:(x + 128)])
     if my_sum % 256:
       block_id = x / 128
       my_err = error.Error('Block %d' % block_id, 'Checksum error',
