@@ -42,6 +42,23 @@ def _BuildBitsFromOptions(options, json_map):
     bits = (bits << 1) + int(json_map[option])
   return bits
 
+def _BuildBitsFromBitmaskList(options, json_map):
+  """Encodes a list of options into bit form for an EDID binary blob.
+
+  Args:
+    options: The list of options (bitmask, string pairs).
+    json_map: The json dictionary indicating whether each option is true or
+        false (i.e., supported or not).
+
+  Returns:
+    An integer to be stored in the EDID that encodes these options.
+  """
+  bits = 0
+  for mask, option in options:
+    if option in json_map:
+      bits += mask * int(json_map[option])
+  return bits
+
 
 def BuildManufacturerInfo(edid, manu_json):
   """Adds information from manufacturer info dictionary into the EDID list.
@@ -803,22 +820,8 @@ def BuildDataBlock(db_json):
 
     tag = 0x04
 
-    speakers = [
-        'Front Center High',
-        'Top Center',
-        'Front Left High / Front Right High',
-        'Front Left Wide / Front Right Wide',
-        'Rear Left Center / Rear Right Center',
-        'Front Left Center / Front Right Center',
-        'Rear Center',
-        'Rear Left / Rear Right',
-        'Front Center',
-        'LFE',
-        'Front Left / Front Right'
-    ]
-
-    speaker_bits = _BuildBitsFromOptions(speakers,
-                                         db_json['Speaker allocation'])
+    speaker_bits = _BuildBitsFromBitmaskList(data_block.SPEAKERS,
+                                             db_json['Speaker allocation'])
 
     blob = [speaker_bits & 0xFF, speaker_bits >> 8, 0]
 
@@ -827,19 +830,11 @@ def BuildDataBlock(db_json):
     tag = 0x07
     extended_tag = 0x05
 
-    # TODO is this reversed? I suspect so...
-    colors = [
-        'Standard Definition Colorimetry based on IEC 61966-2-4',
-        'High Definition Colorimetry based on IEC 61966-2-4',
-        'Colorimetry based on IEC 61966-2-1/Amendment 1',
-        'Colorimetry based on IEC 61966-2-5, Annex A',
-        'Colorimetry based on IEC 61966-2-5',
-        'Colorimetry based on ITU-R BT.2020 YcCbcCrc',
-        'Colorimetry based on ITU-R BT.2020 YCbCr',
-        'Colorimetry based on ITU-R BT.2020 RGB'
-    ]
+    # TODO The previous values appeared reversed:
+    # need to verify that we're round-tripping this right.
 
-    blob = [_BuildBitsFromOptions(colors, db_json['Colorimetry']),
+    blob = [_BuildBitsFromBitmaskList(data_block.COLORS,
+                                      db_json['Colorimetry']),
             db_json['Metadata']]
 
   elif atype == data_block.DB_TYPE_VIDEO_CAPABILITY:
@@ -995,26 +990,10 @@ def BuildSad(sad_json):
   mcc = sad_json['Max channel count'] -1
   sad[0] = (tag << 3) + mcc
 
-  freqs = [
-      '192kHz',
-      '176.4kHz',
-      '96kHz',
-      '88.2kHz',
-      '48kHz',
-      '44.1kHz',
-      '32kHz'
-  ]
-
-  sad[1] = _BuildBitsFromOptions(freqs, sad_json['Supported sampling'])
+  sad[1] = _BuildBitsFromBitmaskList(data_block.FREQS, sad_json['Supported sampling'])
 
   if sad_json['Type'] == 'Linear Pulse Code Modulation (LPCM)':
-    bits = [
-        '24 bit',
-        '20 bit',
-        '16 bit'
-    ]
-
-    sad[2] = _BuildBitsFromOptions(bits, sad_json['Bit depth'])
+    sad[2] = _BuildBitsFromBitmaskList(data_block.AUDIO_BITS, sad_json['Bit depth'])
 
   elif tag <= 0x08 and tag >= 0x02:
     sad[2] = sad_json['Max bit rate'] // 8

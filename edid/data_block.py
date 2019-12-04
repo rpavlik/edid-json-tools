@@ -68,24 +68,24 @@ SAMPLING_FREQ_96KHZ = '96kHz'
 SAMPLING_FREQ_176_4KHZ = '176.4kHz'
 SAMPLING_FREQ_192KHZ = '192kHz'
 
-_freqs = [
-    [0x40, SAMPLING_FREQ_192KHZ],
-    [0x20, SAMPLING_FREQ_176_4KHZ],
-    [0x10, SAMPLING_FREQ_96KHZ],
-    [0x08, SAMPLING_FREQ_88_2KHZ],
-    [0x04, SAMPLING_FREQ_48KHZ],
-    [0x02, SAMPLING_FREQ_44_1KHZ],
-    [0x01, SAMPLING_FREQ_32KHZ]
-]
+FREQS = (
+    (0x40, SAMPLING_FREQ_192KHZ),
+    (0x20, SAMPLING_FREQ_176_4KHZ),
+    (0x10, SAMPLING_FREQ_96KHZ),
+    (0x08, SAMPLING_FREQ_88_2KHZ),
+    (0x04, SAMPLING_FREQ_48KHZ),
+    (0x02, SAMPLING_FREQ_44_1KHZ),
+    (0x01, SAMPLING_FREQ_32KHZ),
+)
 
 MPS_IMPLICIT = 'MPS implicit'
 MPS_EXPLICIT = 'MPS explicit'
 
-_bits = [
-    [0x4, '24 bit'],
-    [0x2, '20 bit'],
-    [0x1, '16 bit']
-]
+AUDIO_BITS = (
+    (0x4, '24 bit'),
+    (0x2, '20 bit'),
+    (0x1, '16 bit'),
+)
 
 
 SVD_NATIVE = 'Native'
@@ -106,20 +106,19 @@ SPEAKER_FRONT_LEFT_RIGHT_HIGH = 'Front Left High / Front Right High'
 SPEAKER_TOP_CENTER = 'Top Center'
 SPEAKER_FRONT_CENTER_HIGH = 'Front Center High'
 
-_speakers = [
-    [0x01, SPEAKER_FRONT_LEFT_RIGHT],
-    [0x02, SPEAKER_LFE],
-    [0x04, SPEAKER_FRONT_CENTER],
-    [0x08, SPEAKER_REAR_LEFT_RIGHT],
-    [0x10, SPEAKER_REAR_CENTER],
-    [0x20, SPEAKER_FRONT_LEFT_CENTER_RIGHT_CENTER],
-    [0x40, SPEAKER_REAR_LEFT_CENTER_RIGHT_CENTER],
-    [0x80, SPEAKER_FRONT_LEFT_RIGHT_WIDE],
-    [0x100, SPEAKER_FRONT_LEFT_RIGHT_HIGH],
-    [0x200, SPEAKER_TOP_CENTER],
-    [0x400, SPEAKER_FRONT_CENTER_HIGH]
-]
-
+SPEAKERS = (
+    (0x01, SPEAKER_FRONT_LEFT_RIGHT),
+    (0x02, SPEAKER_LFE),
+    (0x04, SPEAKER_FRONT_CENTER),
+    (0x08, SPEAKER_REAR_LEFT_RIGHT),
+    (0x10, SPEAKER_REAR_CENTER),
+    (0x20, SPEAKER_FRONT_LEFT_CENTER_RIGHT_CENTER),
+    (0x40, SPEAKER_REAR_LEFT_CENTER_RIGHT_CENTER),
+    (0x80, SPEAKER_FRONT_LEFT_RIGHT_WIDE),
+    (0x100, SPEAKER_FRONT_LEFT_RIGHT_HIGH),
+    (0x200, SPEAKER_TOP_CENTER),
+    (0x400, SPEAKER_FRONT_CENTER_HIGH),
+)
 
 COLORIMETRY_XVYCC601 = ('Standard Definition Colorimetry based on IEC '
                         '61966-2-4')
@@ -132,17 +131,16 @@ COLORIMETRY_BT2020_YCC = 'Colorimetry based on ITU-R BT.2020 YCbCr'
 COLORIMETRY_BT2020_RGB = 'Colorimetry based on ITU-R BT.2020 RGB'
 
 
-_colors = [
-    [0x01, COLORIMETRY_XVYCC601],
-    [0x02, COLORIMETRY_XVYCC709],
-    [0x04, COLORIMETRY_SYCC601],
-    [0x08, COLORIMETRY_ADOBE_YCC601],
-    [0x10, COLORIMETRY_ADOBE_RGB],
-    [0x20, COLORIMETRY_BT2020_CYCC],
-    [0x40, COLORIMETRY_BT2020_YCC],
-    [0x80, COLORIMETRY_BT2020_RGB]
-]
-
+COLORS = (
+    (0x01, COLORIMETRY_XVYCC601),
+    (0x02, COLORIMETRY_XVYCC709),
+    (0x04, COLORIMETRY_SYCC601),
+    (0x08, COLORIMETRY_ADOBE_YCC601),
+    (0x10, COLORIMETRY_ADOBE_RGB),
+    (0x20, COLORIMETRY_BT2020_CYCC),
+    (0x40, COLORIMETRY_BT2020_YCC),
+    (0x80, COLORIMETRY_BT2020_RGB),
+)
 
 OU_UNDEFINED = 'No Data'
 OU_NOT_SUPPORTED = 'Video Formats not supported'
@@ -449,7 +447,7 @@ class ShortAudioDescriptor(object):
       A dict of string constants and bools that indicate sampling frequencies
       and whether each one is supported.
     """
-    return tools.DictFilter(_freqs, self._block[1] & 0x7F)
+    return tools.DictFilter(FREQS, self._block[1] & 0x7F)
 
 
 class AudioDescriptorLpcm(ShortAudioDescriptor):
@@ -472,7 +470,7 @@ class AudioDescriptorLpcm(ShortAudioDescriptor):
       A dict of strings and bools that indicate bit depths and whether each one
       is supported.
     """
-    return tools.DictFilter(_bits, self._block[2] & 0x07)
+    return tools.DictFilter(AUDIO_BITS, self._block[2] & 0x07)
 
 
 class AudioDescriptorBitRate(ShortAudioDescriptor):
@@ -725,7 +723,7 @@ class SpeakerBlock(DataBlock):
       A dict of strings and bools indicating the speaker allocation.
     """
     alloc_bits = ((self._block[2] & 0x07) << 8) + self._block[1]
-    return tools.DictFilter(_speakers, alloc_bits)
+    return tools.DictFilter(SPEAKERS, alloc_bits)
 
 
 class VideoCapabilityBlock(DataBlock):
@@ -833,7 +831,7 @@ class ColorimetryDataBlock(DataBlock):
     Returns:
       A dict of strings and bools indicating the colorimetry.
     """
-    return tools.DictFilter(_colors, self._block[2])
+    return tools.DictFilter(COLORS, self._block[2])
 
   @property
   def metadata(self):
