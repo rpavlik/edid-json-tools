@@ -45,7 +45,13 @@ variety of data about it. Sub-commands include:
 This began as a small fork of a single subdirectory from the "chameleon"
 ChromiumOS repository. The history of that subdirectory of the repo has been
 extracted and retained in this repository. Original code is at
-<https://chromium.googlesource.com/chromiumos/platform/chameleon>
+<https://chromium.googlesource.com/chromiumos/platform/chameleon> in the `tools`
+subdirectory: the `chameleon_fork_point` tag in this project corresponds to the
+code at the same point as the upstream commit
+<https://chromium.googlesource.com/chromiumos/platform/chameleon/+/2a67bd8a0bbb4a7533670129d1b7beb4a8845438>.
+Upstream has been mostly dormant since 2014 except for a late 2020 Python 3
+migration that had already been done in this fork of the project. We remain
+grateful for their awesome work putting together the foundation of this tool.
 
 The license is a 3-clause BSD license, from the original "chameleon" source code
 that gave rise to this project.
