@@ -1,0 +1,1393 @@
+{
+    "definitions": {
+        "aspectRatio": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "string",
+                    "pattern": "^[0-9]+([.][0-9]+)? : 1",
+                    "description": "A floating-point number : 1"
+                }
+            ],
+            "default": null
+        },
+        "chromaticityComponent": {
+            "type": "object",
+            "required": [
+                "x",
+                "y"
+            ],
+            "properties": {
+                "x": {
+                    "type": "integer",
+                    "default": 0,
+                    "examples": [
+                        301
+                    ]
+                },
+                "y": {
+                    "type": "integer",
+                    "default": 0,
+                    "examples": [
+                        650
+                    ]
+                }
+            }
+        }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "cros-chameleon EDID data",
+    "required": [
+        "Base",
+        "Extensions",
+        "Version"
+    ],
+    "properties": {
+        "Base": {
+            "$id": "#/properties/Base",
+            "type": "object",
+            "title": "Base data",
+            "required": [
+                "Basic Display",
+                "Chromaticity",
+                "Descriptors",
+                "Established Timing",
+                "Manufacturer Info",
+                "Standard Timing"
+            ],
+            "properties": {
+                "Basic Display": {
+                    "$id": "#/properties/Base/properties/Basic Display",
+                    "type": "object",
+                    "title": "The Basic display Schema",
+                    "required": [
+                        "Aspect ratio (landscape)",
+                        "Aspect ratio (portrait)",
+                        "Continuous frequency supported",
+                        "DPM active-off supported",
+                        "DPM standby supported",
+                        "DPM suspend supported",
+                        "Display gamma",
+                        "Maximum dimensions (cm)",
+                        "Preferred timing includes native timing pixel format and refresh rate",
+                        "Video input type",
+                        "sRGB Standard is default colour space"
+                    ],
+                    "properties": {
+                        "Aspect ratio (landscape)": {
+                            "$ref": "#/definitions/aspectRatio"
+                        },
+                        "Aspect ratio (portrait)": {
+                            "$ref": "#/definitions/aspectRatio"
+                        },
+                        "Continuous frequency supported": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/Continuous frequency supported",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "DPM active-off supported": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/DPM active-off supported",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "DPM standby supported": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/DPM standby supported",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "DPM suspend supported": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/DPM suspend supported",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Display gamma": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/Display gamma",
+                            "type": "number",
+                            "title": "The Display gamma Schema",
+                            "default": 0.0,
+                            "examples": [
+                                2.2
+                            ]
+                        },
+                        "Maximum dimensions (cm)": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/Maximum dimensions (cm)",
+                            "type": "object",
+                            "title": "The Maximum dimensions (cm) Schema",
+                            "required": [
+                                "x",
+                                "y"
+                            ],
+                            "properties": {
+                                "x": {
+                                    "$id": "#/properties/Base/properties/Basic Display/properties/Maximum dimensions (cm)/properties/x",
+                                    "type": "integer",
+                                    "title": "The X Schema",
+                                    "default": 0,
+                                    "examples": [
+                                        55
+                                    ]
+                                },
+                                "y": {
+                                    "$id": "#/properties/Base/properties/Basic Display/properties/Maximum dimensions (cm)/properties/y",
+                                    "type": "integer",
+                                    "title": "The Y Schema",
+                                    "default": 0,
+                                    "examples": [
+                                        31
+                                    ]
+                                }
+                            }
+                        },
+                        "Preferred timing includes native timing pixel format and refresh rate": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/Preferred timing includes native timing pixel format and refresh rate",
+                            "type": "boolean",
+                            "title": "The Preferred timing includes native timing pixel format and refresh rate Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "Video input type": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/Video input type",
+                            "enum": [
+                                "Digital",
+                                "Analog"
+                            ]
+                        },
+                        "sRGB Standard is default colour space": {
+                            "$id": "#/properties/Base/properties/Basic Display/properties/sRGB Standard is default colour space",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "if": {
+                            "properties": {
+                                "Video input type": {
+                                    "const": "Digital"
+                                }
+                            }
+                        },
+                        "then": {
+                            "$comment": "Digital video",
+                            "required": [
+                                "Digital Video Interface Standard Support",
+                                "Color Bit Depth",
+                                "Display color type"
+                            ],
+                            "properties": {
+                                "Digital Video Interface Standard Support": {
+                                    "$id": "#/properties/Base/properties/Basic Display/properties/Digital Video Interface Standard Support",
+                                    "description": "Only for digital displays",
+                                    "default": null,
+                                    "anyOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "enum": [
+                                                "DVI",
+                                                "HDMI-a",
+                                                "HDMI-b",
+                                                "MDDI",
+                                                "DisplayPort"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "Color Bit Depth": {
+                                    "$id": "#/properties/Base/properties/Basic Display/properties/Color Bit Depth",
+                                    "type": "string",
+                                    "title": "The Color bit depth Schema",
+                                    "description": "Only for digital displays",
+                                    "default": "",
+                                    "anyOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "type": "string",
+                                            "pattern": "(6|8|10|12|14|16) Bits per Primary Color$"
+                                        }
+                                    ]
+                                },
+                                "Display color type": {
+                                    "$id": "#/properties/Base/properties/Basic Display/properties/Display color type",
+                                    "enum": [
+                                        "RGB 4:4:4",
+                                        "RGB 4:4:4 + YCrCb 4:4:4",
+                                        "RGB 4:4:4 + YCrCb 4:4:4 + YCrCb 4:2:2"
+                                    ]
+                                }
+                            }
+                        },
+                        "else": {
+                            "$comment": "Analog video",
+                            "required": [
+                                "Display color type"
+                            ],
+                            "properties": {
+                                "Display color type": {
+                                    "$id": "#/properties/Base/properties/Basic Display/properties/Display color type",
+                                    "enum": [
+                                        "Monochrome/Grayscale",
+                                        "RGB color",
+                                        "Non-RGB color",
+                                        "Undefined"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "Chromaticity": {
+                    "$id": "#/properties/Base/properties/Chromaticity",
+                    "type": "object",
+                    "title": "The Chromaticity Schema",
+                    "required": [
+                        "Blue",
+                        "Green",
+                        "Red",
+                        "White"
+                    ],
+                    "properties": {
+                        "Blue": {
+                            "$ref": "#/definitions/chromaticityComponent"
+                        },
+                        "Green": {
+                            "$ref": "#/definitions/chromaticityComponent"
+                        },
+                        "Red": {
+                            "$ref": "#/definitions/chromaticityComponent"
+                        },
+                        "White": {
+                            "$ref": "#/definitions/chromaticityComponent"
+                        }
+                    }
+                },
+                "Descriptors": {
+                    "$id": "#/properties/Base/properties/Descriptors",
+                    "type": "array",
+                    "title": "The Descriptors Schema",
+                    "items": {
+                        "$id": "#/properties/Base/properties/Descriptors/items",
+                        "type": "object",
+                        "title": "The Items Schema",
+                        "required": [
+                            "Addressable",
+                            "Blanking",
+                            "Border",
+                            "Front porch",
+                            "Image size (mm)",
+                            "Interlace",
+                            "Pixel clock (MHz)",
+                            "Stereo viewing",
+                            "Sync pulse",
+                            "Sync type",
+                            "Type"
+                        ],
+                        "properties": {
+                            "Addressable": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Addressable",
+                                "type": "object",
+                                "title": "The Addressable Schema",
+                                "required": [
+                                    "x",
+                                    "y"
+                                ],
+                                "properties": {
+                                    "x": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Addressable/properties/x",
+                                        "type": "integer",
+                                        "title": "The X Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            1920
+                                        ]
+                                    },
+                                    "y": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Addressable/properties/y",
+                                        "type": "integer",
+                                        "title": "The Y Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            1080
+                                        ]
+                                    }
+                                }
+                            },
+                            "Blanking": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Blanking",
+                                "type": "object",
+                                "title": "The Blanking Schema",
+                                "required": [
+                                    "x",
+                                    "y"
+                                ],
+                                "properties": {
+                                    "x": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Blanking/properties/x",
+                                        "type": "integer",
+                                        "title": "The X Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            280
+                                        ]
+                                    },
+                                    "y": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Blanking/properties/y",
+                                        "type": "integer",
+                                        "title": "The Y Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            45
+                                        ]
+                                    }
+                                }
+                            },
+                            "Border": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Border",
+                                "type": "object",
+                                "title": "The Border Schema",
+                                "required": [
+                                    "x",
+                                    "y"
+                                ],
+                                "properties": {
+                                    "x": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Border/properties/x",
+                                        "type": "integer",
+                                        "title": "The X Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            0
+                                        ]
+                                    },
+                                    "y": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Border/properties/y",
+                                        "type": "integer",
+                                        "title": "The Y Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            0
+                                        ]
+                                    }
+                                }
+                            },
+                            "Front porch": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Front porch",
+                                "type": "object",
+                                "title": "The Front porch Schema",
+                                "required": [
+                                    "x",
+                                    "y"
+                                ],
+                                "properties": {
+                                    "x": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Front porch/properties/x",
+                                        "type": "integer",
+                                        "title": "The X Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            88
+                                        ]
+                                    },
+                                    "y": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Front porch/properties/y",
+                                        "type": "integer",
+                                        "title": "The Y Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            4
+                                        ]
+                                    }
+                                }
+                            },
+                            "Image size (mm)": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Image size (mm)",
+                                "type": "object",
+                                "title": "The Image size (mm) Schema",
+                                "required": [
+                                    "x",
+                                    "y"
+                                ],
+                                "properties": {
+                                    "x": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Image size (mm)/properties/x",
+                                        "type": "integer",
+                                        "title": "The X Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            553
+                                        ]
+                                    },
+                                    "y": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Image size (mm)/properties/y",
+                                        "type": "integer",
+                                        "title": "The Y Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            311
+                                        ]
+                                    }
+                                }
+                            },
+                            "Interlace": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Interlace",
+                                "type": "boolean",
+                                "title": "The Interlace Schema",
+                                "default": false,
+                                "examples": [
+                                    false
+                                ]
+                            },
+                            "Pixel clock (MHz)": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Pixel clock (MHz)",
+                                "type": "number",
+                                "title": "The Pixel clock (mhz) Schema",
+                                "default": 0.0,
+                                "examples": [
+                                    148.5
+                                ]
+                            },
+                            "Stereo viewing": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Stereo viewing",
+                                "type": "string",
+                                "title": "The Stereo viewing Schema",
+                                "default": "",
+                                "examples": [
+                                    "No stereo"
+                                ],
+                                "pattern": "^(.*)$"
+                            },
+                            "Sync pulse": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Sync pulse",
+                                "type": "object",
+                                "title": "The Sync pulse Schema",
+                                "required": [
+                                    "x",
+                                    "y"
+                                ],
+                                "properties": {
+                                    "x": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Sync pulse/properties/x",
+                                        "type": "integer",
+                                        "title": "The X Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            44
+                                        ]
+                                    },
+                                    "y": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Sync pulse/properties/y",
+                                        "type": "integer",
+                                        "title": "The Y Schema",
+                                        "default": 0,
+                                        "examples": [
+                                            5
+                                        ]
+                                    }
+                                }
+                            },
+                            "Sync type": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Sync type",
+                                "type": "object",
+                                "title": "The Sync type Schema",
+                                "required": [
+                                    "Horizontal sync (outside of V-sync)",
+                                    "Type",
+                                    "Vertical sync"
+                                ],
+                                "properties": {
+                                    "Horizontal sync (outside of V-sync)": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Sync type/properties/Horizontal sync (outside of V-sync)",
+                                        "type": "string",
+                                        "title": "The Horizontal sync (outside of v-sync) Schema",
+                                        "default": "",
+                                        "examples": [
+                                            "Positive"
+                                        ],
+                                        "pattern": "^(.*)$"
+                                    },
+                                    "Type": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Sync type/properties/Type",
+                                        "type": "string",
+                                        "title": "The Type Schema",
+                                        "default": "",
+                                        "examples": [
+                                            "Digital Separate Sync"
+                                        ],
+                                        "pattern": "^(.*)$"
+                                    },
+                                    "Vertical sync": {
+                                        "$id": "#/properties/Base/properties/Descriptors/items/properties/Sync type/properties/Vertical sync",
+                                        "type": "string",
+                                        "title": "The Vertical sync Schema",
+                                        "default": "",
+                                        "examples": [
+                                            "Positive"
+                                        ],
+                                        "pattern": "^(.*)$"
+                                    }
+                                }
+                            },
+                            "Type": {
+                                "$id": "#/properties/Base/properties/Descriptors/items/properties/Type",
+                                "type": "string",
+                                "title": "The Type Schema",
+                                "default": "",
+                                "examples": [
+                                    "Detailed Timing Descriptor"
+                                ],
+                                "pattern": "^(.*)$"
+                            }
+                        }
+                    }
+                },
+                "Established Timing": {
+                    "$id": "#/properties/Base/properties/Established Timing",
+                    "type": "object",
+                    "title": "The Established timing Schema",
+                    "required": [
+                        "1024x768 @ 60 Hz",
+                        "1024x768 @ 72 Hz",
+                        "1024x768 @ 75 Hz",
+                        "1024x768 @ 87 Hz, interlaced (1024x768i)",
+                        "1152x870 @ 75 Hz (Apple Macintosh II)",
+                        "1280x1024 @ 75 Hz",
+                        "640x480 @ 60 Hz",
+                        "640x480 @ 67 Hz",
+                        "640x480 @ 72 Hz",
+                        "640x480 @ 75 Hz",
+                        "720x400 @ 70 Hz",
+                        "720x400 @ 88 Hz",
+                        "800x600 @ 56 Hz",
+                        "800x600 @ 60 Hz",
+                        "800x600 @ 72 Hz",
+                        "800x600 @ 75 Hz",
+                        "832x624 @ 75 Hz",
+                        "Manufacturer specific display mode 1",
+                        "Manufacturer specific display mode 2",
+                        "Manufacturer specific display mode 3",
+                        "Manufacturer specific display mode 4",
+                        "Manufacturer specific display mode 5",
+                        "Manufacturer specific display mode 6",
+                        "Manufacturer specific display mode 7"
+                    ],
+                    "properties": {
+                        "1024x768 @ 60 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/1024x768 @ 60 Hz",
+                            "type": "boolean",
+                            "title": "The 1024x768 @ 60 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "1024x768 @ 72 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/1024x768 @ 72 Hz",
+                            "type": "boolean",
+                            "title": "The 1024x768 @ 72 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "1024x768 @ 75 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/1024x768 @ 75 Hz",
+                            "type": "boolean",
+                            "title": "The 1024x768 @ 75 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "1024x768 @ 87 Hz, interlaced (1024x768i)": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/1024x768 @ 87 Hz, interlaced (1024x768i)",
+                            "type": "boolean",
+                            "title": "The 1024x768 @ 87 hz, interlaced (1024x768i) Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "1152x870 @ 75 Hz (Apple Macintosh II)": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/1152x870 @ 75 Hz (Apple Macintosh II)",
+                            "type": "boolean",
+                            "title": "The 1152x870 @ 75 hz (apple macintosh ii) Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "1280x1024 @ 75 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/1280x1024 @ 75 Hz",
+                            "type": "boolean",
+                            "title": "The 1280x1024 @ 75 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "640x480 @ 60 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/640x480 @ 60 Hz",
+                            "type": "boolean",
+                            "title": "The 640x480 @ 60 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "640x480 @ 67 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/640x480 @ 67 Hz",
+                            "type": "boolean",
+                            "title": "The 640x480 @ 67 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "640x480 @ 72 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/640x480 @ 72 Hz",
+                            "type": "boolean",
+                            "title": "The 640x480 @ 72 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "640x480 @ 75 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/640x480 @ 75 Hz",
+                            "type": "boolean",
+                            "title": "The 640x480 @ 75 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "720x400 @ 70 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/720x400 @ 70 Hz",
+                            "type": "boolean",
+                            "title": "The 720x400 @ 70 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "720x400 @ 88 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/720x400 @ 88 Hz",
+                            "type": "boolean",
+                            "title": "The 720x400 @ 88 hz Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "800x600 @ 56 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/800x600 @ 56 Hz",
+                            "type": "boolean",
+                            "title": "The 800x600 @ 56 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "800x600 @ 60 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/800x600 @ 60 Hz",
+                            "type": "boolean",
+                            "title": "The 800x600 @ 60 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "800x600 @ 72 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/800x600 @ 72 Hz",
+                            "type": "boolean",
+                            "title": "The 800x600 @ 72 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "800x600 @ 75 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/800x600 @ 75 Hz",
+                            "type": "boolean",
+                            "title": "The 800x600 @ 75 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "832x624 @ 75 Hz": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/832x624 @ 75 Hz",
+                            "type": "boolean",
+                            "title": "The 832x624 @ 75 hz Schema",
+                            "default": false,
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "Manufacturer specific display mode 1": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/Manufacturer specific display mode 1",
+                            "type": "boolean",
+                            "title": "The Manufacturer specific display mode 1 Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "Manufacturer specific display mode 2": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/Manufacturer specific display mode 2",
+                            "type": "boolean",
+                            "title": "The Manufacturer specific display mode 2 Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "Manufacturer specific display mode 3": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/Manufacturer specific display mode 3",
+                            "type": "boolean",
+                            "title": "The Manufacturer specific display mode 3 Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "Manufacturer specific display mode 4": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/Manufacturer specific display mode 4",
+                            "type": "boolean",
+                            "title": "The Manufacturer specific display mode 4 Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "Manufacturer specific display mode 5": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/Manufacturer specific display mode 5",
+                            "type": "boolean",
+                            "title": "The Manufacturer specific display mode 5 Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "Manufacturer specific display mode 6": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/Manufacturer specific display mode 6",
+                            "type": "boolean",
+                            "title": "The Manufacturer specific display mode 6 Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "Manufacturer specific display mode 7": {
+                            "$id": "#/properties/Base/properties/Established Timing/properties/Manufacturer specific display mode 7",
+                            "type": "boolean",
+                            "title": "The Manufacturer specific display mode 7 Schema",
+                            "default": false,
+                            "examples": [
+                                false
+                            ]
+                        }
+                    }
+                },
+                "Manufacturer Info": {
+                    "$id": "#/properties/Base/properties/Manufacturer Info",
+                    "type": "object",
+                    "title": "The Manufacturer info Schema",
+                    "required": [
+                        "ID Product Code",
+                        "Manufacturer ID",
+                        "Model year",
+                        "Serial number",
+                        "Week of manufacture",
+                        "Year of manufacture"
+                    ],
+                    "properties": {
+                        "ID Product Code": {
+                            "$id": "#/properties/Base/properties/Manufacturer Info/properties/ID Product Code",
+                            "type": "integer",
+                            "title": "The Id product code Schema",
+                            "default": 0,
+                            "examples": [
+                                9713
+                            ]
+                        },
+                        "Manufacturer ID": {
+                            "$id": "#/properties/Base/properties/Manufacturer Info/properties/Manufacturer ID",
+                            "type": "string",
+                            "title": "The Manufacturer id Schema",
+                            "default": "",
+                            "examples": [
+                                "ACI"
+                            ],
+                            "pattern": "^(.*)$"
+                        },
+                        "Model year": {
+                            "$id": "#/properties/Base/properties/Manufacturer Info/properties/Model year",
+                            "type": "null",
+                            "title": "The Model year Schema",
+                            "default": null,
+                            "examples": [
+                                null
+                            ]
+                        },
+                        "Serial number": {
+                            "$id": "#/properties/Base/properties/Manufacturer Info/properties/Serial number",
+                            "type": "integer",
+                            "title": "The Serial number Schema",
+                            "default": 0,
+                            "examples": [
+                                116464
+                            ]
+                        },
+                        "Week of manufacture": {
+                            "$id": "#/properties/Base/properties/Manufacturer Info/properties/Week of manufacture",
+                            "type": "integer",
+                            "title": "The Week of manufacture Schema",
+                            "default": 0,
+                            "examples": [
+                                29
+                            ]
+                        },
+                        "Year of manufacture": {
+                            "$id": "#/properties/Base/properties/Manufacturer Info/properties/Year of manufacture",
+                            "type": "integer",
+                            "title": "The Year of manufacture Schema",
+                            "default": 0,
+                            "examples": [
+                                2011
+                            ]
+                        }
+                    }
+                },
+                "Standard Timing": {
+                    "$id": "#/properties/Base/properties/Standard Timing",
+                    "type": "array",
+                    "title": "The Standard timing Schema",
+                    "items": {
+                        "$id": "#/properties/Base/properties/Standard Timing/items",
+                        "type": "object",
+                        "title": "The Items Schema",
+                        "required": [
+                            "Frequency",
+                            "Ratio",
+                            "X resolution"
+                        ],
+                        "properties": {
+                            "Frequency": {
+                                "$id": "#/properties/Base/properties/Standard Timing/items/properties/Frequency",
+                                "type": "integer",
+                                "title": "The Frequency Schema",
+                                "default": 0,
+                                "examples": [
+                                    75
+                                ]
+                            },
+                            "Ratio": {
+                                "$id": "#/properties/Base/properties/Standard Timing/items/properties/Ratio",
+                                "type": "string",
+                                "title": "The Ratio Schema",
+                                "default": "",
+                                "examples": [
+                                    "4:3"
+                                ],
+                                "pattern": "^(.*)$"
+                            },
+                            "X resolution": {
+                                "$id": "#/properties/Base/properties/Standard Timing/items/properties/X resolution",
+                                "type": "integer",
+                                "title": "The X resolution Schema",
+                                "default": 0,
+                                "examples": [
+                                    1152
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "Extensions": {
+            "$id": "#/properties/Extensions",
+            "type": "array",
+            "title": "The Extensions Schema",
+            "items": {
+                "$id": "#/properties/Extensions/items",
+                "type": "object",
+                "title": "The Items Schema",
+                "required": [
+                    "Coordinated Video Timings",
+                    "Detailed Timing Descriptors",
+                    "Standard Timings",
+                    "Type",
+                    "Version"
+                ],
+                "properties": {
+                    "Coordinated Video Timings": {
+                        "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings",
+                        "type": "array",
+                        "title": "The Coordinated video timings Schema",
+                        "items": {
+                            "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items",
+                            "type": "object",
+                            "title": "The Items Schema",
+                            "required": [
+                                "Active vertical lines",
+                                "Aspect ratio",
+                                "Preferred refresh rate",
+                                "Supported refresh rates"
+                            ],
+                            "properties": {
+                                "Active vertical lines": {
+                                    "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Active vertical lines",
+                                    "type": "integer",
+                                    "title": "The Active vertical lines Schema",
+                                    "default": 0,
+                                    "examples": [
+                                        1440
+                                    ]
+                                },
+                                "Aspect ratio": {
+                                    "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Aspect ratio",
+                                    "type": "string",
+                                    "title": "The Aspect ratio Schema",
+                                    "default": "",
+                                    "examples": [
+                                        "16:10 AR"
+                                    ],
+                                    "pattern": "^(.*)$"
+                                },
+                                "Preferred refresh rate": {
+                                    "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Preferred refresh rate",
+                                    "type": "string",
+                                    "title": "The Preferred refresh rate Schema",
+                                    "default": "",
+                                    "examples": [
+                                        "60Hz (reduced blanking)"
+                                    ],
+                                    "pattern": "^(.*)$"
+                                },
+                                "Supported refresh rates": {
+                                    "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Supported refresh rates",
+                                    "type": "object",
+                                    "title": "The Supported refresh rates Schema",
+                                    "required": [
+                                        "50Hz",
+                                        "60Hz",
+                                        "60Hz (reduced blanking)",
+                                        "75Hz",
+                                        "85Hz"
+                                    ],
+                                    "properties": {
+                                        "50Hz": {
+                                            "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Supported refresh rates/properties/50Hz",
+                                            "type": "boolean",
+                                            "title": "The 50hz Schema",
+                                            "default": false,
+                                            "examples": [
+                                                false
+                                            ]
+                                        },
+                                        "60Hz": {
+                                            "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Supported refresh rates/properties/60Hz",
+                                            "type": "boolean",
+                                            "title": "The 60hz Schema",
+                                            "default": false,
+                                            "examples": [
+                                                false
+                                            ]
+                                        },
+                                        "60Hz (reduced blanking)": {
+                                            "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Supported refresh rates/properties/60Hz (reduced blanking)",
+                                            "type": "boolean",
+                                            "title": "The 60hz (reduced blanking) Schema",
+                                            "default": false,
+                                            "examples": [
+                                                true
+                                            ]
+                                        },
+                                        "75Hz": {
+                                            "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Supported refresh rates/properties/75Hz",
+                                            "type": "boolean",
+                                            "title": "The 75hz Schema",
+                                            "default": false,
+                                            "examples": [
+                                                false
+                                            ]
+                                        },
+                                        "85Hz": {
+                                            "$id": "#/properties/Extensions/items/properties/Coordinated Video Timings/items/properties/Supported refresh rates/properties/85Hz",
+                                            "type": "boolean",
+                                            "title": "The 85hz Schema",
+                                            "default": false,
+                                            "examples": [
+                                                false
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "Detailed Timing Descriptors": {
+                        "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors",
+                        "type": "array",
+                        "title": "The Detailed timing descriptors Schema",
+                        "items": {
+                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items",
+                            "type": "object",
+                            "title": "The Items Schema",
+                            "required": [
+                                "Addressable",
+                                "Blanking",
+                                "Border",
+                                "Front porch",
+                                "Image size (mm)",
+                                "Interlace",
+                                "Pixel clock (MHz)",
+                                "Stereo viewing",
+                                "Sync pulse",
+                                "Sync type",
+                                "Type"
+                            ],
+                            "properties": {
+                                "Addressable": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Addressable",
+                                    "type": "object",
+                                    "title": "The Addressable Schema",
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ],
+                                    "properties": {
+                                        "x": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Addressable/properties/x",
+                                            "type": "integer",
+                                            "title": "The X Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                3840
+                                            ]
+                                        },
+                                        "y": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Addressable/properties/y",
+                                            "type": "integer",
+                                            "title": "The Y Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                2400
+                                            ]
+                                        }
+                                    }
+                                },
+                                "Blanking": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Blanking",
+                                    "type": "object",
+                                    "title": "The Blanking Schema",
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ],
+                                    "properties": {
+                                        "x": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Blanking/properties/x",
+                                            "type": "integer",
+                                            "title": "The X Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                256
+                                            ]
+                                        },
+                                        "y": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Blanking/properties/y",
+                                            "type": "integer",
+                                            "title": "The Y Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                22
+                                            ]
+                                        }
+                                    }
+                                },
+                                "Border": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Border",
+                                    "type": "object",
+                                    "title": "The Border Schema",
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ],
+                                    "properties": {
+                                        "x": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Border/properties/x",
+                                            "type": "integer",
+                                            "title": "The X Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                0
+                                            ]
+                                        },
+                                        "y": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Border/properties/y",
+                                            "type": "integer",
+                                            "title": "The Y Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                0
+                                            ]
+                                        }
+                                    }
+                                },
+                                "Front porch": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Front porch",
+                                    "type": "object",
+                                    "title": "The Front porch Schema",
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ],
+                                    "properties": {
+                                        "x": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Front porch/properties/x",
+                                            "type": "integer",
+                                            "title": "The X Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                32
+                                            ]
+                                        },
+                                        "y": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Front porch/properties/y",
+                                            "type": "integer",
+                                            "title": "The Y Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                4
+                                            ]
+                                        }
+                                    }
+                                },
+                                "Image size (mm)": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Image size (mm)",
+                                    "type": "object",
+                                    "title": "The Image size (mm) Schema",
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ],
+                                    "properties": {
+                                        "x": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Image size (mm)/properties/x",
+                                            "type": "integer",
+                                            "title": "The X Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                477
+                                            ]
+                                        },
+                                        "y": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Image size (mm)/properties/y",
+                                            "type": "integer",
+                                            "title": "The Y Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                297
+                                            ]
+                                        }
+                                    }
+                                },
+                                "Interlace": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Interlace",
+                                    "type": "boolean",
+                                    "title": "The Interlace Schema",
+                                    "default": false,
+                                    "examples": [
+                                        false
+                                    ]
+                                },
+                                "Pixel clock (MHz)": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Pixel clock (MHz)",
+                                    "type": "integer",
+                                    "title": "The Pixel clock (mhz) Schema",
+                                    "default": 0,
+                                    "examples": [
+                                        129
+                                    ]
+                                },
+                                "Stereo viewing": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Stereo viewing",
+                                    "type": "string",
+                                    "title": "The Stereo viewing Schema",
+                                    "default": "",
+                                    "examples": [
+                                        "No stereo"
+                                    ],
+                                    "pattern": "^(.*)$"
+                                },
+                                "Sync pulse": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Sync pulse",
+                                    "type": "object",
+                                    "title": "The Sync pulse Schema",
+                                    "required": [
+                                        "x",
+                                        "y"
+                                    ],
+                                    "properties": {
+                                        "x": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Sync pulse/properties/x",
+                                            "type": "integer",
+                                            "title": "The X Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                128
+                                            ]
+                                        },
+                                        "y": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Sync pulse/properties/y",
+                                            "type": "integer",
+                                            "title": "The Y Schema",
+                                            "default": 0,
+                                            "examples": [
+                                                10
+                                            ]
+                                        }
+                                    }
+                                },
+                                "Sync type": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Sync type",
+                                    "type": "object",
+                                    "title": "The Sync type Schema",
+                                    "required": [
+                                        "Horizontal sync (outside of V-sync)",
+                                        "Type",
+                                        "Vertical sync"
+                                    ],
+                                    "properties": {
+                                        "Horizontal sync (outside of V-sync)": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Sync type/properties/Horizontal sync (outside of V-sync)",
+                                            "type": "string",
+                                            "title": "The Horizontal sync (outside of v-sync) Schema",
+                                            "default": "",
+                                            "examples": [
+                                                "Negative"
+                                            ],
+                                            "pattern": "^(.*)$"
+                                        },
+                                        "Type": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Sync type/properties/Type",
+                                            "type": "string",
+                                            "title": "The Type Schema",
+                                            "default": "",
+                                            "examples": [
+                                                "Digital Separate Sync"
+                                            ],
+                                            "pattern": "^(.*)$"
+                                        },
+                                        "Vertical sync": {
+                                            "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Sync type/properties/Vertical sync",
+                                            "type": "string",
+                                            "title": "The Vertical sync Schema",
+                                            "default": "",
+                                            "examples": [
+                                                "Positive"
+                                            ],
+                                            "pattern": "^(.*)$"
+                                        }
+                                    }
+                                },
+                                "Type": {
+                                    "$id": "#/properties/Extensions/items/properties/Detailed Timing Descriptors/items/properties/Type",
+                                    "type": "string",
+                                    "title": "The Type Schema",
+                                    "default": "",
+                                    "examples": [
+                                        "Detailed Timing Descriptor"
+                                    ],
+                                    "pattern": "^(.*)$"
+                                }
+                            }
+                        }
+                    },
+                    "Standard Timings": {
+                        "$id": "#/properties/Extensions/items/properties/Standard Timings",
+                        "type": "array",
+                        "title": "The Standard timings Schema",
+                        "items": {
+                            "$id": "#/properties/Extensions/items/properties/Standard Timings/items",
+                            "type": "object",
+                            "title": "The Items Schema",
+                            "required": [
+                                "Frequency",
+                                "Ratio",
+                                "X resolution"
+                            ],
+                            "properties": {
+                                "Frequency": {
+                                    "$id": "#/properties/Extensions/items/properties/Standard Timings/items/properties/Frequency",
+                                    "type": "integer",
+                                    "title": "The Frequency Schema",
+                                    "default": 0,
+                                    "examples": [
+                                        120
+                                    ]
+                                },
+                                "Ratio": {
+                                    "$id": "#/properties/Extensions/items/properties/Standard Timings/items/properties/Ratio",
+                                    "type": "string",
+                                    "title": "The Ratio Schema",
+                                    "default": "",
+                                    "examples": [
+                                        "16:10"
+                                    ],
+                                    "pattern": "^(.*)$"
+                                },
+                                "X resolution": {
+                                    "$id": "#/properties/Extensions/items/properties/Standard Timings/items/properties/X resolution",
+                                    "type": "integer",
+                                    "title": "The X resolution Schema",
+                                    "default": 0,
+                                    "examples": [
+                                        1680
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "Type": {
+                        "$id": "#/properties/Extensions/items/properties/Type",
+                        "type": "string",
+                        "title": "The Type Schema",
+                        "default": "",
+                        "examples": [
+                            "Video Timing Block Extension (VTB-EXT)"
+                        ],
+                        "pattern": "^(.*)$"
+                    },
+                    "Version": {
+                        "$id": "#/properties/Extensions/items/properties/Version",
+                        "type": "integer",
+                        "title": "The Version Schema",
+                        "default": 0,
+                        "examples": [
+                            1
+                        ]
+                    }
+                }
+            }
+        },
+        "Version": {
+            "$id": "#/properties/Version",
+            "type": "string",
+            "title": "The Version Schema",
+            "default": "",
+            "examples": [
+                "1.4"
+            ],
+            "pattern": "^(.*)$"
+        }
+    }
+}
