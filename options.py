@@ -1,7 +1,11 @@
 #!/usr/bin/env python3 -i
 # Copyright 2014 The Chromium OS Authors. All rights reserved.
+# Copyright (c) 2019-2021 The EDID JSON Tools authors. All rights reserved.
+#
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
+#
+# SPDX-License-Identifier: BSD-3-Clause
 
 """Options to create an EDID binary blob."""
 
