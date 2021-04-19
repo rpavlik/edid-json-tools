@@ -6,6 +6,10 @@ Copyright (c) 2019-2021 The EDID JSON Tools authors. All rights reserved.
 SPDX-License-Identifier: BSD-3-Clause
 -->
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![REUSE status](https://api.reuse.software/badge/github.com/rpavlik/edid-json-tools)](https://api.reuse.software/info/github.com/rpavlik/edid-json-tools)
+
 This is a collection of tools that helps you work with EDID files, by parsing
 them as well as by converting between EDID binaries and JSON files.
 
@@ -85,15 +89,15 @@ We use:
   have it built in or available thru an extension)
 - [pre-commit][] to ensure our code is nice before
   committing. Among other checks, it runs:
+  - [black][] for code formatting
   - [flake8][] for style checking (with some custom settings right now, to avoid
     changing the format much from upstream)
-  - [autopep8][] for code formatting
-  - [mypy][] for intense code checking
+  - [mypy][] for intense code checking (type checkign)
 
 [editorconfig]: https://editorconfig.org/
 [pre-commit]: https://pre-commit.com/
+[black]: https://black.readthedocs.io
 [flake8]: https://flake8.pycqa.org/en/latest/
-[autopep8]: https://github.com/hhatto/autopep8/
 [mypy]: http://mypy-lang.org/
 
 For the best experience for your pull requests, we recommend installing the pre-commit tool and installing its "hooks" in this repository:
