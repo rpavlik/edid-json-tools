@@ -25,12 +25,15 @@ does other EDID analysis.
 """
 
 
-from . import data_block, descriptor, extensions, tools, video_block
+from enum import IntEnum
+from . import data_block, descriptor, edid, extensions, tools, video_block
 from .tools import PrintHexData
 
-LAYOUT_MODE = 0
-NORMAL_MODE = 1
-VERBOSE_MODE = 2
+
+class Mode(IntEnum):
+  LAYOUT_MODE = 0
+  NORMAL_MODE = 1
+  VERBOSE_MODE = 2
 
 
 TYPE_ALL = 'all'
@@ -44,14 +47,17 @@ TYPE_DP = 'dp'
 TYPE_XALL = 'xall'
 
 
-RAW_OFF = 0
-RAW_HEX = 1
-RAW_DEC = 2
+class RawMode(IntEnum):
+  RAW_OFF = 0
+  RAW_HEX = 1
+  RAW_DEC = 2
+
+  def __bool__(self) -> bool:
+      return self.value != 0
 
 
 VALID_TYPES = set([TYPE_ALL, TYPE_BASE, TYPE_VENDOR, TYPE_BD, TYPE_DCC, TYPE_ET,
                    TYPE_ST, TYPE_DP, TYPE_XALL])
-
 
 VALID_TYPE_MESSAGE = ('Type options include: all (all info), base (base block),'
                       ' vendor (vendor and product info, bd (basic display in '
@@ -90,7 +96,7 @@ def PrintList(alist, mode, print_format):
     print_format: The string format for printing.
   """
   for x, s in alist:
-    if mode == NORMAL_MODE and not s:
+    if mode == Mode.NORMAL_MODE and not s:
       continue
     print(print_format % (x, s))
 
@@ -108,7 +114,7 @@ def GetManufacturerInfo(e, mode, raw_mode):
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x08, 0x12)
 
-  if mode == LAYOUT_MODE:
+  if mode == Mode.LAYOUT_MODE:
     return
 
   info = [
@@ -136,7 +142,7 @@ def GetBasicDisplay(e, mode, raw_mode):
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x14, 0x19)
 
-  if mode == LAYOUT_MODE:
+  if mode == Mode.LAYOUT_MODE:
     return
 
   bd = e.basic_display
@@ -195,7 +201,7 @@ def GetBasicDisplay(e, mode, raw_mode):
   PrintList(info, mode, '  %-50s %s')
 
   cfs = bd.cont_freq_support
-  if mode == VERBOSE_MODE and cfs:
+  if mode == Mode.VERBOSE_MODE and cfs:
     print('  %-50s %s' % ('Continuous frequency supported:', cfs))
 
 
@@ -212,7 +218,7 @@ def GetChromaticity(e, mode, raw_mode):
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x19, 0x23)
 
-  if mode == LAYOUT_MODE:
+  if mode == Mode.LAYOUT_MODE:
     return
 
   chrom = e.chromaticity
@@ -241,7 +247,7 @@ def GetEstablishedTiming(e, mode, raw_mode):
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x23, 0x26)
 
-  if mode == LAYOUT_MODE:
+  if mode == Mode.LAYOUT_MODE:
     return
 
   et = e.established_timings
@@ -273,14 +279,14 @@ def GetBaseStandardTiming(e, mode, raw_mode):
   if raw_mode:
     PrintRawRange(e.GetData(), raw_mode, 0x26, 0x36)
 
-  if mode == LAYOUT_MODE:
+  if mode == Mode.LAYOUT_MODE:
     return
 
   sts = e.standard_timings
   if sts:
     for st in sts:
       PrintSt(st)
-  elif mode == VERBOSE_MODE:
+  elif mode == Mode.VERBOSE_MODE:
     print('  None')
 
 
@@ -340,7 +346,7 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
   """
   print('%s%s' % (prefix, desc.type))
 
-  if mode == LAYOUT_MODE:
+  if mode == Mode.LAYOUT_MODE:
 
     if desc.type == descriptor.TYPE_DISPLAY_RANGE_LIMITS:
       print('  Subtype: %s' % desc.subtype)
@@ -350,7 +356,7 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
     PrintRawRange(e.GetData(), raw_mode, base + (start * 18),
                   base + ((start + 1) * 18))
 
-  if mode == LAYOUT_MODE:
+  if mode == Mode.LAYOUT_MODE:
     return
 
   if desc.type in (descriptor.TYPE_PRODUCT_SERIAL_NUMBER,
@@ -480,7 +486,7 @@ def PrintCp(cp, num):
       ('Gamma:', str(cp.gamma) if cp.gamma else 'Gamma not described here'),
   ]
 
-  PrintList(cp_info, VERBOSE_MODE, '  %-30s %s')
+  PrintList(cp_info, Mode.VERBOSE_MODE, '  %-30s %s')
 
 
 def PrintDtd(desc):
@@ -512,7 +518,7 @@ def PrintDtd(desc):
       ('Stereo viewing:', desc.stereo_mode),
   ]
 
-  PrintList(info, VERBOSE_MODE, '  %-17s %s')
+  PrintList(info, Mode.VERBOSE_MODE, '  %-17s %s')
 
   st = desc.sync_type
   print('  Sync type:')
@@ -532,7 +538,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
   ext = e.GetExtension(block_num)
   print('EXTENSION NUMBER %d: %s' % (block_num, ext.type))
 
-  if mode == VERBOSE_MODE:
+  if mode == Mode.VERBOSE_MODE:
     print('Tag: %d' % ext.tag)
 
   if ext.type == extensions.TYPE_CEA_861:
@@ -540,7 +546,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     dbs = ext.data_blocks
     dtds = ext.dtds
 
-    if mode == LAYOUT_MODE:
+    if mode == Mode.LAYOUT_MODE:
       print('Number of data blocks: %d' % len(dbs))
       for x in range(0, len(dbs)):
         print('%d. %s' % (x + 1, dbs[x].type))
@@ -595,7 +601,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           ('Extension tag:', db.ext_tag),
       ]
 
-      if mode == VERBOSE_MODE:
+      if mode == Mode.VERBOSE_MODE:
         PrintList(db_basic, mode, '  %-19s %s')
         print('\n')
 
@@ -620,7 +626,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
               ('Supported sampling:', '  '.join(ssf)),
           ]
 
-          if mode == VERBOSE_MODE:
+          if mode == Mode.VERBOSE_MODE:
             ad_basic.insert(0, ('Format code:', ad.format_code))
 
           PrintList(ad_basic, mode, '  %-19s %s')
@@ -684,7 +690,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
         for vsif in vsifs:
 
-          if mode == NORMAL_MODE:
+          if mode == Mode.NORMAL_MODE:
             v_type = vsif.type
             print('  %-25s %s' % ('Type:', v_type))
             if v_type == data_block.INFO_FRAME_TYPE_VENDOR_SPECIFIC:
@@ -737,7 +743,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     cvts = ext.cvts
     sts = ext.sts
 
-    if mode == LAYOUT_MODE:
+    if mode == Mode.LAYOUT_MODE:
       print('Number of detailed timing descriptors: %d' % len(dtbs))
       for x in range(0, len(dtbs)):
         print('%d. %s' % (x + 1, dtbs[x].type))
@@ -795,7 +801,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     if raw_mode:
       PrintRawRange(ext.GetBlock(), raw_mode)
 
-    if mode == LAYOUT_MODE:
+    if mode == Mode.LAYOUT_MODE:
       return
 
     tags = ext.all_tags
@@ -911,7 +917,7 @@ def PrintRawRange(e, raw_mode, start=0, end=None):
   data = e[start:end]
 
   if raw_mode:
-    if raw_mode == RAW_HEX:
+    if raw_mode == RawMode.RAW_HEX:
       my_format = '  Byte 0x%02X:\t0x%02X'
     else:  # Decimal
       my_format = '  Byte %04d:\t%04d'

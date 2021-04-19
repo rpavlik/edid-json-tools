@@ -26,12 +26,10 @@ import argparse
 import re
 
 from . import edid
-from .edidparser_impl import (LAYOUT_MODE, NORMAL_MODE, RAW_DEC, RAW_HEX,
-                                 RAW_OFF, TYPE_ALL, TYPE_BASE, TYPE_XALL,
-                                 VERBOSE_MODE, CheckInvalidTypes, PrintBase,
-                                 PrintDecEdid, PrintExtensions, PrintHexEdid,
-                                 PrintSpace, Verify, Version, Xc,
-                                 type_help_string)
+from .edidparser_impl import (TYPE_ALL, TYPE_BASE, TYPE_XALL,
+                              CheckInvalidTypes, Mode, PrintBase, PrintDecEdid,
+                              PrintExtensions, PrintHexEdid, PrintSpace,
+                              RawMode, Verify, Version, Xc, type_help_string)
 from .tools import BytesFromFile
 
 # The body of this script has been moved into the module itself.
@@ -90,25 +88,25 @@ def ParseEdid():
     exit()
 
   # Set defaults here
-  mode = NORMAL_MODE
-  raw_mode = RAW_OFF
+  mode = Mode.NORMAL_MODE
+  raw_mode = RawMode.RAW_OFF
 
   if args.layout:  # Layout of EDID only
     # Here, set the mode to layout mode
     # Run each analysis method but get back basic info only
-    mode = LAYOUT_MODE
+    mode = Mode.LAYOUT_MODE
 
   elif args.verbose:
     # Here, set the mode to verbose mode
-    mode = VERBOSE_MODE
+    mode = Mode.VERBOSE_MODE
 
   # Otherwise, mode remains NORMAL_MODE
 
   if args.dec:
-    raw_mode = RAW_DEC
+    raw_mode = RawMode.RAW_DEC
 
   elif args.hex:
-    raw_mode = RAW_HEX
+    raw_mode = RawMode.RAW_HEX
 
   if not args.types or TYPE_ALL in args.types.split(','):
     base_types = [TYPE_BASE]
