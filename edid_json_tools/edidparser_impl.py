@@ -112,12 +112,12 @@ def GetManufacturerInfo(e, mode, raw_mode):
     return
 
   info = [
-      ['Manufacturer ID:', e.manufacturer_id],
-      ['ID Product Code:', e.product_code],
-      ['Serial number:', e.serial_number],
-      ['Week of manufacture:', e.manufacturing_week],
-      ['Year of manufacture:', e.manufacturing_year],
-      ['Model year:', e.model_year]
+      ('Manufacturer ID:', e.manufacturer_id),
+      ('ID Product Code:', e.product_code),
+      ('Serial number:', e.serial_number),
+      ('Week of manufacture:', e.manufacturing_week),
+      ('Year of manufacture:', e.manufacturing_year),
+      ('Model year:', e.model_year),
   ]
 
   PrintList(info, mode, '  %-22s %s')
@@ -147,9 +147,9 @@ def GetBasicDisplay(e, mode, raw_mode):
     print('Digital Video Signal Interface')
 
     dig_info = [
-        ['Color Bit Depth:', bd.color_bit_depth],
-        ['Digital Video Interface Standard Support:',
-         bd.digital_supports]
+        ('Color Bit Depth:', bd.color_bit_depth),
+        ('Digital Video Interface Standard Support:',
+         bd.digital_supports)
     ]
 
     PrintList(dig_info, mode, '  %-50s %s')
@@ -180,16 +180,16 @@ def GetBasicDisplay(e, mode, raw_mode):
              % '  format and refresh rate:')
 
   info = [
-      ['Maximum dimensions (cm):', max_dim],
-      ['Aspect ratio (portrait):', bd.aspect_ratio_portrait],
-      ['Aspect ratio (landscape):', bd.aspect_ratio_landscape],
-      ['Display gamma:', '%.2f' % bd.display_gamma],
-      ['DPM standby supported:', bd.dpm_standby],
-      ['DPM suspend supported:', bd.dpm_suspend],
-      ['DPM active-off supported:', bd.active_off],
-      ['Display color type:', bd.display_type],
-      ['sRGB Standard is default colour space:', bd.srgb_as_default],
-      [pix_str, bd.native_preferred_timing_mode]
+      ('Maximum dimensions (cm):', max_dim),
+      ('Aspect ratio (portrait):', bd.aspect_ratio_portrait),
+      ('Aspect ratio (landscape):', bd.aspect_ratio_landscape),
+      ('Display gamma:', '%.2f' % bd.display_gamma),
+      ('DPM standby supported:', bd.dpm_standby),
+      ('DPM suspend supported:', bd.dpm_suspend),
+      ('DPM active-off supported:', bd.active_off),
+      ('Display color type:', bd.display_type),
+      ('sRGB Standard is default colour space:', bd.srgb_as_default),
+      (pix_str, bd.native_preferred_timing_mode),
   ]
 
   PrintList(info, mode, '  %-50s %s')
@@ -475,9 +475,9 @@ def PrintCp(cp, num):
   wht = '(%d, %d)' % (cp.white_x, cp.white_y)
 
   cp_info = [
-      ['Index number:', cp.index_number],
-      ['White point coordinates:', wht],
-      ['Gamma:', str(cp.gamma) if cp.gamma else 'Gamma not described here']
+      ('Index number:', cp.index_number),
+      ('White point coordinates:', wht),
+      ('Gamma:', str(cp.gamma) if cp.gamma else 'Gamma not described here'),
   ]
 
   PrintList(cp_info, VERBOSE_MODE, '  %-30s %s')
@@ -501,15 +501,15 @@ def PrintDtd(desc):
   bord = '%d x %d' % (desc.h_border_pixels, desc.v_border_lines)
 
   info = [
-      ['Pixel clock:', pix],
-      ['Addressable:', active],
-      ['Blanking:', blank],
-      ['Front porch:', fp],
-      ['Sync pulse:', sp],
-      ['Image size (mm):', ds],
-      ['Border:', bord],
-      ['Interlace:', desc.interlaced],
-      ['Stereo viewing:', desc.stereo_mode]
+      ('Pixel clock:', pix),
+      ('Addressable:', active),
+      ('Blanking:', blank),
+      ('Front porch:', fp),
+      ('Sync pulse:', sp),
+      ('Image size (mm):', ds),
+      ('Border:', bord),
+      ('Interlace:', desc.interlaced),
+      ('Stereo viewing:', desc.stereo_mode),
   ]
 
   PrintList(info, VERBOSE_MODE, '  %-17s %s')
@@ -568,12 +568,12 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
       PrintRawRange(cea_base, raw_mode)
 
     cea_info = [
-        ['Version:', ext.version],
-        ['Underscan support:', ext.underscan_support],
-        ['Basic audio support:', ext.basic_audio_support],
-        ['YCbCr 4:4:4 support:', ext.ycbcr444_support],
-        ['YCbCr 4:2:2 support:', ext.ycbcr422_support],
-        ['Native DTD count:', ext.native_dtd_count]
+        ('Version:', ext.version),
+        ('Underscan support:', ext.underscan_support),
+        ('Basic audio support:', ext.basic_audio_support),
+        ('YCbCr 4:4:4 support:', ext.ycbcr444_support),
+        ('YCbCr 4:2:2 support:', ext.ycbcr422_support),
+        ('Native DTD count:', ext.native_dtd_count),
     ]
 
     PrintList(cea_info, mode, '  %-23s %s')
@@ -590,9 +590,9 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
         PrintRawRange(db.GetBlock(), raw_mode)
 
       db_basic = [
-          ['Tag:', db.tag],
-          ['Length:', db.length],
-          ['Extension tag:', db.ext_tag],
+          ('Tag:', db.tag),
+          ('Length:', db.length),
+          ('Extension tag:', db.ext_tag),
       ]
 
       if mode == VERBOSE_MODE:
@@ -615,13 +615,13 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           ssf = tools.ListTrueOnly(ad.supported_sampling_freqs)
 
           ad_basic = [
-              ['Type:', ad.type],
-              ['Max channel count:', ad.max_channel_count],
-              ['Supported sampling:', '  '.join(ssf)],
+              ('Type:', ad.type),
+              ('Max channel count:', ad.max_channel_count),
+              ('Supported sampling:', '  '.join(ssf)),
           ]
 
           if mode == VERBOSE_MODE:
-            ad_basic.insert(0, ['Format code:', ad.format_code])
+            ad_basic.insert(0, ('Format code:', ad.format_code))
 
           PrintList(ad_basic, mode, '  %-19s %s')
 
@@ -632,7 +632,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
             print('  %-19s %s' % ('DRA value:', ad.value))
           elif ad.format_code <= 8 and ad.format_code >= 2:
             print('  %-19s %s' % ('Max bit rate:', ad.max_bit_rate))
-          elif ad.format_code <= 14 and ad.format_code <= 9:
+          elif ad.format_code <= 14 and ad.format_code >= 9:
             print('  %-19s %s' % ('Value:', ad.value))
           else:
             print('  %-19s %s' % ('Extension code:', ad.ext_code))
@@ -663,13 +663,11 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
       elif db.type == data_block.DB_TYPE_VIDEO_CAPABILITY:
 
         vc_info = [
-            ['YCC Quantization range:',
-             db.selectable_quantization_range_ycc],
-            ['RGB Quantization range:',
-             db.selectable_quantization_range_rgb],
-            ['PT behavior:', db.pt_behavior],
-            ['IT behavior:', db.it_behavior],
-            ['CE behavior:', db.ce_behavior]
+            ('YCC Quantization range:', db.selectable_quantization_range_ycc),
+            ('RGB Quantization range:', db.selectable_quantization_range_rgb),
+            ('PT behavior:', db.pt_behavior),
+            ('IT behavior:', db.it_behavior),
+            ('CE behavior:', db.ce_behavior),
         ]
 
         PrintList(vc_info, mode, '  %-35s %s')
@@ -694,10 +692,10 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
             continue
 
           vsif_info = [
-              ['Type code:', vsif.type_code],
-              ['Type:', vsif.type],
-              ['Payload length:', vsif.payload_length],
-              ['Data payload:', vsif.payload]
+              ('Type code:', vsif.type_code),
+              ('Type:', vsif.type),
+              ('Payload length:', vsif.payload_length),
+              ('Data payload:', vsif.payload),
           ]
 
           PrintList(vsif_info, mode, '  %-25s %s')

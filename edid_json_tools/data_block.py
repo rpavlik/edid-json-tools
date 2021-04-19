@@ -775,8 +775,8 @@ class VideoCapabilityBlock(DataBlock):
       return OU_OVERSCAN
     if pt == 0x02:
       return OU_UNDERSCAN
-    if pt == 0x03:
-      return OU_BOTH
+    assert(pt == 0x03)
+    return OU_BOTH
 
   @property
   def it_behavior(self):
@@ -794,8 +794,8 @@ class VideoCapabilityBlock(DataBlock):
       return OU_OVERSCAN
     if it == 0x02:
       return OU_UNDERSCAN
-    if it == 0x03:
-      return OU_BOTH
+    assert(it == 0x03)
+    return OU_BOTH
 
   @property
   def ce_behavior(self):
@@ -813,8 +813,8 @@ class VideoCapabilityBlock(DataBlock):
       return OU_OVERSCAN
     if ce == 0x02:
       return OU_UNDERSCAN
-    if ce == 0x03:
-      return OU_BOTH
+    assert(ce == 0x03)
+    return OU_BOTH
 
 
 class ColorimetryDataBlock(DataBlock):

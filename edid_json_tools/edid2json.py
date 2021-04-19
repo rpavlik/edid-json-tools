@@ -390,7 +390,7 @@ def AnalyzeExtension(e, block_num):
             addict['DRA value'] = ad.value
           elif ad.format_code <= 8 and ad.format_code >= 2:
             addict['Max bit rate'] = ad.max_bit_rate
-          elif ad.format_code <= 14 and ad.format_code <= 9:
+          elif ad.format_code <= 14 and ad.format_code >= 9:
             addict['Value'] = ad.value
           else:
             addict['Extension code'] = ad.ext_code

@@ -213,7 +213,7 @@ class CEAExtension(Extension):
     """
     # DTDs begin immediately, meaning there are no data blocks
     if self._dtd_start == 4:
-      return None
+      return []
 
     dbs = []
 

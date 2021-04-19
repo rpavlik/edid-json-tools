@@ -34,11 +34,11 @@ class CoordinatedVideoTiming(object):
   """Return a CoordinatedVideoTiming object and its properties."""
 
   _ref_rates = [
-      [0x10, '50Hz'],
-      [0x08, '60Hz'],
-      [0x04, '75Hz'],
-      [0x02, '85Hz'],
-      [0x01, '60Hz (reduced blanking)']
+      (0x10, '50Hz'),
+      (0x08, '60Hz'),
+      (0x04, '75Hz'),
+      (0x02, '85Hz'),
+      (0x01, '60Hz (reduced blanking)'),
   ]
 
   def __init__(self, edid, start_index):
