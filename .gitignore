@@ -5,9 +5,10 @@
 # Ignore all hidden files by default
 .*
 !.gitignore
-!.flake8
 !.editorconfig
 !.reuse
+!.pre-commit-config.yaml
+!.git-blame-ignore-revs
 
 # Dev/execution stuff
 __pycache__

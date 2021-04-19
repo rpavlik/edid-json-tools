@@ -4,7 +4,7 @@
 #
 # These are requirements for better development.
 
-autopep8
+black
 flake8
 mypy
 pre-commit

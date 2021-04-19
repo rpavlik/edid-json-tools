@@ -1,0 +1,8 @@
+# Copyright (c) 2019-2021 The EDID JSON Tools authors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+# See https://black.readthedocs.io/en/stable/installation_and_usage.html#migrating-your-code-style-without-ruining-git-blame
+
+# Migrate code style to Black
+d1f53a77eb86d5e6f31efa60ae41fea939a02ed0
