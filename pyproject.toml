@@ -1,0 +1,7 @@
+# Copyright (c) 2019-2021 The EDID JSON Tools authors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
