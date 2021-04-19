@@ -1,3 +1,21 @@
+# Copyright (c) 2019-2021 The EDID JSON Tools authors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+# Ignore all hidden files by default
+.*
+!.gitignore
+!.flake8
+!.editorconfig
+
+# Dev/execution stuff
+__pycache__
+venv
 *.pyc
 *.json
 
+
+# Distribution stuff
+*.egg-info/
+build/
+dist/
