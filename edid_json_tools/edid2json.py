@@ -20,6 +20,7 @@
 
 """Parses EDID into python object and outputs Json form of EDID object."""
 
+import sys
 
 from . import data_block, descriptor, edid, extensions
 from .tools import BytesFromFile
@@ -565,12 +566,12 @@ def ParseEdid(filename, ignore_errors=False):
   edid_obj = edid.Edid(BytesFromFile(filename))
   errors = edid_obj.GetErrors()
   if errors:
-    print('Found %d errors\n' % len(errors))
+    sys.stderr.write('Found %d errors\n\n' % len(errors))
     for error in errors:
-      print('At %s: %s' % (error.location, error.message))
+      sys.stderr.write('At %s: %s\n' % (error.location, error.message))
       if error.expected:
-        print('\tExpected\t%s' % error.expected)
-        print('\tFound\t\t\t%s' % error.found)
+        sys.stderr.write('\tExpected\t%s\n' % error.expected)
+        sys.stderr.write('\tFound\t\t\t%s\n' % error.found)
   if ignore_errors or not errors:
     return {
         'Base': BuildBase(edid_obj),
