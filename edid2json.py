@@ -558,11 +558,12 @@ def BuildExtensions(e):
           for x in list(range(0, e.extension_count))]
 
 
-def ParseEdid(filename):
+def ParseEdid(filename, ignore_errors=False):
   """Create an EDID object from binary blob and convert to dictionary form.
 
   Args:
     filename: The name of the file containing the binary blob.
+    ignore_errors: Whether we should return the dictionary even if there were errors.
 
   Returns:
     A dictionary of information about the EDID object.
@@ -570,19 +571,19 @@ def ParseEdid(filename):
   # Fill the edid list with bytes from binary blob
   edid_obj = edid.Edid(BytesFromFile(filename))
   errors = edid_obj.GetErrors()
-  if not errors:
-    return {
-        'Base': BuildBase(edid_obj),
-        'Extensions': BuildExtensions(edid_obj),
-        'Version': edid_obj.edid_version
-    }
-  else:
+  if errors:
     print('Found %d errors\n' % len(errors))
     for error in errors:
       print('At %s: %s' % (error.location, error.message))
       if error.expected:
         print('\tExpected\t%s' % error.expected)
         print('\tFound\t\t\t%s' % error.found)
+  if ignore_errors or not errors:
+    return {
+        'Base': BuildBase(edid_obj),
+        'Extensions': BuildExtensions(edid_obj),
+        'Version': edid_obj.edid_version
+    }
 
 
 _USAGE = """
