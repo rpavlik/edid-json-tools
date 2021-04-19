@@ -38,10 +38,10 @@ it out in the stdout.
 ####################
 # CODE STARTS HERE #
 ####################
-if __name__ == '__main__':
-  if len(sys.argv) < 2:
-    print(_USAGE % sys.argv[0])
-  else:
-    edid_json = ParseEdid(sys.argv[1])
-    if edid_json:
-      print(json.dumps(edid_json, sort_keys=True, indent=4))
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print(_USAGE % sys.argv[0])
+    else:
+        edid_json = ParseEdid(sys.argv[1])
+        if edid_json:
+            print(json.dumps(edid_json, sort_keys=True, indent=4))

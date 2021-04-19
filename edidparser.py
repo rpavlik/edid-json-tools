@@ -28,5 +28,5 @@ from edid_json_tools.edidparser_argparse import ParseEdid
 ####################
 # CODE STARTS HERE #
 ####################
-if __name__ == '__main__':
-  ParseEdid()
+if __name__ == "__main__":
+    ParseEdid()
