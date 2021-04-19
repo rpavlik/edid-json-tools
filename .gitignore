@@ -7,13 +7,14 @@
 !.gitignore
 !.flake8
 !.editorconfig
+!.reuse
 
 # Dev/execution stuff
 __pycache__
 venv
 *.pyc
 *.json
-
+!edid-schema.json
 
 # Distribution stuff
 *.egg-info/
