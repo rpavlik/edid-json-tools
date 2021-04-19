@@ -12,13 +12,13 @@ If errors are found, returns error.Error objects that store information about
 each error's location, message, expected data, and what data is found.
 """
 
-from . import descriptor
-from . import error
-from . import extensions
-from . import standard_timings
+from typing import List
+
+from . import descriptor, error, extensions, standard_timings
+from .typing import ByteList, EdidVersion
 
 
-def _LengthError(e):
+def _LengthError(e: ByteList):
   """Check if the length of the EDID is a multiple of 128.
 
   Args:
@@ -34,7 +34,7 @@ def _LengthError(e):
                         'Length %% 128 = %d' % (len(e) % 128))]
 
 
-def _HeaderError(e):
+def _HeaderError(e: ByteList):
   """Check if header (bytes 0-7) is set up properly.
 
   Header should be 0x00 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0x00.
@@ -67,7 +67,7 @@ def _HeaderError(e):
   return None
 
 
-def _ChecksumError(e):
+def _ChecksumError(e: ByteList):
   """Check if checksum is valid.
 
   Checksum for each 128-byte block should be divisible by 256.
@@ -92,7 +92,7 @@ def _ChecksumError(e):
   return cs_errors
 
 
-def _DescriptorErrors(edid, version):
+def _DescriptorErrors(edid: ByteList, version: EdidVersion):
   """Check the descriptor blocks for errors.
 
   Args:
@@ -118,7 +118,7 @@ def _DescriptorErrors(edid, version):
   return errors
 
 
-def _BaseStErrors(edid, version):
+def _BaseStErrors(edid: ByteList, version: EdidVersion):
   """Check the standard timing section for errors.
 
   Args:
@@ -142,7 +142,7 @@ def _BaseStErrors(edid, version):
   return errors
 
 
-def _ExtensionErrors(edid, version):
+def _ExtensionErrors(edid: ByteList, version: EdidVersion):
   """Check all extensions for errors.
 
   Args:
@@ -171,7 +171,7 @@ def _ExtensionErrors(edid, version):
   return errors
 
 
-def _WeekError(edid):
+def _WeekError(edid: ByteList):
   """Check if the manufacturer week is in the proper range of 1-54.
 
   Args:
@@ -185,7 +185,7 @@ def _WeekError(edid):
                         ' value', 'Week in range 1-54', 'Week %d' % edid[0x10])]
 
 
-def GetErrors(edid, version):
+def GetErrors(edid: ByteList, version: EdidVersion) -> List[error.Error]:
   """Check EDID for all potential errors.
 
   Args:

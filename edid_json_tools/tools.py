@@ -10,10 +10,16 @@
 
 
 import collections
+from typing import Collection, List, Tuple
+
+from .typing import BoolDict, ByteList
 
 
-def DictFilter(alist, bits):
+def DictFilter(alist: Collection[Tuple[int, str]], bits: int) -> BoolDict:
   """Translate bits from EDID into a list of strings.
+
+  Essentially, interprets a bitmask value, using a collection of masks and
+  descriptive strings.
 
   Args:
     alist: A list of tuples, with the first being a number and second a string.
@@ -29,7 +35,7 @@ def DictFilter(alist, bits):
   return d
 
 
-def ListTrueOnly(adict):
+def ListTrueOnly(adict: BoolDict) -> List[str]:
   """Return a list of strings for which their values were True in the dict.
 
   Args:
@@ -41,7 +47,7 @@ def ListTrueOnly(adict):
   return [x for x in adict if adict[x]]
 
 
-def BytesFromFile(filename):
+def BytesFromFile(filename: str) -> ByteList:
   """Read the EDID from binary blob form into list form.
 
   Args:
@@ -55,7 +61,7 @@ def BytesFromFile(filename):
     return [int(x) for x in bytes(chunk)]
 
 
-def PrintHexData(data):
+def PrintHexData(data: ByteList):
   """Print an array of values in hexadecimal form.
 
   Args:

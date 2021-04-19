@@ -10,6 +10,9 @@
 """Provides the Error class with methods for describing and reporting errors."""
 
 
+from typing import List, Optional
+
+
 class Error(object):
   """Defines an Error object, with location, message, etc."""
 
@@ -62,3 +65,7 @@ class Error(object):
       A string describing the value found in the EDID.
     """
     return self._found
+
+
+ErrorList = List[Error]
+OptionalErrorList = Optional[ErrorList]

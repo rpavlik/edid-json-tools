@@ -13,8 +13,11 @@ DataBlock objects are found in CEA extensions and appear in varying length.
 The various types of DataBlocks all inherit the basic DataBlock object.
 """
 
-from . import tools
+from typing import Final, List, Optional, Union
 
+from edid_json_tools.typing import BoolDict, ByteList, OverscanBehavior
+
+from . import tools
 
 DB_TYPE_AUDIO = 'Audio Data Block'
 DB_TYPE_VIDEO = 'Video Data Block'
@@ -168,7 +171,7 @@ INFO_FRAME_TYPE_PROCESSING = 'Processing Descriptor Header'
 INFO_FRAME_TYPE_UNKNOWN = 'Unknown'
 
 
-def GetDataBlock(edid, start):
+def GetDataBlock(edid: ByteList, start: int) -> 'DataBlock':
   """Create a DataBlock object based on the type specified in the tag.
 
   Args:
@@ -238,17 +241,17 @@ def GetDataBlock(edid, start):
 class DataBlock(object):
   """Defines a basic Data Block object, with length, type, etc."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create a basic DataBlock object.
 
     Args:
       block: The list of bytes that make up the data block.
       my_type: The specific type of Data Block.
     """
-    self._block = block
-    self._type = my_type
+    self._block: Final[ByteList] = block
+    self._type: Final[str] = my_type
 
-  def GetBlock(self):
+  def GetBlock(self) -> ByteList:
     """Fetch the list of bytes that make up the data block.
 
     Returns:
@@ -257,7 +260,7 @@ class DataBlock(object):
     return self._block
 
   @property
-  def type(self):
+  def type(self) -> str:
     """Fetch the Data Block type.
 
     Returns:
@@ -266,7 +269,7 @@ class DataBlock(object):
     return self._type
 
   @property
-  def length(self):
+  def length(self) -> int:
     """Fetch the length of this data block.
 
     Length is the number of bytes that follow the initial tag byte.
@@ -277,7 +280,7 @@ class DataBlock(object):
     return self._block[0] & 0x1F
 
   @property
-  def tag(self):
+  def tag(self) -> int:
     """Fetch the tag of the data block.
 
     Returns:
@@ -286,7 +289,7 @@ class DataBlock(object):
     return (self._block[0] >> 5) & 0x07
 
   @property
-  def ext_tag(self):
+  def ext_tag(self) -> Optional[int]:
     """Fetch the extended tag of the data block.
 
     The extended tag only exists if the original tag was equal to 7.
@@ -297,7 +300,7 @@ class DataBlock(object):
     """
     return self._block[1] if self.tag == 7 else None
 
-  def GetBlob(self):
+  def GetBlob(self) -> ByteList:
     """Fetch the data blob of the data block.
 
     Returns:
@@ -309,7 +312,7 @@ class DataBlock(object):
 class AudioBlock(DataBlock):
   """Defines an Audio Data Block."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create an AudioBlock object.
 
     Args:
@@ -318,7 +321,7 @@ class AudioBlock(DataBlock):
     DataBlock.__init__(self, block, DB_TYPE_AUDIO)
 
   @property
-  def short_audio_descriptors(self):
+  def short_audio_descriptors(self) -> List['ShortAudioDescriptor']:
     """Fetch the short audio descriptors in the audio block.
 
     Returns:
@@ -333,7 +336,7 @@ class AudioBlock(DataBlock):
 
     return sads
 
-  def _GetSad(self, block):
+  def _GetSad(self, block: ByteList) -> 'ShortAudioDescriptor':
     """Fetch a single Short Audio Descriptor.
 
     Args:
@@ -402,18 +405,18 @@ class ShortAudioDescriptor(object):
   """Defines a Short Audio Descriptor within an Audio Data Block."""
 
   # Expects a 3 byte block
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create a basic ShortAudioDescriptor object.
 
     Args:
       block: The list of bytes that make up the Short Audio Descriptor.
       my_type: The type of Short Audio Descriptor.
     """
-    self._block = block
-    self._type = my_type
+    self._block: Final[ByteList] = block
+    self._type: Final[str] = my_type
 
   @property
-  def format_code(self):
+  def format_code(self) -> int:
     """Fetch the format code of the short audio descriptor.
 
     Returns:
@@ -422,7 +425,7 @@ class ShortAudioDescriptor(object):
     return (self._block[0] >> 3) & 0x1F
 
   @property
-  def max_channel_count(self):
+  def max_channel_count(self) -> int:
     """Fetch the maximum channel count.
 
     Returns:
@@ -431,7 +434,7 @@ class ShortAudioDescriptor(object):
     return (self._block[0] & 0x07) + 1
 
   @property
-  def type(self):
+  def type(self) -> str:
     """Fetch the type of short audio descriptor.
 
     Returns:
@@ -440,7 +443,7 @@ class ShortAudioDescriptor(object):
     return self._type
 
   @property
-  def supported_sampling_freqs(self):
+  def supported_sampling_freqs(self) -> BoolDict:
     """Fetch a list of supported sampling frequencies.
 
     Note that extended SADs will never support 192 kHz or 176.4 kHz (see list
@@ -457,7 +460,7 @@ class ShortAudioDescriptor(object):
 class AudioDescriptorLpcm(ShortAudioDescriptor):
   """Defines a LPCM Short Audio Descriptor inside Audio Data Block."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create an AudioDescriptorLpcm object.
 
     Args:
@@ -467,7 +470,7 @@ class AudioDescriptorLpcm(ShortAudioDescriptor):
     ShortAudioDescriptor.__init__(self, block, my_type)
 
   @property
-  def bit_depth(self):
+  def bit_depth(self) -> BoolDict:
     """Fetch the supported bit depths.
 
     Returns:
@@ -480,7 +483,7 @@ class AudioDescriptorLpcm(ShortAudioDescriptor):
 class AudioDescriptorBitRate(ShortAudioDescriptor):
   """Defines a BitRate Short Audio Descriptor inside Audio Data Block."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create a AudioDescriptorBitRate object.
 
     Args:
@@ -490,7 +493,7 @@ class AudioDescriptorBitRate(ShortAudioDescriptor):
     ShortAudioDescriptor.__init__(self, block, my_type)
 
   @property
-  def max_bit_rate(self):
+  def max_bit_rate(self) -> str:
     """Fetch the maximum bit rate.
 
     Returns:
@@ -502,7 +505,7 @@ class AudioDescriptorBitRate(ShortAudioDescriptor):
 class AudioDescriptorOther(ShortAudioDescriptor):
   """Defines nonspecialized Short Audio Descriptor inside Audio Data Block."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create a nonspecialized AudioDescriptorOther object.
 
     Args:
@@ -512,7 +515,7 @@ class AudioDescriptorOther(ShortAudioDescriptor):
     ShortAudioDescriptor.__init__(self, block, my_type)
 
   @property
-  def value(self):
+  def value(self) -> int:
     """Fetch the value of the Audio Descriptor, stored in the 3rd byte.
 
     Returns:
@@ -524,7 +527,7 @@ class AudioDescriptorOther(ShortAudioDescriptor):
 class AudioDescriptorExtendedMpeg4(ShortAudioDescriptor):
   """Defines Extended MPEG4 Short Audio Descriptor inside Audio Data Block."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create an AudioDescriptorExtendedMpeg4 object.
 
     Args:
@@ -534,7 +537,7 @@ class AudioDescriptorExtendedMpeg4(ShortAudioDescriptor):
     ShortAudioDescriptor.__init__(self, block, my_type)
 
   @property
-  def ext_code(self):
+  def ext_code(self) -> int:
     """Fetch the extension code.
 
     Returns:
@@ -543,7 +546,7 @@ class AudioDescriptorExtendedMpeg4(ShortAudioDescriptor):
     return (self._block[2] >> 3) & 0x1F
 
   @property
-  def frame_length(self):
+  def frame_length(self) -> str:
     """Fetch the frame length.
 
     Returns:
@@ -558,7 +561,7 @@ class AudioDescriptorExtendedMpeg4(ShortAudioDescriptor):
     # TODO(chromium:395947): Check if exactly one bit is set.
 
   @property
-  def mps_support(self):
+  def mps_support(self) -> Optional[str]:
     """Fetch whether MPS is supported.
 
     Returns:
@@ -577,7 +580,7 @@ class AudioDescriptorExtendedMpeg4(ShortAudioDescriptor):
 class AudioDescriptorExtendedDra(ShortAudioDescriptor):
   """Defines Extended DRA Short Audio Descriptor inside Audio Data Block."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create an AudioDescriptorExtendedDra object.
 
     Args:
@@ -587,7 +590,7 @@ class AudioDescriptorExtendedDra(ShortAudioDescriptor):
     ShortAudioDescriptor.__init__(self, block, my_type)
 
   @property
-  def ext_code(self):  # Should always return 7
+  def ext_code(self) -> int:  # Should always return 7
     """Fetch the extension code.
 
     Returns:
@@ -596,7 +599,7 @@ class AudioDescriptorExtendedDra(ShortAudioDescriptor):
     return (self._block[2] >> 3) & 0x1F
 
   @property
-  def value(self):
+  def value(self) -> int:
     """Fetch the value of the DRA SAD.
 
     Returns:
@@ -608,7 +611,7 @@ class AudioDescriptorExtendedDra(ShortAudioDescriptor):
 class VideoBlock(DataBlock):
   """Defines a Video Data Block."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create a VideoBlock object.
 
     Args:
@@ -619,7 +622,7 @@ class VideoBlock(DataBlock):
     self._offset = 1 if self.ext_tag else 0
 
   @property
-  def short_video_descriptors(self):
+  def short_video_descriptors(self) -> List['ShortVideoDescriptor']:
     """Fetch the short video descriptors.
 
     Returns:
@@ -636,7 +639,7 @@ class VideoBlock(DataBlock):
 class ShortVideoDescriptor(object):
   """Defines a Short Video Descriptor."""
 
-  def __init__(self, byte):
+  def __init__(self, byte: int):
     """Create a ShortVideoDescriptor object.
 
     Args:
@@ -645,7 +648,7 @@ class ShortVideoDescriptor(object):
     self._byte = byte
 
   @property
-  def nativity(self):
+  def nativity(self) -> str:
     """Fetch the nativity of the Short Video Descriptor.
 
     Nativity options include SVD_NATIVE, SVD_NONNATIVE, and SVD_UNSPECIFIED.
@@ -661,7 +664,7 @@ class ShortVideoDescriptor(object):
       return SVD_UNSPECIFIED
 
   @property
-  def vic(self):
+  def vic(self) -> int:
     """Fetch the Video Identification code for the Short Video Descriptor.
 
     Returns:
@@ -675,7 +678,7 @@ class ShortVideoDescriptor(object):
 class VendorSpecificBlock(DataBlock):
   """Defines a Vendor Specific Data Block."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create a VendorSpecificBlock object.
 
     Args:
@@ -683,10 +686,10 @@ class VendorSpecificBlock(DataBlock):
       my_type: A string that indicates that this Data Block is Vendor Specific.
     """
     DataBlock.__init__(self, block, my_type)
-    self._offset = 1 if self.ext_tag else 0
+    self._offset: Final[int] = 1 if self.ext_tag else 0
 
   @property
-  def ieee_oui(self):
+  def ieee_oui(self) -> str:
     """Fetch the IEEE Organizationally Unique Identifier.
 
     Returns:
@@ -699,7 +702,7 @@ class VendorSpecificBlock(DataBlock):
     )
 
   @property
-  def payload(self):
+  def payload(self) -> ByteList:
     """Fetch the rest of the data in the Vendor Specific Block.
 
     Returns:
@@ -711,7 +714,7 @@ class VendorSpecificBlock(DataBlock):
 class SpeakerBlock(DataBlock):
   """Defines a Speaker Data Block."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create a SpeakerBlock object.
 
     Args:
@@ -720,7 +723,7 @@ class SpeakerBlock(DataBlock):
     DataBlock.__init__(self, block, DB_TYPE_SPEAKER_ALLOCATION)
 
   @property
-  def allocation(self):
+  def allocation(self) -> BoolDict:
     """Fetch the speaker allocation.
 
     Returns:
@@ -733,7 +736,7 @@ class SpeakerBlock(DataBlock):
 class VideoCapabilityBlock(DataBlock):
   """Defines a Video Capability Data Block."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create a VideoCapabilityBlock object.
 
     Args:
@@ -742,7 +745,7 @@ class VideoCapabilityBlock(DataBlock):
     DataBlock.__init__(self, block, DB_TYPE_VIDEO_CAPABILITY)
 
   @property
-  def selectable_quantization_range_ycc(self):
+  def selectable_quantization_range_ycc(self) -> bool:
     """Fetch the selectability of YCbCr quantization range.
 
     Returns:
@@ -752,7 +755,7 @@ class VideoCapabilityBlock(DataBlock):
     return bool(self._block[2] >> 7)
 
   @property
-  def selectable_quantization_range_rgb(self):
+  def selectable_quantization_range_rgb(self) -> bool:
     """Fetch the selectability of RGB quantization range.
 
     Returns:
@@ -762,7 +765,7 @@ class VideoCapabilityBlock(DataBlock):
     return bool((self._block[2] >> 6) & 0x01)
 
   @property
-  def pt_behavior(self):
+  def pt_behavior(self) -> OverscanBehavior:
     """Fetch the PT behavior - preferred timing overscan/underscan.
 
     Returns:
@@ -779,7 +782,7 @@ class VideoCapabilityBlock(DataBlock):
     return OU_BOTH
 
   @property
-  def it_behavior(self):
+  def it_behavior(self) -> OverscanBehavior:
     """Fetch the IT application specific display overscan/underscan behavior.
 
     IT application specific display may, for example, be computer display.
@@ -798,7 +801,7 @@ class VideoCapabilityBlock(DataBlock):
     return OU_BOTH
 
   @property
-  def ce_behavior(self):
+  def ce_behavior(self) -> OverscanBehavior:
     """Fetch the CE application specific display overscan/underscan behavior.
 
     CE application specific display may, for example, be DTV.
@@ -820,7 +823,7 @@ class VideoCapabilityBlock(DataBlock):
 class ColorimetryDataBlock(DataBlock):
   """Defines a Colorimetry Data Block."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create a ColorimetryDataBlock object.
 
     Args:
@@ -829,7 +832,7 @@ class ColorimetryDataBlock(DataBlock):
     DataBlock.__init__(self, block, DB_TYPE_COLORIMETRY)
 
   @property
-  def colorimetry(self):
+  def colorimetry(self) -> BoolDict:
     """Fetch the colorimetry.
 
     Returns:
@@ -838,7 +841,7 @@ class ColorimetryDataBlock(DataBlock):
     return tools.DictFilter(COLORS, self._block[2])
 
   @property
-  def metadata(self):
+  def metadata(self) -> int:
     """Fetch the additional metadata.
 
     Metadata is stored in the least significant 4 bits of the 4th byte.
@@ -852,7 +855,7 @@ class ColorimetryDataBlock(DataBlock):
 class VideoFormatPrefBlock(DataBlock):
   """Defines a Video Format Preference Data Block."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create a VideoFormatPrefBlock object.
 
     Args:
@@ -981,7 +984,7 @@ class VideoPreferenceReserved(VideoPreference):
 class YCBCR420CapabilityMapBlock(DataBlock):
   """Defines a YCbCr 4:2:0 Capability Map Data Block."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create a YCBCR420CapabilityMapBlock object.
 
     Args:
@@ -1017,7 +1020,7 @@ class YCBCR420CapabilityMapBlock(DataBlock):
 class InfoFrameDataBlock(DataBlock):
   """Defines an InfoFrame Data Block."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create a basic InfoFrameDataBlock object.
 
     Args:
@@ -1053,7 +1056,10 @@ class InfoFrameDataBlock(DataBlock):
 
     return vsifs
 
-  def _GetVsif(self, new_block):
+  def _GetVsif(
+      self,
+      new_block: ByteList
+  ) -> Union['InfoFrameVendorSpecific', 'InfoFrameDescriptor']:
     """Fetch a single InfoFrameDescriptor object.
 
     Args:
@@ -1088,15 +1094,15 @@ class InfoFrameDataBlock(DataBlock):
 class InfoFrameDescriptor(object):
   """Defines an InfoFrameDescriptor inside InfoFrame Data Block."""
 
-  def __init__(self, block, my_type):
+  def __init__(self, block: ByteList, my_type: str):
     """Create an InfoFrameDescriptor object.
 
     Args:
       block: The list of bytes that make up the InfoFrame Descriptor.
       my_type: The string that indicates the type of the InfoFrame Descriptor.
     """
-    self._block = block
-    self._type = my_type
+    self._block: Final[ByteList] = block
+    self._type: Final[str] = my_type
 
   @property
   def type_code(self):
@@ -1138,7 +1144,7 @@ class InfoFrameDescriptor(object):
 class InfoFrameProcessingDescriptor(InfoFrameDescriptor):
   """Defines an InfoFrame Processing Descriptor Header."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create an InfoFrameProcessingDescriptor object.
 
     Args:
@@ -1160,7 +1166,7 @@ class InfoFrameProcessingDescriptor(InfoFrameDescriptor):
 class InfoFrameVendorSpecific(InfoFrameDescriptor):
   """Defines InfoFrame Vendor Specific Desc inside InfoFrame Data Block."""
 
-  def __init__(self, block):
+  def __init__(self, block: ByteList):
     """Create an InfoFrameVendorSpecific object.
 
     Args:

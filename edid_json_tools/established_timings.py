@@ -12,6 +12,7 @@
 EstablishedTimings information is found in bytes 23h-25h of the base EDID.
 """
 
+from .typing import BoolDict, ByteList
 from . import tools
 
 
@@ -46,7 +47,7 @@ _timings = (
 class EstablishedTimings(object):
   """Identify and return a list of supported Established Timings."""
 
-  def __init__(self, edid):
+  def __init__(self, edid: ByteList):
     """Create an EstablishedTimings object.
 
     Args:
@@ -55,7 +56,7 @@ class EstablishedTimings(object):
     self._edid = edid
 
   @property
-  def supported_timings(self):
+  def supported_timings(self) -> BoolDict:
     """Create the list of supported timings.
 
     Returns:

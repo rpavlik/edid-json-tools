@@ -13,7 +13,10 @@ StandardTiming objects are found in bytes 26h-35h of the base EDID, as well as
 in StandardTimingDescriptor objects.
 """
 
+from typing import Final
+
 from . import error
+from .typing import ByteList, EdidVersion
 
 
 def GetStandardTiming(edid, start_index, version):
@@ -37,7 +40,7 @@ def GetStandardTiming(edid, start_index, version):
 class StandardTiming(object):
   """Defines a single supported Standard Timing and its properties."""
 
-  def __init__(self, edid, start_index, version):
+  def __init__(self, edid: ByteList, start_index: int, version: EdidVersion):
     """Create a StandardTiming object.
 
     Args:
@@ -46,10 +49,10 @@ class StandardTiming(object):
           objects.
       version: The version of the EDID.
     """
-    self._block = edid[start_index:start_index + 2]
-    self._version = version
+    self._block: Final[ByteList] = edid[start_index:start_index + 2]
+    self._version: Final[EdidVersion] = version
 
-  def GetBlock(self):
+  def GetBlock(self) -> ByteList:
     """Fetch the data block of the StandardTiming object.
 
     Returns:
@@ -58,7 +61,7 @@ class StandardTiming(object):
     return self._block
 
   @property
-  def x_resolution(self):
+  def x_resolution(self) -> int:
     """Fetch x resolution.
 
     Returns:
@@ -66,7 +69,7 @@ class StandardTiming(object):
     """
     return (self._block[0] + 31) * 8
 
-  def CheckErrors(self, index=None):
+  def CheckErrors(self, index=None) -> error.OptionalErrorList:
     """Check if the x resolution is faulty.
 
     Args:
@@ -87,7 +90,7 @@ class StandardTiming(object):
       return None
 
   @property
-  def xy_pixel_ratio(self):
+  def xy_pixel_ratio(self) -> str:
     """Fetch the xy pixel ratio.
 
     Returns:
@@ -107,7 +110,7 @@ class StandardTiming(object):
     return pixel_ratio
 
   @property
-  def vertical_freq(self):
+  def vertical_freq(self) -> int:
     """Fetch the vertical frequency.
 
     Actual frequency is 60 more than the value stored in the EDID.

@@ -121,7 +121,7 @@ _svds = [
 ]
 
 
-def GetSvd(code):
+def GetSvd(code: int) -> str:
   """Fetch the Short Video Descriptor for a given numerical code.
 
   Args:

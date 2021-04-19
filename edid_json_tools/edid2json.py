@@ -21,6 +21,7 @@
 """Parses EDID into python object and outputs Json form of EDID object."""
 
 import sys
+from typing import Any, Dict, List
 
 from . import data_block, descriptor, edid, extensions
 from .tools import BytesFromFile
@@ -60,7 +61,7 @@ def GetManufacturerInfo(e: edid.Edid):
   }
 
 
-def GetBasicDisplay(e):
+def GetBasicDisplay(e: edid.Edid) -> Dict[str, Any]:
   """Organizes the basic display information of an EDID.
 
   Args:
@@ -70,7 +71,8 @@ def GetBasicDisplay(e):
     A dictionary of basic display information.
   """
   bd = e.basic_display
-  jdict = {'Video input type': 'Digital' if bd.video_input_type else 'Analog'}
+  jdict: Dict[str, Any] = {
+      'Video input type': 'Digital' if bd.video_input_type else 'Analog'}
 
   if bd.video_input_type:  # Digital
 
@@ -116,7 +118,7 @@ def GetBasicDisplay(e):
   return jdict
 
 
-def GetChromaticity(e):
+def GetChromaticity(e: edid.Edid) -> Dict[str, Any]:
   """Organizes the chromaticity information of an EDID.
 
   Args:
@@ -135,7 +137,7 @@ def GetChromaticity(e):
   }
 
 
-def GetEstablishedTiming(e):
+def GetEstablishedTiming(e: edid.Edid) -> Dict[str, Any]:
   """Organizes the established timing information of an EDID.
 
   Args:
@@ -147,7 +149,7 @@ def GetEstablishedTiming(e):
   return e.established_timings.supported_timings
 
 
-def GetBaseStandardTiming(e):
+def GetBaseStandardTiming(e: edid.Edid) -> List[Dict[str, int]]:
   """Organizes the standard timing information of an EDID.
 
   Args:
@@ -159,7 +161,7 @@ def GetBaseStandardTiming(e):
   return [BuildSt(s) for s in e.standard_timings]
 
 
-def BuildSt(st):
+def BuildSt(st) -> Dict[str, int]:
   """Organizes information in a single standard_timings.StandardTiming object.
 
   Args:
@@ -175,7 +177,7 @@ def BuildSt(st):
   }
 
 
-def GetDescriptorBlocks(e):
+def GetDescriptorBlocks(e: edid.Edid) -> List[Dict[str, Any]]:
   """Organizes the descriptor blocks information of an EDID.
 
   Calls BuildBlockAnalysis on each block for detailed organization.
@@ -189,7 +191,7 @@ def GetDescriptorBlocks(e):
   return [BuildBlockAnalysis(d) for d in e.descriptors]
 
 
-def BuildBlockAnalysis(desc):
+def BuildBlockAnalysis(desc: descriptor.Descriptor) -> Dict[str, Any]:
   """Organizes a single 18-byte descriptor's information.
 
   Called up to 4 times in a base EDID.
@@ -201,16 +203,16 @@ def BuildBlockAnalysis(desc):
   Returns:
     A dictionary of descriptor information.
   """
-  mydict = {'Type': desc.type}
+  mydict: Dict[str, Any] = {'Type': desc.type}
 
   if desc.type in (descriptor.TYPE_PRODUCT_SERIAL_NUMBER,
                    descriptor.TYPE_ALPHANUM_DATA_STRING,
                    descriptor.TYPE_DISPLAY_PRODUCT_NAME):
-
+    assert(isinstance(desc, descriptor.StringDescriptor))
     mydict['Data string'] = desc.string
 
   elif desc.type == descriptor.TYPE_DISPLAY_RANGE_LIMITS:
-
+    assert(isinstance(desc, descriptor.DisplayRangeDescriptor))
     mydict['Subtype'] = desc.subtype
 
     vert_rate = _XYDict(desc.min_vertical_rate,
@@ -225,6 +227,7 @@ def BuildBlockAnalysis(desc):
     })
 
     if desc.subtype == descriptor.SUBTYPE_DISPLAY_RANGE_CVT:
+      assert(isinstance(desc, descriptor.DisplayRangeCVT))
 
       mydict.update({
           'Supported aspect ratios': desc.supported_aspect_ratios,
@@ -238,6 +241,7 @@ def BuildBlockAnalysis(desc):
       })
 
     elif desc.subtype == descriptor.SUBTYPE_DISPLAY_RANGE_2ND_GTF:
+      assert(isinstance(desc, descriptor.DisplayRangeGTF))
 
       mydict.update({
           'Start break frequency': desc.start_break_freq,
@@ -248,6 +252,7 @@ def BuildBlockAnalysis(desc):
       })
 
   elif desc.type == descriptor.TYPE_COLOR_POINT_DATA:
+    assert(isinstance(desc, descriptor.ColorPointDescriptor))
     cp_1 = desc.first_color_point
     cp_2 = desc.second_color_point
 
@@ -255,10 +260,12 @@ def BuildBlockAnalysis(desc):
     mydict['Color Point'] = BuildCp(cp_2)
 
   elif desc.type == descriptor.TYPE_STANDARD_TIMING:
+    assert(isinstance(desc, descriptor.StandardTimingDescriptor))
 
     mydict['Standard Timings'] = desc.standard_timings
 
   elif desc.type == descriptor.TYPE_DISPLAY_COLOR_MANAGEMENT:
+    assert(isinstance(desc, descriptor.DisplayColorDescriptor))
 
     mydict['Display color management'] = {
         'Red a3:': desc.red_a3,
@@ -270,26 +277,30 @@ def BuildBlockAnalysis(desc):
     }
 
   elif desc.type == descriptor.TYPE_CVT_TIMING:
+    assert(isinstance(desc, descriptor.CoordinatedVideoTimingsDescriptor))
 
     cvtlist = [BuildCvt(c) for c in desc.coordinated_video_timings]
     mydict['Coordinated Video Timings'] = cvtlist
 
   elif desc.type == descriptor.TYPE_ESTABLISHED_TIMINGS_III:
+    assert(isinstance(desc, descriptor.EstablishedTimingsIIIDescriptor))
 
     mydict['Established Timings'] = desc.established_timings
 
   elif desc.type == descriptor.TYPE_MANUFACTURER_SPECIFIED:
+    assert(isinstance(desc, descriptor.ManuSpecifiedDescriptor))
 
     mydict['Blob'] = desc.GetBlob()
 
   elif desc.type == descriptor.TYPE_DETAILED_TIMING:
+    assert(isinstance(desc, descriptor.DetailedTimingDescriptor))
 
     return BuildDtd(desc)
 
   return mydict
 
 
-def BuildCp(cp):
+def BuildCp(cp: descriptor.ColorPoint) -> Dict[str, Any]:
   """Organizes information about a single descriptor.ColorPoint object.
 
   Args:
@@ -305,7 +316,7 @@ def BuildCp(cp):
   }
 
 
-def BuildDtd(desc):
+def BuildDtd(desc: descriptor.DetailedTimingDescriptor) -> Dict[str, Any]:
   """Organizes information about a single descriptor.DetailedTimingDescriptor.
 
   Used in the base EDID analysis as well as certain extensions (i.e., VTB).
@@ -331,7 +342,7 @@ def BuildDtd(desc):
   }
 
 
-def AnalyzeExtension(e, block_num):
+def AnalyzeExtension(e: edid.Edid, block_num: int):
   """Organizes an extension of an EDID.
 
   Args:
@@ -342,9 +353,10 @@ def AnalyzeExtension(e, block_num):
     A dictionary of extension information.
   """
   ext = e.GetExtension(block_num)
-  mydict = {'Type': ext.type}
+  mydict: Dict[str, Any] = {'Type': ext.type}
 
   if ext.type == extensions.TYPE_CEA_861:
+    assert(isinstance(ext, extensions.CEAExtension))
 
     # BASIC CEA INFO
     mydict.update({
@@ -362,10 +374,13 @@ def AnalyzeExtension(e, block_num):
 
     for db in ext.data_blocks:
 
-      dbdict = {'Type': db.type}
+      # TODO have the data blocks describe themselves,
+      # instead of this structure of manual typing
+      dbdict: Dict[str, Any] = {'Type': db.type}
 
       if db.type in (data_block.DB_TYPE_VIDEO,
                      data_block.DB_TYPE_YCBCR420_VIDEO):
+        assert(isinstance(db, data_block.VideoBlock))
 
         svd_list = []
         for svd in db.short_video_descriptors:
@@ -374,6 +389,7 @@ def AnalyzeExtension(e, block_num):
         dbdict['Short video descriptors'] = svd_list
 
       elif db.type == data_block.DB_TYPE_AUDIO:
+        assert(isinstance(db, data_block.AudioBlock))
 
         adlist = []
         for ad in db.short_audio_descriptors:
@@ -385,14 +401,23 @@ def AnalyzeExtension(e, block_num):
           }
 
           if ad.type == data_block.AUDIO_TYPE_LPCM:
+            assert(isinstance(ad, data_block.AudioDescriptorLpcm))
             addict['Bit depth'] = ad.bit_depth
+
           elif ad.type == data_block.AUDIO_TYPE_DRA:
+            assert(isinstance(ad, data_block.AudioDescriptorExtendedDra))
             addict['DRA value'] = ad.value
+
           elif ad.format_code <= 8 and ad.format_code >= 2:
+            assert(isinstance(ad, data_block.AudioDescriptorBitRate))
             addict['Max bit rate'] = ad.max_bit_rate
+
           elif ad.format_code <= 14 and ad.format_code >= 9:
+            assert(isinstance(ad, data_block.AudioDescriptorOther))
             addict['Value'] = ad.value
+
           else:
+            assert(isinstance(ad, data_block.AudioDescriptorExtendedMpeg4))
             addict['Extension code'] = ad.ext_code
             addict['Frame length'] = ad.frame_length
             if ad.mps_support:
@@ -404,21 +429,26 @@ def AnalyzeExtension(e, block_num):
 
       elif db.type == data_block.DB_TYPE_SPEAKER_ALLOCATION:
 
+        assert(isinstance(db, data_block.SpeakerBlock))
         dbdict['Speaker allocation'] = db.allocation
 
       elif db.type in (data_block.DB_TYPE_VENDOR_SPECIFIC,
                        data_block.DB_TYPE_VENDOR_SPECIFIC_AUDIO,
                        data_block.DB_TYPE_VENDOR_SPECIFIC_VIDEO):
+
+        assert(isinstance(db, data_block.VendorSpecificBlock))
         dbdict['IEEE OUI'] = db.ieee_oui
         dbdict['Data payload'] = db.payload
 
       elif db.type == data_block.DB_TYPE_COLORIMETRY:
 
+        assert(isinstance(db, data_block.ColorimetryDataBlock))
         dbdict['Colorimetry'] = db.colorimetry
         dbdict['Metadata'] = db.metadata
 
       elif db.type == data_block.DB_TYPE_VIDEO_CAPABILITY:
 
+        assert(isinstance(db, data_block.VideoCapabilityBlock))
         dbdict.update({
             'YCC Quantization range': db.selectable_quantization_range_ycc,
             'RGB Quantization range': db.selectable_quantization_range_rgb,
@@ -429,6 +459,7 @@ def AnalyzeExtension(e, block_num):
 
       elif db.type == data_block.DB_TYPE_INFO_FRAME:
 
+        assert(isinstance(db, data_block.InfoFrameDataBlock))
         if_proc = db.if_processing
         dbdict['InfoFrame Processing Descriptor'] = {'Data payload':
                                                      if_proc.payload}
@@ -450,10 +481,12 @@ def AnalyzeExtension(e, block_num):
 
       elif db.type == data_block.DB_TYPE_YCBCR420_CAPABILITY_MAP:
 
+        assert(isinstance(db, data_block.YCBCR420CapabilityMapBlock))
         dbdict['Supported descriptor indices'] = db.supported_descriptor_indices
 
       elif db.type == data_block.DB_TYPE_VIDEO_FORMAT_PREFERENCE:
 
+        assert(isinstance(db, data_block.VideoFormatPrefBlock))
         vps_list = []
         for vp in db.video_preferences:
           vp_json = {'Type': vp.type}
@@ -487,6 +520,8 @@ def AnalyzeExtension(e, block_num):
 
   elif ext.type == extensions.TYPE_VIDEO_TIMING_BLOCK:
 
+    assert(isinstance(ext, extensions.VTBExtension))
+
     mydict.update({
         'Version': ext.version,
         'Detailed Timing Descriptors': [BuildDtd(d) for d in ext.dtbs],
@@ -496,6 +531,7 @@ def AnalyzeExtension(e, block_num):
 
   elif ext.type == extensions.TYPE_EXTENSION_BLOCK_MAP:
 
+    assert(isinstance(ext, extensions.ExtensionBlockMap))
     mydict['Tags'] = ext.all_tags
 
   return mydict
@@ -520,7 +556,7 @@ def BuildCvt(cvt):
   }
 
 
-def BuildBase(e):
+def BuildBase(e: edid.Edid):
   """Organizes all information of the base EDID.
 
   Args:
@@ -539,7 +575,7 @@ def BuildBase(e):
   }
 
 
-def BuildExtensions(e):
+def BuildExtensions(e: edid.Edid) -> List[Any]:
   """Organize all information of one or more extensions.
 
   Args:

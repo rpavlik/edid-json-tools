@@ -26,6 +26,10 @@ does other EDID analysis.
 
 
 from enum import IntEnum
+from typing import Any, Collection, List, Tuple, Union
+
+from edid_json_tools.typing import ByteList
+
 from . import data_block, descriptor, edid, extensions, tools, video_block
 from .tools import PrintHexData
 
@@ -86,8 +90,14 @@ def PrintSpace(num=1):
   elif num == 0:
     print('\n')
 
+# TODO narrow alist's type down to List[Tuple[Any, Any]]
 
-def PrintList(alist, mode, print_format):
+
+def PrintList(
+    alist: Union[List[Tuple[Any, Any]], List[List[Any]]],
+    mode: Mode,
+    print_format: str
+):
   """Print out a list of properties and their values in specified format.
 
   Args:
@@ -101,7 +111,7 @@ def PrintList(alist, mode, print_format):
     print(print_format % (x, s))
 
 
-def GetManufacturerInfo(e, mode, raw_mode):
+def GetManufacturerInfo(e: edid.Edid, mode: Mode, raw_mode: RawMode):
   """Print and interpret the manufacturer information of an EDID.
 
   Args:
@@ -129,7 +139,7 @@ def GetManufacturerInfo(e, mode, raw_mode):
   PrintList(info, mode, '  %-22s %s')
 
 
-def GetBasicDisplay(e, mode, raw_mode):
+def GetBasicDisplay(e: edid.Edid, mode: Mode, raw_mode: RawMode):
   """Print and interpret the basic display information of an EDID.
 
   Args:
@@ -205,7 +215,7 @@ def GetBasicDisplay(e, mode, raw_mode):
     print('  %-50s %s' % ('Continuous frequency supported:', cfs))
 
 
-def GetChromaticity(e, mode, raw_mode):
+def GetChromaticity(e: edid.Edid, mode: Mode, raw_mode: RawMode):
   """Print and interpret the chromaticity information of an EDID.
 
   Args:
@@ -234,7 +244,7 @@ def GetChromaticity(e, mode, raw_mode):
     print('%7s: (%3d, %3d)' % x)
 
 
-def GetEstablishedTiming(e, mode, raw_mode):
+def GetEstablishedTiming(e: edid.Edid, mode: Mode, raw_mode: RawMode):
   """Print and interpret the established timing information of an EDID.
 
   Args:
@@ -266,7 +276,7 @@ def GetEstablishedTiming(e, mode, raw_mode):
         print('  %-12s' % r)
 
 
-def GetBaseStandardTiming(e, mode, raw_mode):
+def GetBaseStandardTiming(e: edid.Edid, mode: Mode, raw_mode: RawMode):
   """Print and interpret the standard timing information of an EDID.
 
   Args:
@@ -308,7 +318,7 @@ def PrintSt(st):
   print('  %4d x %4d  %-8s @ %d Hz' % (x_res, y_res, form_rat, freq))
 
 
-def GetDescriptorBlocks(e, mode, raw_mode):
+def GetDescriptorBlocks(e: edid.Edid, mode: Mode, raw_mode: RawMode):
   """Print and interpret the descriptor blocks information of an EDID.
 
   Calls PrintBlockAnalysis on each block for detailed print out.
@@ -329,7 +339,14 @@ def GetDescriptorBlocks(e, mode, raw_mode):
     PrintSpace(mode)
 
 
-def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
+def PrintBlockAnalysis(
+    e: edid.Edid,
+    desc,
+    mode: Mode,
+    raw_mode,
+        start,
+        prefix=None
+):
   """Print and interpret a single 18-byte descriptor's information.
 
   Called up to 4 times in a base EDID.
@@ -469,7 +486,7 @@ def PrintBlockAnalysis(e, desc, mode, raw_mode, start, prefix=None):
     PrintDtd(desc)
 
 
-def PrintCp(cp, num):
+def PrintCp(cp: descriptor.ColorPoint, num: int):
   """Print out information about a single descriptor.ColorPoint object.
 
   Args:
@@ -489,7 +506,7 @@ def PrintCp(cp, num):
   PrintList(cp_info, Mode.VERBOSE_MODE, '  %-30s %s')
 
 
-def PrintDtd(desc):
+def PrintDtd(desc: descriptor.DetailedTimingDescriptor):
   """Print out information about a single descriptor.DetailedTimingDescriptor.
 
   Used in the base EDID analysis as well as certain extensions (i.e., VTB).
@@ -526,7 +543,7 @@ def PrintDtd(desc):
     print('    %-39s %s' % ('%s:' % x, st[x]))
 
 
-def AnalyzeExtension(e, mode, raw_mode, block_num=1):
+def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
   """Print and interpret an extension of an EDID.
 
   Args:
@@ -543,6 +560,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
   if ext.type == extensions.TYPE_CEA_861:
 
+    assert(isinstance(ext, extensions.CEAExtension))
     dbs = ext.data_blocks
     dtds = ext.dtds
 
@@ -589,7 +607,6 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
     # DATA BLOCKS
 
     for db in dbs:
-
       print('Data Block %s' % db.type)
 
       if raw_mode:
@@ -607,11 +624,13 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
       if db.type in (data_block.DB_TYPE_VIDEO,
                      data_block.DB_TYPE_YCBCR420_VIDEO):
+        assert(isinstance(db, data_block.VideoBlock))
         svds = db.short_video_descriptors
         for svd in svds:
           print('  %-20s%s' % (svd.nativity, video_block.GetSvd(svd.vic)))
 
       elif db.type == data_block.DB_TYPE_AUDIO:
+        assert(isinstance(db, data_block.AudioBlock))
         ads = db.short_audio_descriptors
         for x in range(0, len(ads)):
 
@@ -632,15 +651,24 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           PrintList(ad_basic, mode, '  %-19s %s')
 
           if ad.type == data_block.AUDIO_TYPE_LPCM:
+            assert(isinstance(ad, data_block.AudioDescriptorLpcm))
             print('  %-19s %s' % ('Bit depth:',
                                   tools.ListTrueOnly(ad.bit_depth)))
+
           elif ad.type == data_block.AUDIO_TYPE_DRA:
+            assert(isinstance(ad, data_block.AudioDescriptorExtendedDra))
             print('  %-19s %s' % ('DRA value:', ad.value))
+
           elif ad.format_code <= 8 and ad.format_code >= 2:
+            assert(isinstance(ad, data_block.AudioDescriptorBitRate))
             print('  %-19s %s' % ('Max bit rate:', ad.max_bit_rate))
+
           elif ad.format_code <= 14 and ad.format_code >= 9:
+            assert(isinstance(ad, data_block.AudioDescriptorOther))
             print('  %-19s %s' % ('Value:', ad.value))
+
           else:
+            assert(isinstance(ad, data_block.AudioDescriptorExtendedMpeg4))
             print('  %-19s %s' % ('Extension code:', ad.ext_code))
             print('  %-19s %s' % ('Frame length:', ad.frame_length))
             print('  %-19s %s' % ('MPS support:', ad.mps_support))
@@ -648,6 +676,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
           print('\n')
 
       elif db.type == data_block.DB_TYPE_SPEAKER_ALLOCATION:
+        assert(isinstance(db, data_block.SpeakerBlock))
 
         print('  Speaker allocation:')
         for a in tools.ListTrueOnly(db.allocation):
@@ -656,11 +685,13 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
       elif db.type in (data_block.DB_TYPE_VENDOR_SPECIFIC,
                        data_block.DB_TYPE_VENDOR_SPECIFIC_AUDIO,
                        data_block.DB_TYPE_VENDOR_SPECIFIC_VIDEO):
+        assert(isinstance(db, data_block.VendorSpecificBlock))
         print('  %-20s %s' % ('IEEE:', db.ieee_oui))
         print('  %-20s %s' % ('Data payload:', db.payload))
 
       elif db.type == data_block.DB_TYPE_COLORIMETRY:
 
+        assert(isinstance(db, data_block.ColorimetryDataBlock))
         print('  Colorimetry:')
         for c in tools.ListTrueOnly(db.colorimetry):
           print('    %s' % c)
@@ -668,6 +699,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
       elif db.type == data_block.DB_TYPE_VIDEO_CAPABILITY:
 
+        assert(isinstance(db, data_block.VideoCapabilityBlock))
         vc_info = [
             ('YCC Quantization range:', db.selectable_quantization_range_ycc),
             ('RGB Quantization range:', db.selectable_quantization_range_rgb),
@@ -680,6 +712,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
       elif db.type == data_block.DB_TYPE_INFO_FRAME:
 
+        assert(isinstance(db, data_block.InfoFrameDataBlock))
         if_proc = db.if_processing
         vsifs = db.vsifs
         print('  %-25s %s' % ('VSIF count:', len(vsifs)))
@@ -710,11 +743,13 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
             print('  %-25s %s' % ('IEEE:', vsif.ieee_oui))
 
       elif db.type == data_block.DB_TYPE_YCBCR420_CAPABILITY_MAP:
+        assert(isinstance(db, data_block.YCBCR420CapabilityMapBlock))
         sdis = db.supported_descriptor_indices
         for sdi in sdis:
           print(sdi)
 
       elif db.type == data_block.DB_TYPE_VIDEO_FORMAT_PREFERENCE:
+        assert(isinstance(db, data_block.VideoFormatPrefBlock))
         vps = db.video_preferences
         for vp in vps:
           if vp.type == data_block.VIDEO_PREFERENCE_VIC:
@@ -739,6 +774,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
   elif ext.type == extensions.TYPE_VIDEO_TIMING_BLOCK:
 
+    assert(isinstance(ext, extensions.VTBExtension))
     dtbs = ext.dtbs
     cvts = ext.cvts
     sts = ext.sts
@@ -798,6 +834,7 @@ def AnalyzeExtension(e, mode, raw_mode, block_num=1):
 
   elif ext.type == extensions.TYPE_EXTENSION_BLOCK_MAP:
 
+    assert(isinstance(ext, extensions.ExtensionBlockMap))
     if raw_mode:
       PrintRawRange(ext.GetBlock(), raw_mode)
 
@@ -829,12 +866,17 @@ def PrintCvt(cvt):
   ]
 
   if cvt:
-    PrintList(cvt_info, VERBOSE_MODE, '  %-35s %s')
+    PrintList(cvt_info, Mode.VERBOSE_MODE, '  %-35s %s')
   else:
     print('UNUSED FIELD')
 
 
-def PrintBase(e, mode, raw_mode, types):
+def PrintBase(
+        e: edid.Edid,
+        mode: Mode,
+        raw_mode: RawMode,
+        types: Collection[str]
+):
   """Print and interpret all information of the base EDID.
 
   Args:
@@ -869,7 +911,7 @@ def PrintBase(e, mode, raw_mode, types):
     PrintSpace()
 
 
-def PrintExtensions(e, mode, raw_mode, exts):
+def PrintExtensions(e: edid.Edid, mode, raw_mode, exts):
   """Print and interpret all information of one or more extensions.
 
   Args:
@@ -888,7 +930,7 @@ def PrintExtensions(e, mode, raw_mode, exts):
       PrintSpace()
 
 
-def GetXall(e, mode, raw_mode):
+def GetXall(e: edid.Edid, mode: Mode, raw_mode: RawMode):
   """Print and interpret the information of all extensions to an EDID.
 
   Args:
@@ -903,7 +945,7 @@ def GetXall(e, mode, raw_mode):
     PrintSpace(mode)
 
 
-def PrintRawRange(e, raw_mode, start=0, end=None):
+def PrintRawRange(e: ByteList, raw_mode, start=0, end=None):
   """Print the raw data of a section of an EDID.
 
   If no arguments given for start and end, the whole list is printed.

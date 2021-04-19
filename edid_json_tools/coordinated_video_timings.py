@@ -11,11 +11,16 @@
 CoordinatedVideoTiming info is stored in Video Timing Block extensions.
 """
 
-from . import error
-from . import tools
+from typing import Final, List, Optional, Tuple
+
+from . import error, tools
+from .typing import ByteList
 
 
-def GetCoordinatedVideoTiming(edid, start_index):
+def GetCoordinatedVideoTiming(
+    edid: ByteList,
+    start_index: int
+) -> Optional['CoordinatedVideoTiming']:
   """Return a CoordinatedVideoTiming object if valid block exists.
 
   Args:
@@ -33,7 +38,7 @@ def GetCoordinatedVideoTiming(edid, start_index):
 class CoordinatedVideoTiming(object):
   """Return a CoordinatedVideoTiming object and its properties."""
 
-  _ref_rates = [
+  _ref_rates: List[Tuple[int, str]] = [
       (0x10, '50Hz'),
       (0x08, '60Hz'),
       (0x04, '75Hz'),
@@ -41,7 +46,7 @@ class CoordinatedVideoTiming(object):
       (0x01, '60Hz (reduced blanking)'),
   ]
 
-  def __init__(self, edid, start_index):
+  def __init__(self, edid: ByteList, start_index: int):
     """Create a CoordinatedVideoTiming object.
 
     Args:
@@ -49,9 +54,9 @@ class CoordinatedVideoTiming(object):
       start_index: The starting index of the coordinated video timing block,
           relative to the base EDID.
     """
-    self._block = edid[start_index:(start_index + 3)]
+    self._block: Final[ByteList] = edid[start_index:(start_index + 3)]
 
-  def GetBlock(self):
+  def GetBlock(self) -> ByteList:
     """Fetch the bytes that constitute the coordinated video timing block.
 
     Returns:
@@ -60,7 +65,7 @@ class CoordinatedVideoTiming(object):
     return self._block
 
   @property
-  def active_vertical_lines(self):
+  def active_vertical_lines(self) -> int:
     """Fetch the number of active vertical lines.
 
     Returns:
@@ -70,7 +75,7 @@ class CoordinatedVideoTiming(object):
     return (val + 1) * 2
 
   @property
-  def aspect_ratio(self):
+  def aspect_ratio(self) -> str:
     """Fetch the aspect ratio.
 
     Returns:
@@ -91,7 +96,7 @@ class CoordinatedVideoTiming(object):
     return asp_ratio
 
   @property
-  def preferred_vertical_rate(self):
+  def preferred_vertical_rate(self) -> str:
     """Fetch the preferred refresh rate (byte 3).
 
     Returns:

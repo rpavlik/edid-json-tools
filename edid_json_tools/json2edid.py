@@ -16,14 +16,18 @@
 
 import itertools
 import json
+from typing import Any, Dict, List, NewType, Tuple
 
 from . import data_block
 from . import edid as edid_module
 from . import options as options_module
 from .tools import PrintHexData
+from .typing import BoolDict
+
+BitMask = NewType('BitMask', int)
 
 
-def _BuildBitsFromOptions(options, json_map):
+def _BuildBitsFromOptions(options: List[str], json_map: BoolDict) -> int:
   """Encode a list of options into bit form for an EDID binary blob.
 
   The order of the options determines the bit position in the EDID. The first
@@ -44,7 +48,10 @@ def _BuildBitsFromOptions(options, json_map):
   return bits
 
 
-def _BuildBitsFromBitmaskList(options, json_map):
+def _BuildBitsFromBitmaskList(
+    options: List[Tuple[BitMask, str]],
+    json_map: BoolDict
+) -> int:
   """Encode a list of options into bit form for an EDID binary blob.
 
   Args:
@@ -62,7 +69,7 @@ def _BuildBitsFromBitmaskList(options, json_map):
   return bits
 
 
-def BuildManufacturerInfo(edid, manu_json):
+def BuildManufacturerInfo(edid: List[int], manu_json: Dict[str, Any]):
   """Add information from manufacturer info dictionary into the EDID list.
 
   Args:
@@ -108,7 +115,7 @@ def BuildManufacturerInfo(edid, manu_json):
       edid[0x11] = manu_json['Model year'] - 1990
 
 
-def BuildBasicDisplay(edid, bd_json):
+def BuildBasicDisplay(edid: List[int], bd_json: Dict[str, Any]):
   """Add information from basic display info dictionary into the EDID list.
 
   Args:
@@ -216,7 +223,7 @@ def BuildBasicDisplay(edid, bd_json):
   edid[0x18] = (sum_dpm << 5) + (color << 3) + sum_fsf
 
 
-def BuildChromaticity(edid, chrom_json):
+def BuildChromaticity(edid: List[int], chrom_json: Dict[str, Dict[str, int]]):
   """Add information from chromaticity info dictionary into the EDID list.
 
   Args:
@@ -244,7 +251,7 @@ def BuildChromaticity(edid, chrom_json):
   edid[0x22] = chrom_json['White']['y'] >> 2
 
 
-def BuildEstablishedTimings(edid, et_json):
+def BuildEstablishedTimings(edid: List[int], et_json):
   """Add information from established timings info dictionary into EDID list.
 
   Args:
@@ -258,7 +265,7 @@ def BuildEstablishedTimings(edid, et_json):
   edid[0x25] = sum_bits & 0xFF
 
 
-def BuildStandardTimings(edid, sts_json):
+def BuildStandardTimings(edid: List[int], sts_json):
   """Add information from standard timings info dictionary into the EDID list.
 
   Args:
@@ -299,7 +306,7 @@ def BuildSt(one_st_json):
   return [x, (iar << 6) + frr]
 
 
-def BuildDescriptors(edid, descs_json):
+def BuildDescriptors(edid: List[int], descs_json):
   """Add information from descriptors info dictionary into the EDID list.
 
   Args:
@@ -692,7 +699,7 @@ def BuildCvt(cvt_json):
   return edid
 
 
-def BuildExtensions(edid, exts_json):
+def BuildExtensions(edid: List[int], exts_json):
   """Add information from extensions dictionary into the EDID list.
 
   Args:
@@ -1080,7 +1087,7 @@ def BuildEdid(edid_json):
   return edid
 
 
-def JsonToBinary(in_file, out_file):
+def JsonToBinary(in_file: str, out_file: str):
   """Read text file in as Json and convert information into binary blob.
 
   Args:
