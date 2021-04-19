@@ -25,11 +25,8 @@
 import json
 import sys
 
-import edid.data_block as data_block
-import edid.descriptor as descriptor
-import edid.edid as edid
-import edid.extensions as extensions
-from edid.tools import BytesFromFile
+from edid_json_tools import data_block, descriptor, edid, extensions
+from edid_json_tools.tools import BytesFromFile
 
 
 def _XYDict(x_value, y_value, first='x', second='y'):

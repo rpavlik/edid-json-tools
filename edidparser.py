@@ -25,13 +25,9 @@
 import argparse
 import re
 
-import edid.data_block as data_block
-import edid.descriptor as descriptor
-import edid.edid as edid
-import edid.extensions as extensions
-import edid.tools as tools
-import edid.video_block as video_block
-from edid.tools import BytesFromFile, PrintHexData
+from edid_json_tools import (data_block, descriptor, edid, extensions, tools,
+                             video_block)
+from edid_json_tools.tools import BytesFromFile, PrintHexData
 
 LAYOUT_MODE = 0
 NORMAL_MODE = 1

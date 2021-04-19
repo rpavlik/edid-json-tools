@@ -19,10 +19,9 @@ import itertools
 import json
 import sys
 
-import edid.edid as edid_module
-import edid.data_block as data_block
+from edid_json_tools import edid as edid_module, data_block
 import options as options_module
-from edid.tools import PrintHexData
+from edid_json_tools.tools import PrintHexData
 
 
 def _BuildBitsFromOptions(options, json_map):
