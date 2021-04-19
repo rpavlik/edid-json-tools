@@ -1,0 +1,10 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: EDID-JSON-Tools
+Upstream-Contact: Ryan Pavlik <ryan.pavlik@gmail.com>
+Source: https://github.com/rpavlik/edid-json-tools
+
+# Sample paragraph, commented out:
+#
+# Files: src/*
+# Copyright: $YEAR $NAME <$CONTACT>
+# License: ...
