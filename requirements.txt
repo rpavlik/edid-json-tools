@@ -1,0 +1,16 @@
+# Copyright (c) 2019-2021 The EDID JSON Tools authors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# These are requirements for better development.
+
+autopep8
+flake8
+mypy
+pre-commit
+
+# for command-line programs
+click
+
+# typed stubs for click
+types-click
