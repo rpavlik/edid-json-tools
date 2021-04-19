@@ -30,6 +30,7 @@ def edid2json(ignore_errors, edid_file):
   if edid_json:
     print(json.dumps(edid_json, sort_keys=True, indent=4))
   else:
+    sys.stderr.write("\n\nTo attempt to output JSON despite these errors, try again using the --ignore-errors flag\n")
     sys.exit(1)
 
 
