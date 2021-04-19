@@ -1,5 +1,11 @@
 # EDID JSON Tools
 
+<!--
+Copyright (c) 2019-2021 The EDID JSON Tools authors. All rights reserved.
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 This is a collection of tools that helps you work with EDID files, by parsing
 them as well as by converting between EDID binaries and JSON files.
 
