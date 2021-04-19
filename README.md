@@ -15,7 +15,7 @@ source software, it is open to be extended and adapted as needed.
 
 ## Dependencies
 
-This tool uses Python 3.
+This tool uses Python 3.5 - it is gradually having some type annotations added.
 
 The "nice" command line interfaces use Click (7.x): this is optional if you just
 want the capabilities of this package in a Python module, rather than a
@@ -74,6 +74,43 @@ If you install this package, you will get an `edidparser` launcher script
 created, which just wraps what this (now very small) Python script in the root
 directory of the repo does. It uses `argparse` instead of bare `sys.argv` usage,
 so it has not yet been converted to use Click.
+
+## Development
+
+Pull requests happily accepted!
+
+We use:
+
+- [editorconfig][] to keep our files clean - make sure your editor has support (most
+  have it built in or available thru an extension)
+- [pre-commit][] to ensure our code is nice before
+  committing. Among other checks, it runs:
+  - [flake8][] for style checking (with some custom settings right now, to avoid
+    changing the format much from upstream)
+  - [autopep8][] for code formatting
+  - [mypy][] for intense code checking
+
+[editorconfig]: https://editorconfig.org/
+[pre-commit]: https://pre-commit.com/
+[flake8]: https://flake8.pycqa.org/en/latest/
+[autopep8]: https://github.com/hhatto/autopep8/
+[mypy]: http://mypy-lang.org/
+
+For the best experience for your pull requests, we recommend installing the pre-commit tool and installing its "hooks" in this repository:
+
+```sh
+python3 -m pip install --user pre-commit   # or via your package manager
+pre-commit install   # in this repo directory
+```
+
+Alternately, you can manually run it after just installing the tool with:
+
+```sh
+pre-commit run
+
+# or, for a more thorough check
+pre-commit run --all-files
+```
 
 ## History
 
