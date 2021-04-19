@@ -557,7 +557,8 @@ def ParseEdid(filename, ignore_errors=False):
 
   Args:
     filename: The name of the file containing the binary blob.
-    ignore_errors: Whether we should return the dictionary even if there were errors.
+    ignore_errors: Whether we should return the dictionary even if
+      there were errors.
 
   Returns:
     A dictionary of information about the EDID object.

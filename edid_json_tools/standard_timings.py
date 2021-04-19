@@ -79,7 +79,8 @@ class StandardTiming(object):
 
     if self._block[0] == 0:
       return [error.Error('Standard Timing object %s' % st_index,
-                          'X resolution unset/invalid - possibly indicating "unused" in a non-compliant way',
+                          'X resolution unset/invalid - possibly indicating '
+                          '"unused" in a non-compliant way',
                           '256-2288 pixels',
                           'Value of 0 (converts to 248)')]
     else:
