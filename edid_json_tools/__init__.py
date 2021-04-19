@@ -4,3 +4,5 @@
 # found in the LICENSE file.
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+VERSION = "0.9.1"
