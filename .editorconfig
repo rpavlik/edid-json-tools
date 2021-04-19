@@ -1,0 +1,14 @@
+# Copyright (c) 2019-2021 The EDID JSON Tools authors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*]
+indent_style = space
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
