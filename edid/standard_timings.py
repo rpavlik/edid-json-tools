@@ -27,10 +27,10 @@ def GetStandardTiming(edid, start_index, version):
   Returns:
     A StandardTiming object, if valid; else, None.
   """
-  if not edid[start_index] == edid[start_index + 1] == 0x01:
-    return StandardTiming(edid, start_index, version)
-  else:
+  if edid[start_index] == edid[start_index + 1] == 0x01:
+    # All 0x01: unused
     return None
+  return StandardTiming(edid, start_index, version)
 
 
 # Used in base EDID as well as StandardTimingDescriptors
@@ -79,7 +79,8 @@ class StandardTiming(object):
 
     if self._block[0] == 0:
       return [error.Error('Standard Timing object %s' % st_index,
-                          'X resolution unset/invalid', '256-2288 pixels',
+                          'X resolution unset/invalid - possibly indicating "unused" in a non-compliant way',
+                          '256-2288 pixels',
                           'Value of 0 (converts to 248)')]
     else:
       return None
