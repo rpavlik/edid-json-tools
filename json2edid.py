@@ -30,7 +30,7 @@ produces the EDID in the binary form.
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print(_USAGE % sys.argv[0])
+        print(_USAGE % sys.argv[0], file=sys.stderr)
     else:
         input_file = sys.argv[1]
         output_file = sys.argv[2]

@@ -40,7 +40,7 @@ it out in the stdout.
 ####################
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print(_USAGE % sys.argv[0])
+        print(_USAGE % sys.argv[0], file=sys.stderr)
     else:
         edid_json = ParseEdid(sys.argv[1])
         if edid_json:
