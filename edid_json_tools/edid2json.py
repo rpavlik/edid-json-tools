@@ -307,6 +307,7 @@ def BuildBlockAnalysis(desc: descriptor.Descriptor) -> Dict[str, Any]:
         assert isinstance(desc, descriptor.ManuSpecifiedDescriptor)
 
         mydict["Blob"] = desc.GetBlob()
+        mydict["Tag"] = desc.tag
 
     elif desc.type == descriptor.TYPE_DETAILED_TIMING:
         assert isinstance(desc, descriptor.DetailedTimingDescriptor)

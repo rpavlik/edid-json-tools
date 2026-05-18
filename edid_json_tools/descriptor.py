@@ -79,7 +79,7 @@ def GetDescriptor(
                 )
             return StandardTimingDescriptor(block, version)
         elif tag >= 0x00 and tag <= 0x0F:
-            return ManuSpecifiedDescriptor(block)
+            return ManuSpecifiedDescriptor(block, tag)
         else:  # tag >= 0x11 and tag <= 0xF6
             return ReservedDescriptor(block)
 
@@ -972,13 +972,15 @@ class DummyDescriptor(Descriptor):
 class ManuSpecifiedDescriptor(Descriptor):
     """Defines a Manufacturer Specified Descriptor."""
 
-    def __init__(self, block: ByteList):
+    def __init__(self, block: ByteList, tag: int):
         """Create a ManuSpecifiedDescriptor object.
 
         Args:
-          block: A list of 18-bytes that make up this descriptor.
+          block: A list of 18-bytes that make up this descriptor;
+          tag:   Descriptor tag number (0x00 - 0x0f according to EDID 1.4 spec).
         """
         Descriptor.__init__(self, block, TYPE_MANUFACTURER_SPECIFIED)
+        self._tag = tag
 
     def GetBlob(self) -> ByteList:
         """Fetch the data blob (13-byte manufacturer specified data).
@@ -987,6 +989,15 @@ class ManuSpecifiedDescriptor(Descriptor):
           A list of bytes that make up the data blob.
         """
         return self._block[5:18]
+
+    @property
+    def tag(self) -> int:
+        """Fetch descriptor tag number.
+
+        Returns:
+          An integer denoting the descriptor tag number (0x00 - 0x0f).
+        """
+        return self._tag
 
 
 class DetailedTimingDescriptor(Descriptor):

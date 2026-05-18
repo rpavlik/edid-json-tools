@@ -424,7 +424,7 @@ def BuildDescriptor(desc_json):
             "Established Timings III": 0xF7,
             "Error: Reserved/undefined; do not use": 0x11,
             "Dummy descriptor": 0x10,
-            "Manufacturer Specified Display Descriptor": 0x00,  # 0x00 to 0xF6
+            "Manufacturer Specified Display Descriptor": 0x00,  # 0x00 to 0x0F according to EDID 1.4 spec
         }
 
         d[3] = types[atype]
@@ -524,6 +524,9 @@ def BuildDescriptor(desc_json):
 
         elif atype == "Manufacturer Specified Display Descriptor":
             d[5:18] = desc_json["Blob"]
+            # Update tag number if known
+            if "Tag" in desc_json:
+                d[3] = desc_json["Tag"]
 
         elif atype == "Established Timings III":
 
@@ -782,7 +785,8 @@ def BuildDataBlock(db_json):
 
         else:  # YCbCr 4:2:0
             tag = 0x07
-            extended_tag = 0x01
+            # "YCbCr 4:2:0 Video Data Block" has Extended tag code 0x0e, not 0x01 (see section 7.5.10 in CTA-861 spec revision G)
+            extended_tag = 0x0e
 
         blob = [BuildSvd(svd) for svd in db_json["Short video descriptors"]]
 
@@ -895,10 +899,12 @@ def BuildDataBlock(db_json):
     else:
         raise RuntimeError("Got a data block we can't turn back into EDID")
 
-    length = len(blob) if not extended_tag else len(blob) + 1
+    # Extended tag can be 0x00 for DB_TYPE_VIDEO_CAPABILITY
+    length = len(blob) if extended_tag is None else len(blob) + 1
     header = [(tag << 5) + length]
 
-    if extended_tag:
+    # Extended tag can be 0x00 for DB_TYPE_VIDEO_CAPABILITY
+    if extended_tag is not None:
         header.append(extended_tag)
 
     return header + blob
@@ -979,9 +985,10 @@ def BuildSad(sad_json):
         sad[2] = _BuildBitsFromBitmaskList(data_block.AUDIO_BITS, sad_json["Bit depth"])
 
     elif tag <= 0x08 and tag >= 0x02:
-        sad[2] = sad_json["Max bit rate"] // 8
+        # Max bit rate is stored as a string, e.g. "640 kHz"
+        sad[2] = int(sad_json["Max bit rate"].removesuffix(" kHz")) // 8
 
-    elif tag <= 0x0E and tag <= 0x09:
+    elif tag <= 0x0E and tag >= 0x09:
         sad[2] = sad_json["Value"]
 
     elif sad_json["Type"] == "DRA":  # A type of extension SAD
