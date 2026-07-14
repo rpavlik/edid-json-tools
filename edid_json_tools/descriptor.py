@@ -73,19 +73,19 @@ def GetDescriptor(
         tag = block[3]
         if tag in class_map:
             return class_map[tag](block)
-        elif tag == 0xFA:
+        if tag == 0xFA:
             if version is None:
                 raise ValueError(
                     "Standard timing descriptors need to know their version"
                 )
             return StandardTimingDescriptor(block, version)
-        elif tag >= 0x00 and tag <= 0x0F:
+        if tag >= 0x00 and tag <= 0x0F:
             return ManuSpecifiedDescriptor(block, tag)
-        else:  # tag >= 0x11 and tag <= 0xF6
-            return ReservedDescriptor(block)
+        # tag >= 0x11 and tag <= 0xF6
+        return ReservedDescriptor(block)
 
-    else:  # Detailed timing descriptor
-        return DetailedTimingDescriptor(block)
+    # Detailed timing descriptor
+    return DetailedTimingDescriptor(block)
 
 
 def GetDisplayRangeDescriptor(block: ByteList) -> "DisplayRangeDescriptor":
@@ -100,14 +100,13 @@ def GetDisplayRangeDescriptor(block: ByteList) -> "DisplayRangeDescriptor":
     support_flag = block[10]
     if support_flag == 0x00:
         return DisplayRangeDescriptor(block, SUBTYPE_DISPLAY_RANGE_DEFAULT)
-    elif support_flag == 0x01:
+    if support_flag == 0x01:
         return DisplayRangeDescriptor(block, SUBTYPE_DISPLAY_RANGE_LIMIT_ONLY)
-    elif support_flag == 0x02:
+    if support_flag == 0x02:
         return DisplayRangeGTF(block)
-    elif support_flag == 0x04:
+    if support_flag == 0x04:
         return DisplayRangeCVT(block)
-    else:
-        return DisplayRangeDescriptor(block, SUBTYPE_DISPLAY_RANGE_UNKNOWN)
+    return DisplayRangeDescriptor(block, SUBTYPE_DISPLAY_RANGE_UNKNOWN)
 
 
 class Descriptor(object):
@@ -175,8 +174,7 @@ class StringDescriptor(Descriptor):
         for x in range(5, 18):
             if self._block[x] == 0x0A:
                 break
-            else:
-                alphanum_data += chr(self._block[x])
+            alphanum_data += chr(self._block[x])
 
         return alphanum_data
 
@@ -192,8 +190,7 @@ class StringDescriptor(Descriptor):
         if self._block[4] != 0x00:
             loc = "%s %s" % (self._type, "#%d" % index if index else "")
             return [error.Error(loc, "Byte 5", 0x00, self._block[4])]
-        else:
-            return None
+        return None
 
 
 class ProductSerialNumberDescriptor(StringDescriptor):
@@ -263,8 +260,7 @@ class DisplayRangeDescriptor(Descriptor):
         """
         if self._block[4] & 0x02:
             return 255
-        else:
-            return 0
+        return 0
 
     def _GetMinVerticalRateOffset(self) -> int:
         """Fetch the minimum vertical rate offset.
@@ -274,8 +270,7 @@ class DisplayRangeDescriptor(Descriptor):
         """
         if self._block[4] & 0x03 == 0x03:
             return 255
-        else:
-            return 0
+        return 0
 
     def _GetMaxHorizontalRateOffset(self) -> int:
         """Fetch the maximum horizontal rate offset.
@@ -285,8 +280,7 @@ class DisplayRangeDescriptor(Descriptor):
         """
         if (self._block[4] & 0x0C) >> 2:
             return 255
-        else:
-            return 0
+        return 0
 
     def _GetMinHorizontalRateOffset(self) -> int:
         """Fetch the minimum horizontal rate offset.
@@ -296,8 +290,7 @@ class DisplayRangeDescriptor(Descriptor):
         """
         if (self._block[4] >> 2) & 0x03 == 0x03:
             return 255
-        else:
-            return 0
+        return 0
 
     @property
     def min_vertical_rate(self) -> int:
@@ -527,9 +520,9 @@ class DisplayRangeCVT(DisplayRangeDescriptor):
         """
         if self._block[13] == 0x00:
             return None
-        else:  # 8 x [Byte13 + (256 x (Byte 12, bits 1-0))]
-            byte12_end = self._block[12] & 0x03
-            return 8 * (self._block[13] + (256 * byte12_end))
+        # 8 x [Byte13 + (256 x (Byte 12, bits 1-0))]
+        byte12_end = self._block[12] & 0x03
+        return 8 * (self._block[13] + (256 * byte12_end))
 
     @property
     def supported_aspect_ratios(self) -> BoolDict:
@@ -696,8 +689,7 @@ class ColorPoint(object):
         """
         if self._block[4] == 0xFF:
             return None
-        else:
-            return (self._block[4] + 100) / 100
+        return (self._block[4] + 100) / 100
 
 
 class StandardTimingDescriptor(Descriptor):

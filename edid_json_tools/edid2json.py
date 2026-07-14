@@ -21,7 +21,7 @@
 """Parses EDID into python object and outputs Json form of EDID object."""
 
 import sys
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from . import data_block, descriptor, edid, extensions
 from .tools import BytesFromFile
@@ -597,7 +597,7 @@ def BuildExtensions(e: edid.Edid) -> List[Any]:
     return [AnalyzeExtension(e, x + 1) for x in list(range(e.extension_count))]
 
 
-def ParseEdid(filename, ignore_errors=False):
+def ParseEdid(filename, ignore_errors=False) -> Optional[Dict]:
     """Create an EDID object from binary blob and convert to dictionary form.
 
     Args:
@@ -624,3 +624,4 @@ def ParseEdid(filename, ignore_errors=False):
             "Extensions": BuildExtensions(edid_obj),
             "Version": edid_obj.edid_version,
         }
+    return None

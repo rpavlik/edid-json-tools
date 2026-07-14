@@ -407,229 +407,225 @@ def BuildDescriptor(desc_json):
     if atype == "Detailed Timing Descriptor":
         return BuildDtd(desc_json)
 
-    else:
-        d[0] = d[1] = d[2] = 0x00
-        types = {
-            "Display Product Serial Number": 0xFF,
-            "Alphanumeric Data String (ASCII)": 0xFE,
-            "Display Range Limits Descriptor": 0xFD,
-            "Display Product Name": 0xFC,
-            "Color Point Data": 0xFB,
-            "Standard Timing Identifiers": 0xFA,
-            "Display Color Management (DCM) Data": 0xF9,
-            "CVT 3 Byte Timing Codes": 0xF8,
-            "Established Timings III": 0xF7,
-            "Error: Reserved/undefined; do not use": 0x11,
-            "Dummy descriptor": 0x10,
-            # 0x00 to 0x0F according to EDID 1.4 spec
-            "Manufacturer Specified Display Descriptor": 0x00,
+    d[0] = d[1] = d[2] = 0x00
+    types = {
+        "Display Product Serial Number": 0xFF,
+        "Alphanumeric Data String (ASCII)": 0xFE,
+        "Display Range Limits Descriptor": 0xFD,
+        "Display Product Name": 0xFC,
+        "Color Point Data": 0xFB,
+        "Standard Timing Identifiers": 0xFA,
+        "Display Color Management (DCM) Data": 0xF9,
+        "CVT 3 Byte Timing Codes": 0xF8,
+        "Established Timings III": 0xF7,
+        "Error: Reserved/undefined; do not use": 0x11,
+        "Dummy descriptor": 0x10,
+        # 0x00 to 0x0F according to EDID 1.4 spec
+        "Manufacturer Specified Display Descriptor": 0x00,
+    }
+
+    d[3] = types[atype]
+
+    if d[3] in [0xFF, 0xFE, 0xFC]:  # Type of string descriptor
+        d[5:18] = [0x20] * 13  # Padding with 0x20
+        data = desc_json["Data string"]
+        str_len = len(data)
+        d[5 : (5 + str_len)] = list(map(ord, data))
+        if str_len < 13:
+            d[5 + str_len] = 0x0A
+
+    elif atype == "Display Range Limits Descriptor":
+        subtypes = {
+            "Default GTF supported": 0x00,
+            "Range Limits Only - no additional info": 0x01,
+            "Secondary GTF supported - requires default too": 0x02,
+            "CVT supported": 0x04,
+            "Unknown": 0x03,  # Could be 0x03, 0x05+
         }
 
-        d[3] = types[atype]
+        asubtype = desc_json["Subtype"]
+        d[10] = subtypes[asubtype]
 
-        if d[3] in [0xFF, 0xFE, 0xFC]:  # Type of string descriptor
-            d[5:18] = [0x20] * 13  # Padding with 0x20
-            data = desc_json["Data string"]
-            str_len = len(data)
-            d[5 : (5 + str_len)] = list(map(ord, data))
-            if str_len < 13:
-                d[5 + str_len] = 0x0A
+        vmin = int(desc_json["Vertical rate (Hz)"]["Minimum"])
+        vmax = int(desc_json["Vertical rate (Hz)"]["Maximum"])
+        hmin = int(desc_json["Horizontal rate (kHz)"]["Minimum"])
+        hmax = int(desc_json["Horizontal rate (kHz)"]["Maximum"])
 
-        elif atype == "Display Range Limits Descriptor":
-            subtypes = {
-                "Default GTF supported": 0x00,
-                "Range Limits Only - no additional info": 0x01,
-                "Secondary GTF supported - requires default too": 0x02,
-                "CVT supported": 0x04,
-                "Unknown": 0x03,  # Could be 0x03, 0x05+
-            }
+        h = hmax // 256
+        i = hmin // 256
+        j = vmax // 256
+        k = vmin // 256
 
-            asubtype = desc_json["Subtype"]
-            d[10] = subtypes[asubtype]
+        d[4] = (h << 3) + (i << 2) + (j << 1) + k
+        d[5] = vmin % 256
+        d[6] = vmax % 256
+        d[7] = hmin % 256
+        d[8] = hmax % 256
 
-            vmin = int(desc_json["Vertical rate (Hz)"]["Minimum"])
-            vmax = int(desc_json["Vertical rate (Hz)"]["Maximum"])
-            hmin = int(desc_json["Horizontal rate (kHz)"]["Minimum"])
-            hmax = int(desc_json["Horizontal rate (kHz)"]["Maximum"])
+        d[9] = int(desc_json["Pixel clock (MHz)"] / 10)
 
-            h = hmax // 256
-            i = hmin // 256
-            j = vmax // 256
-            k = vmin // 256
+        if asubtype == "Secondary GTF supported - requires default too":
+            d[12] = desc_json["Start break frequency"] // 2
+            d[13] = desc_json["C"] * 2
+            d[14] = desc_json["M"] & 0xFF
+            d[15] = desc_json["M"] >> 8
+            d[16] = desc_json["K"]
+            d[17] = desc_json["J"] * 2
 
-            d[4] = (h << 3) + (i << 2) + (j << 1) + k
-            d[5] = vmin % 256
-            d[6] = vmax % 256
-            d[7] = hmin % 256
-            d[8] = hmax % 256
+        elif asubtype == "CVT supported":
+            v, r = desc_json["CVT Version"].split(".")
+            d[11] = (int(v) << 4) + int(r)
+            apc = int(desc_json["Additional Pixel Clock (MHz)"] / 0.25)
 
-            d[9] = int(desc_json["Pixel clock (MHz)"] / 10)
+            maxap = desc_json["Maximum active pixels"]
+            maxap = int(maxap) // 8 if maxap else 0
 
-            if asubtype == "Secondary GTF supported - requires default too":
-                d[12] = desc_json["Start break frequency"] // 2
-                d[13] = desc_json["C"] * 2
-                d[14] = desc_json["M"] & 0xFF
-                d[15] = desc_json["M"] >> 8
-                d[16] = desc_json["K"]
-                d[17] = desc_json["J"] * 2
+            d[12] = (apc << 2) + (maxap >> 8)
+            d[13] = maxap & 0xFF
 
-            elif asubtype == "CVT supported":
-                v, r = desc_json["CVT Version"].split(".")
-                d[11] = (int(v) << 4) + int(r)
-                apc = int(desc_json["Additional Pixel Clock (MHz)"] / 0.25)
+            ratios = ["4:3 AR", "16:9 AR", "16:10 AR", "5:4 AR", "15:9 AR"]
 
-                maxap = desc_json["Maximum active pixels"]
-                maxap = int(maxap) // 8 if maxap else 0
+            d[14] = (
+                _BuildBitsFromOptions(ratios, desc_json["Supported aspect ratios"]) << 3
+            )
 
-                d[12] = (apc << 2) + (maxap >> 8)
-                d[13] = maxap & 0xFF
+            par = ratios.index(desc_json["Preferred aspect ratio"])
 
-                ratios = ["4:3 AR", "16:9 AR", "16:10 AR", "5:4 AR", "15:9 AR"]
+            cvt_blank = desc_json["CVT blanking support"]
+            rcvt = 1 if cvt_blank["Reduced CVT Blanking"] else 0
+            scvt = 1 if cvt_blank["Standard CVT Blanking"] else 0
+            d[15] = (par << 5) + (rcvt << 4) + (scvt << 3)
 
-                d[14] = (
-                    _BuildBitsFromOptions(ratios, desc_json["Supported aspect ratios"])
-                    << 3
-                )
-
-                par = ratios.index(desc_json["Preferred aspect ratio"])
-
-                cvt_blank = desc_json["CVT blanking support"]
-                rcvt = 1 if cvt_blank["Reduced CVT Blanking"] else 0
-                scvt = 1 if cvt_blank["Standard CVT Blanking"] else 0
-                d[15] = (par << 5) + (rcvt << 4) + (scvt << 3)
-
-                scalings = [
-                    "Horizontal Shrink",
-                    "Horizontal Stretch",
-                    "Vertical Shrink",
-                    "Vertical Stretch",
-                ]
-
-                d[16] = (
-                    _BuildBitsFromOptions(
-                        scalings, desc_json["Display scaling support"]
-                    )
-                    << 4
-                )
-                d[17] = desc_json["Preferred vertical refresh (Hz)"]
-
-            else:  # Not Secondary GTF or CVT supported
-                d[11] = 0x0A
-                d[12:18] = [0x20] * 6
-
-        elif atype == "Manufacturer Specified Display Descriptor":
-            d[5:18] = desc_json["Blob"]
-            # Update tag number if known
-            if "Tag" in desc_json:
-                d[3] = desc_json["Tag"]
-
-        elif atype == "Established Timings III":
-            est_timings = [
-                [0x80000000000, "640 x 350 @ 85 Hz"],
-                [0x40000000000, "640 x 400 @ 85 Hz"],
-                [0x20000000000, "720 x 400 @ 85 Hz"],
-                [0x10000000000, "640 x 480 @ 85 Hz"],
-                [0x8000000000, "848 x 480 @ 60 Hz"],
-                [0x4000000000, "800 x 600 @ 85 Hz"],
-                [0x2000000000, "1024 x 768 @ 85 Hz"],
-                [0x1000000000, "1152 x 864 @ 75 Hz"],
-                [0x800000000, "1280 x 768 @ 60 Hz (RB)"],
-                [0x400000000, "1280 x 768 @ 60 Hz"],
-                [0x200000000, "1280 x 768 @ 75 Hz"],
-                [0x100000000, "1280 x 768 @ 85 Hz"],
-                [0x80000000, "1280 x 960 @ 60 Hz"],
-                [0x40000000, "1280 x 960 @ 85 Hz"],
-                [0x20000000, "1280 x 1024 @ 60 Hz"],
-                [0x10000000, "1280 x 1024 @ 85 Hz"],
-                [0x8000000, "1360 x 768 @ 60 Hz"],
-                [0x4000000, "1440 x 900 @ 60 Hz (RB)"],
-                [0x2000000, "1440 x 900 @ 60 Hz"],
-                [0x1000000, "1440 x 900 @ 75 Hz"],
-                [0x800000, "1440 x 900 @ 85 Hz"],
-                [0x400000, "1400 x 1050 @ 60 Hz (RB)"],
-                [0x200000, "1400 x 1050 @ 60 Hz"],
-                [0x100000, "1400 x 1050 @ 75 Hz"],
-                [0x80000, "1400 x 1050 @ 85 Hz"],
-                [0x40000, "1680 x 1050 @ 60 Hz (RB)"],
-                [0x20000, "1680 x 1050 @ 60 Hz"],
-                [0x10000, "1680 x 1050 @ 75 Hz"],
-                [0x8000, "1680 x 1050 @ 85 Hz"],
-                [0x4000, "1600 x 1200 @ 60 Hz"],
-                [0x2000, "1600 x 1200 @ 65 Hz"],
-                [0x1000, "1600 x 1200 @ 70 Hz"],
-                [0x800, "1600 x 1200 @ 75 Hz"],
-                [0x400, "1600 x 1200 @ 85 Hz"],
-                [0x200, "1792 x 1344 @ 60 Hz"],
-                [0x100, "1792 x 1344 @ 75 Hz"],
-                [0x80, "1856 x 1392 @ 60 Hz"],
-                [0x40, "1856 x 1392 @ 75 Hz"],
-                [0x20, "1920 x 1200 @ 60 Hz (RB)"],
-                [0x10, "1920 x 1200 @ 60 Hz"],
-                [0x8, "1920 x 1200 @ 75 Hz"],
-                [0x4, "1920 x 1200 @ 85 Hz"],
-                [0x2, "1920 x 1440 @ 60 Hz"],
-                [0x1, "1920 x 1440 @ 75 Hz"],
+            scalings = [
+                "Horizontal Shrink",
+                "Horizontal Stretch",
+                "Vertical Shrink",
+                "Vertical Stretch",
             ]
 
-            sum_bits = 0
+            d[16] = (
+                _BuildBitsFromOptions(scalings, desc_json["Display scaling support"])
+                << 4
+            )
+            d[17] = desc_json["Preferred vertical refresh (Hz)"]
 
-            for x, s in est_timings:
-                if desc_json["Established Timings"][s]:
-                    sum_bits += x
+        else:  # Not Secondary GTF or CVT supported
+            d[11] = 0x0A
+            d[12:18] = [0x20] * 6
 
-            sum_bits <<= 4
+    elif atype == "Manufacturer Specified Display Descriptor":
+        d[5:18] = desc_json["Blob"]
+        # Update tag number if known
+        if "Tag" in desc_json:
+            d[3] = desc_json["Tag"]
 
-            d[6] = sum_bits >> 40
-            d[7] = (sum_bits >> 32) & 0xFF
-            d[8] = (sum_bits >> 24) & 0xFF
-            d[9] = (sum_bits >> 16) & 0xFF
-            d[10] = (sum_bits >> 8) & 0xFF
-            d[11] = sum_bits & 0xFF
+    elif atype == "Established Timings III":
+        est_timings = [
+            [0x80000000000, "640 x 350 @ 85 Hz"],
+            [0x40000000000, "640 x 400 @ 85 Hz"],
+            [0x20000000000, "720 x 400 @ 85 Hz"],
+            [0x10000000000, "640 x 480 @ 85 Hz"],
+            [0x8000000000, "848 x 480 @ 60 Hz"],
+            [0x4000000000, "800 x 600 @ 85 Hz"],
+            [0x2000000000, "1024 x 768 @ 85 Hz"],
+            [0x1000000000, "1152 x 864 @ 75 Hz"],
+            [0x800000000, "1280 x 768 @ 60 Hz (RB)"],
+            [0x400000000, "1280 x 768 @ 60 Hz"],
+            [0x200000000, "1280 x 768 @ 75 Hz"],
+            [0x100000000, "1280 x 768 @ 85 Hz"],
+            [0x80000000, "1280 x 960 @ 60 Hz"],
+            [0x40000000, "1280 x 960 @ 85 Hz"],
+            [0x20000000, "1280 x 1024 @ 60 Hz"],
+            [0x10000000, "1280 x 1024 @ 85 Hz"],
+            [0x8000000, "1360 x 768 @ 60 Hz"],
+            [0x4000000, "1440 x 900 @ 60 Hz (RB)"],
+            [0x2000000, "1440 x 900 @ 60 Hz"],
+            [0x1000000, "1440 x 900 @ 75 Hz"],
+            [0x800000, "1440 x 900 @ 85 Hz"],
+            [0x400000, "1400 x 1050 @ 60 Hz (RB)"],
+            [0x200000, "1400 x 1050 @ 60 Hz"],
+            [0x100000, "1400 x 1050 @ 75 Hz"],
+            [0x80000, "1400 x 1050 @ 85 Hz"],
+            [0x40000, "1680 x 1050 @ 60 Hz (RB)"],
+            [0x20000, "1680 x 1050 @ 60 Hz"],
+            [0x10000, "1680 x 1050 @ 75 Hz"],
+            [0x8000, "1680 x 1050 @ 85 Hz"],
+            [0x4000, "1600 x 1200 @ 60 Hz"],
+            [0x2000, "1600 x 1200 @ 65 Hz"],
+            [0x1000, "1600 x 1200 @ 70 Hz"],
+            [0x800, "1600 x 1200 @ 75 Hz"],
+            [0x400, "1600 x 1200 @ 85 Hz"],
+            [0x200, "1792 x 1344 @ 60 Hz"],
+            [0x100, "1792 x 1344 @ 75 Hz"],
+            [0x80, "1856 x 1392 @ 60 Hz"],
+            [0x40, "1856 x 1392 @ 75 Hz"],
+            [0x20, "1920 x 1200 @ 60 Hz (RB)"],
+            [0x10, "1920 x 1200 @ 60 Hz"],
+            [0x8, "1920 x 1200 @ 75 Hz"],
+            [0x4, "1920 x 1200 @ 85 Hz"],
+            [0x2, "1920 x 1440 @ 60 Hz"],
+            [0x1, "1920 x 1440 @ 75 Hz"],
+        ]
 
-        elif atype == "Color Point Data":
-            cps = desc_json["Color Points"]  # List of dicts
+        sum_bits = 0
 
-            start = 5
-            for cp in cps:
-                d[start] = cp["Index number"]
-                wx = cp["White point coordinates"]["x"]
-                wy = cp["White point coordinates"]["y"]
-                d[start + 1] = ((wx & 0x03) << 2) + (wy & 0x03)
-                d[start + 2] = wx >> 2
-                d[start + 3] = wy >> 2
-                gamma = cp["Gamma"]
-                d[start + 4] = int((gamma * 100) - 100) if gamma else 0xFF
-                start += 5
+        for x, s in est_timings:
+            if desc_json["Established Timings"][s]:
+                sum_bits += x
 
-            # If there's only one color point, the 2nd remains all 0x00
+        sum_bits <<= 4
 
-        elif atype == "Standard Timing Identifiers":
-            sts = desc_json["Standard Timings"]
-            for x in range(6):
-                d[5 + (x * 2) : 7 + (x * 2)] = BuildSt(sts[x])
+        d[6] = sum_bits >> 40
+        d[7] = (sum_bits >> 32) & 0xFF
+        d[8] = (sum_bits >> 24) & 0xFF
+        d[9] = (sum_bits >> 16) & 0xFF
+        d[10] = (sum_bits >> 8) & 0xFF
+        d[11] = sum_bits & 0xFF
 
-            d[17] = 0x0A
+    elif atype == "Color Point Data":
+        cps = desc_json["Color Points"]  # List of dicts
 
-        elif atype == "Display Color Management (DCM) Data":
-            d[5] = 0x03
-            d[6] = desc_json["Red a3"] & 0xFF
-            d[7] = desc_json["Red a3"] >> 8
-            d[8] = desc_json["Red a2"] & 0xFF
-            d[9] = desc_json["Red a2"] >> 8
-            d[10] = desc_json["Green a3"] & 0xFF
-            d[11] = desc_json["Green a3"] >> 8
-            d[12] = desc_json["Green a2"] & 0xFF
-            d[13] = desc_json["Green a2"] >> 8
-            d[14] = desc_json["Blue a3"] & 0xFF
-            d[15] = desc_json["Blue a3"] >> 8
-            d[16] = desc_json["Blue a2"] & 0xFF
-            d[17] = desc_json["Blue a2"] >> 8
+        start = 5
+        for cp in cps:
+            d[start] = cp["Index number"]
+            wx = cp["White point coordinates"]["x"]
+            wy = cp["White point coordinates"]["y"]
+            d[start + 1] = ((wx & 0x03) << 2) + (wy & 0x03)
+            d[start + 2] = wx >> 2
+            d[start + 3] = wy >> 2
+            gamma = cp["Gamma"]
+            d[start + 4] = int((gamma * 100) - 100) if gamma else 0xFF
+            start += 5
 
-        elif atype == "CVT 3 Byte Timing Codes":
-            d[5] = 0x01
-            cvts = desc_json["Coordinated Video Timings"]
-            for x in range(len(cvts)):  # Up to 4
-                d[6 + (x * 3) : 9 + (x * 3)] = BuildCvt(cvts[x])
+        # If there's only one color point, the 2nd remains all 0x00
+
+    elif atype == "Standard Timing Identifiers":
+        sts = desc_json["Standard Timings"]
+        for x in range(6):
+            d[5 + (x * 2) : 7 + (x * 2)] = BuildSt(sts[x])
+
+        d[17] = 0x0A
+
+    elif atype == "Display Color Management (DCM) Data":
+        d[5] = 0x03
+        d[6] = desc_json["Red a3"] & 0xFF
+        d[7] = desc_json["Red a3"] >> 8
+        d[8] = desc_json["Red a2"] & 0xFF
+        d[9] = desc_json["Red a2"] >> 8
+        d[10] = desc_json["Green a3"] & 0xFF
+        d[11] = desc_json["Green a3"] >> 8
+        d[12] = desc_json["Green a2"] & 0xFF
+        d[13] = desc_json["Green a2"] >> 8
+        d[14] = desc_json["Blue a3"] & 0xFF
+        d[15] = desc_json["Blue a3"] >> 8
+        d[16] = desc_json["Blue a2"] & 0xFF
+        d[17] = desc_json["Blue a2"] >> 8
+
+    elif atype == "CVT 3 Byte Timing Codes":
+        d[5] = 0x01
+        cvts = desc_json["Coordinated Video Timings"]
+        for x in range(len(cvts)):  # Up to 4
+            d[6 + (x * 3) : 9 + (x * 3)] = BuildCvt(cvts[x])
 
     return d
 

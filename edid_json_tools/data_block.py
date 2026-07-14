@@ -548,8 +548,7 @@ class AudioDescriptorExtendedMpeg4(ShortAudioDescriptor):
             return "1024"
         if self._block[2] & 0x2:
             return "960"
-        else:
-            return "Undefined"
+        return "Undefined"
         # TODO(chromium:395947): Check if exactly one bit is set.
 
     @property
@@ -563,10 +562,9 @@ class AudioDescriptorExtendedMpeg4(ShortAudioDescriptor):
         if self.ext_code in (0x08, 0x0A):
             if self._block[2] & 0x1:
                 return MPS_EXPLICIT
-            else:
-                return MPS_IMPLICIT
-        else:  # for 4-6
-            return None
+            return MPS_IMPLICIT
+        # for 4-6
+        return None
 
 
 class AudioDescriptorExtendedDra(ShortAudioDescriptor):
@@ -652,8 +650,7 @@ class ShortVideoDescriptor(object):
             return SVD_NONNATIVE
         if 129 <= self._byte <= 192:
             return SVD_NATIVE
-        else:
-            return SVD_UNSPECIFIED
+        return SVD_UNSPECIFIED
 
     @property
     def vic(self) -> int:
@@ -1073,8 +1070,7 @@ class InfoFrameDataBlock(DataBlock):
             return InfoFrameDescriptor(new_block, INFO_FRAME_TYPE_MPEG_SOURCE)
         if code == 0x06:
             return InfoFrameDescriptor(new_block, INFO_FRAME_TYPE_NTSC_VBI)
-        else:
-            return InfoFrameDescriptor(new_block, INFO_FRAME_TYPE_UNKNOWN)
+        return InfoFrameDescriptor(new_block, INFO_FRAME_TYPE_UNKNOWN)
 
 
 class InfoFrameDescriptor(object):

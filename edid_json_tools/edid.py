@@ -105,8 +105,7 @@ class Edid(object):
         """
         if self._edid[0x10] in [0, 255]:
             return None
-        else:
-            return self._edid[0x10]
+        return self._edid[0x10]
 
     @property
     def manufacturing_year(self) -> Optional[int]:
@@ -117,8 +116,7 @@ class Edid(object):
         """
         if self._edid[0x10] == 255:
             return None
-        else:
-            return self._edid[0x11] + 1990
+        return self._edid[0x11] + 1990
 
     @property
     def model_year(self) -> Optional[int]:
@@ -131,8 +129,7 @@ class Edid(object):
         """
         if self._edid[0x10] == 255:
             return self._edid[0x11] + 1990
-        else:
-            return None
+        return None
 
     @property
     def extension_count(self) -> int:

@@ -24,6 +24,8 @@ select = [
     "C4",
     # flake8-pie
     "PIE",
+    # flake8-return
+    "RET",
     # isort
     "I",
 ]

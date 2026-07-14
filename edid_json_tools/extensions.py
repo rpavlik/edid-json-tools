@@ -48,22 +48,21 @@ def GetExtension(edid: ByteList, index: int, version: EdidVersion):
 
     if tag == 0x00:
         return TimingExtension(block)
-    elif tag == 0x02:
+    if tag == 0x02:
         return CEAExtension(block, version)
-    elif tag == 0x10:
+    if tag == 0x10:
         return VTBExtension(block, version)
-    elif tag == 0x40:
+    if tag == 0x40:
         return DisplayInformationExtension(block)
-    elif tag == 0x50:
+    if tag == 0x50:
         return LocalizedStringExtension(block)
-    elif tag == 0x60:
+    if tag == 0x60:
         return DPVLExtension(block)
-    elif tag == 0xF0:
+    if tag == 0xF0:
         return ExtensionBlockMap(block)
-    elif tag == 0xFF:
+    if tag == 0xFF:
         return ManufacturerExtension(block)
-    else:
-        return Extension(block, TYPE_UNKNOWN)
+    return Extension(block, TYPE_UNKNOWN)
 
 
 class Extension(object):
@@ -287,8 +286,7 @@ class CEAExtension(Extension):
                     found,
                 )
             ]
-        else:
-            return None
+        return None
 
 
 class VTBExtension(Extension):

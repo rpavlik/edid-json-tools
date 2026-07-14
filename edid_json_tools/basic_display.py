@@ -57,7 +57,7 @@ class BasicDisplay(object):
 
         if cbd == 0x00:
             return None
-        elif cbd == 0x01:
+        if cbd == 0x01:
             bits = 6
         elif cbd == 0x02:
             bits = 8
@@ -188,8 +188,7 @@ class BasicDisplay(object):
         """
         if self._edid[0x16]:
             return self._edid[0x15]
-        else:
-            return None
+        return None
 
     @property
     def vertical_dim(self):
@@ -200,8 +199,7 @@ class BasicDisplay(object):
         """
         if self._edid[0x15]:
             return self._edid[0x16]
-        else:
-            return None
+        return None
 
     @property
     def aspect_ratio_portrait(self):
@@ -213,8 +211,7 @@ class BasicDisplay(object):
         if not self._edid[0x15] and self._edid[0x16]:
             aspect_ratio = 100.0 / (self._edid[0x16] + 99.0)
             return "%.2f : 1" % aspect_ratio
-        else:
-            return None
+        return None
 
     @property
     def aspect_ratio_landscape(self):
@@ -226,8 +223,7 @@ class BasicDisplay(object):
         if not self._edid[0x16] and self._edid[0x15]:
             aspect_ratio = (self._edid[0x15] + 99.0) / 100.0
             return "%.2f : 1" % aspect_ratio
-        else:
-            return None
+        return None
 
     @property
     def display_gamma(self):

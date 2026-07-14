@@ -29,15 +29,14 @@ def _LengthError(e: ByteList):
     """
     if not len(e) % 128:
         return None
-    else:
-        return [
-            error.Error(
-                "Overall EDID",
-                "Invalid length",
-                "Length % 128 = 0",
-                "Length %% 128 = %d" % (len(e) % 128),
-            )
-        ]
+    return [
+        error.Error(
+            "Overall EDID",
+            "Invalid length",
+            "Length % 128 = 0",
+            "Length %% 128 = %d" % (len(e) % 128),
+        )
+    ]
 
 
 def _HeaderError(e: ByteList):
@@ -57,12 +56,9 @@ def _HeaderError(e: ByteList):
 
     if e[0:8] == magic_header:
         return None
-    else:
-        return [
-            error.Error(
-                "Bytes 0-7", "Incorrect EDID header", "00FF FFFF FFFF FF00", header
-            )
-        ]
+    return [
+        error.Error("Bytes 0-7", "Incorrect EDID header", "00FF FFFF FFFF FF00", header)
+    ]
 
     return None
 
@@ -178,7 +174,7 @@ def _ExtensionErrors(edid: ByteList, version: EdidVersion):
     return errors
 
 
-def _WeekError(edid: ByteList):
+def _WeekError(edid: ByteList) -> error.OptionalErrorList:
     """Check if the manufacturer week is in the proper range of 1-54.
 
     Args:
@@ -196,6 +192,7 @@ def _WeekError(edid: ByteList):
                 "Week %d" % edid[0x10],
             )
         ]
+    return None
 
 
 def GetErrors(edid: ByteList, version: EdidVersion) -> List[error.Error]:
