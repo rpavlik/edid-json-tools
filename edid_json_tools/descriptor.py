@@ -11,6 +11,7 @@
 18-byte descriptors are found both in the base EDID and in extensions.
 The various types of Descriptor all inherit the basic Descriptor object.
 """
+
 import typing
 from collections import OrderedDict
 from typing import Final, List, Optional, Union
@@ -623,7 +624,7 @@ class ColorPointDescriptor(Descriptor):
         """
         return ColorPoint(self._block, 10)
 
-    def CheckErrors(self, index: int = None) -> ErrorList:
+    def CheckErrors(self, index: Optional[int] = None) -> ErrorList:
         """Check the ColorPointDescriptor for errors.
 
         Args:
@@ -945,7 +946,7 @@ class DummyDescriptor(Descriptor):
         Descriptor.__init__(self, block, TYPE_DUMMY)
 
     # First 5 bytes of Dummy Descriptor should be 0x00
-    def CheckErrors(self, index: int = None):
+    def CheckErrors(self, index: Optional[int] = None):
         """Check the DummyDescriptor for errors.
 
         Args:
