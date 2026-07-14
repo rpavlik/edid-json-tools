@@ -5,6 +5,7 @@
 # Ignore all hidden files by default
 .*
 !.gitignore
+!.mailmap
 !.editorconfig
 !.reuse
 !.pre-commit-config.yaml
