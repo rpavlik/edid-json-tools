@@ -2,16 +2,17 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
-# These are requirements for better development.
 
+# for command-line programs
+click
+
+# These are requirements for better development.
 black
 flake8
 mypy
 pre-commit
 isort
 
-# for command-line programs
-click
-
-# typed stubs for click
+# typed stubs
 types-click
+types-setuptools
