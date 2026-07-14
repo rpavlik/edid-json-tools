@@ -16,7 +16,6 @@
 
 # The body of this script has been moved into the module itself.
 
-
 import sys
 
 from edid_json_tools.json2edid import JsonToBinary

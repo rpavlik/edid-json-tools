@@ -379,7 +379,7 @@ class DisplayRangeDescriptor(Descriptor):
             errors.append(
                 error.Error(
                     loc,
-                    "Maximum horizontal rate less than " "minimum",
+                    "Maximum horizontal rate less than minimum",
                     "",
                     "Max hor: %d\tMin hor: %d" % (max_hor, min_hor),
                 )
@@ -399,7 +399,7 @@ class DisplayRangeDescriptor(Descriptor):
         if self._block[10] not in val:
             my_err = error.Error(
                 loc + "- byte 10",
-                "Invalid value for Video Timing " "Support Flags",
+                "Invalid value for Video Timing Support Flags",
                 val_str,
                 "0x%02X" % self._block[10],
             )
@@ -639,7 +639,7 @@ class ColorPointDescriptor(Descriptor):
             errors.append(
                 error.Error(
                     "ColorPointDescriptor",
-                    "First color point is " "invalid",
+                    "First color point is invalid",
                     "Non-0 value",
                     0x00,
                 )
@@ -1188,7 +1188,6 @@ class DetailedTimingDescriptor(Descriptor):
         # Bits 4-1 | Sync signal definitions:
         sync_bits = (self._block[17] >> 1) & 0x0F
         if not sync_bits & 0x08:  # Analog sync signal definitions
-
             if not sync_bits & 0x04:
                 s["Type"] = "Analog Composite Sync"
             else:

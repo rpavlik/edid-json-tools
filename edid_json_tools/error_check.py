@@ -81,7 +81,6 @@ def _ChecksumError(e: ByteList):
     cs_errors = []
 
     for x in range(0, len(e), 128):
-
         my_sum = sum(e[x : (x + 128)])
         if my_sum % 256:
             block_id = x / 128
@@ -111,7 +110,6 @@ def _DescriptorErrors(edid: ByteList, version: EdidVersion):
     errors = []
 
     for x in range(0, 4):
-
         desc = descriptor.GetDescriptor(edid, base + (x * 18), version)
 
         desc_errors = desc.CheckErrors(x + 1)
@@ -164,7 +162,7 @@ def _ExtensionErrors(edid: ByteList, version: EdidVersion):
         errors.append(
             error.Error(
                 "Extensions",
-                "Extension count does not match " "EDID length",
+                "Extension count does not match EDID length",
                 "%d extensions" % num_ext,
                 "%d extensions" % ((len(edid) / 128) - 1),
             )
@@ -193,7 +191,7 @@ def _WeekError(edid: ByteList):
         return [
             error.Error(
                 "Manufacturer/Vendor section- byte 0x10",
-                "Invalid week" " value",
+                "Invalid week value",
                 "Week in range 1-54",
                 "Week %d" % edid[0x10],
             )

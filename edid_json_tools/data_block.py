@@ -23,9 +23,7 @@ DB_TYPE_AUDIO = "Audio Data Block"
 DB_TYPE_VIDEO = "Video Data Block"
 DB_TYPE_VENDOR_SPECIFIC = "Vendor-Specific Data Block"
 DB_TYPE_SPEAKER_ALLOCATION = "Speaker Allocation Block"
-DB_TYPE_VESA_DISPLAY_TRANSFER_CHAR = (
-    "VESA Display Transfer Characteristic " "Data Block"
-)
+DB_TYPE_VESA_DISPLAY_TRANSFER_CHAR = "VESA Display Transfer Characteristic Data Block"
 DB_TYPE_RESERVED = "Reserved block"
 DB_TYPE_VIDEO_CAPABILITY = "Video Capability Data Block"
 DB_TYPE_VENDOR_SPECIFIC_VIDEO = "Vendor-Specific Video Data Block"
@@ -106,7 +104,7 @@ SPEAKER_LFE = "LFE"
 SPEAKER_FRONT_CENTER = "Front Center"
 SPEAKER_REAR_LEFT_RIGHT = "Rear Left / Rear Right"
 SPEAKER_REAR_CENTER = "Rear Center"
-SPEAKER_FRONT_LEFT_CENTER_RIGHT_CENTER = "Front Left Center / " "Front Right Center"
+SPEAKER_FRONT_LEFT_CENTER_RIGHT_CENTER = "Front Left Center / Front Right Center"
 SPEAKER_REAR_LEFT_CENTER_RIGHT_CENTER = "Rear Left Center / Rear Right Center"
 SPEAKER_FRONT_LEFT_RIGHT_WIDE = "Front Left Wide / Front Right Wide"
 SPEAKER_FRONT_LEFT_RIGHT_HIGH = "Front Left High / Front Right High"
@@ -127,7 +125,7 @@ SPEAKERS = (
     (0x400, SPEAKER_FRONT_CENTER_HIGH),
 )
 
-COLORIMETRY_XVYCC601 = "Standard Definition Colorimetry based on IEC " "61966-2-4"
+COLORIMETRY_XVYCC601 = "Standard Definition Colorimetry based on IEC 61966-2-4"
 COLORIMETRY_XVYCC709 = "High Definition Colorimetry based on IEC 61966-2-4"
 COLORIMETRY_SYCC601 = "Colorimetry based on IEC 61966-2-1/Amendment 1"
 COLORIMETRY_ADOBE_YCC601 = "Colorimetry based on IEC 61966-2-5, Annex A"

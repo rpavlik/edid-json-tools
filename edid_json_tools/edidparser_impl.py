@@ -24,7 +24,6 @@ The implementation parts of the edidparser command, which parses EDID and
 does other EDID analysis.
 """
 
-
 from enum import IntEnum
 from typing import Any, Collection, List, Tuple, Union
 
@@ -282,7 +281,6 @@ def GetEstablishedTiming(e: edid.Edid, mode: Mode, raw_mode: RawMode):
         print("  None")
     else:
         for r in results:
-
             if "@" in r:
                 res, hz = r.split("@")
                 print("  %-12s @%s" % (res, hz))
@@ -348,7 +346,6 @@ def GetDescriptorBlocks(e: edid.Edid, mode: Mode, raw_mode: RawMode):
     descs = e.descriptors
 
     for x in range(0, len(descs)):
-
         prefix = "Block #%d: " % (x + 1)
         PrintBlockAnalysis(e, descs[x], mode, raw_mode, x, prefix)
         PrintSpace(mode)
@@ -372,7 +369,6 @@ def PrintBlockAnalysis(e: edid.Edid, desc, mode: Mode, raw_mode, start, prefix=N
     print("%s%s" % (prefix, desc.type))
 
     if mode == Mode.LAYOUT_MODE:
-
         if desc.type == descriptor.TYPE_DISPLAY_RANGE_LIMITS:
             print("  Subtype: %s" % desc.subtype)
 
@@ -390,11 +386,9 @@ def PrintBlockAnalysis(e: edid.Edid, desc, mode: Mode, raw_mode, start, prefix=N
         descriptor.TYPE_ALPHANUM_DATA_STRING,
         descriptor.TYPE_DISPLAY_PRODUCT_NAME,
     ):
-
         print("  Data string:\t%s" % desc.string)
 
     elif desc.type == descriptor.TYPE_DISPLAY_RANGE_LIMITS:
-
         print("Subtype:", desc.subtype)
 
         vert_rate = "%2d - %d" % (desc.min_vertical_rate, desc.max_vertical_rate)
@@ -409,7 +403,6 @@ def PrintBlockAnalysis(e: edid.Edid, desc, mode: Mode, raw_mode, start, prefix=N
         PrintList(info, mode, "  %-35s %s")
 
         if desc.subtype == descriptor.SUBTYPE_DISPLAY_RANGE_CVT:
-
             ss = []
             for ar in tools.ListTrueOnly(desc.supported_aspect_ratios):
                 ss.append("  %-35s %s" % ("", ar))
@@ -439,7 +432,6 @@ def PrintBlockAnalysis(e: edid.Edid, desc, mode: Mode, raw_mode, start, prefix=N
             PrintList(cvt_info, mode, "  %-35s %s")
 
         elif desc.subtype == descriptor.SUBTYPE_DISPLAY_RANGE_2ND_GTF:
-
             gtf_info = [
                 ["Start break frequency:", desc.start_break_freq],
                 ["C:", desc.c],
@@ -458,13 +450,11 @@ def PrintBlockAnalysis(e: edid.Edid, desc, mode: Mode, raw_mode, start, prefix=N
         PrintCp(cp_2, 2)
 
     elif desc.type == descriptor.TYPE_STANDARD_TIMING:
-
         sts = desc.standard_timings
         for st in sts:
             PrintSt(st)
 
     elif desc.type == descriptor.TYPE_DISPLAY_COLOR_MANAGEMENT:
-
         dcm_info = [
             ["Red a3:", desc.red_a3],
             ["Red a2:", desc.red_a2],
@@ -477,13 +467,11 @@ def PrintBlockAnalysis(e: edid.Edid, desc, mode: Mode, raw_mode, start, prefix=N
         PrintList(dcm_info, mode, "  %-12s %s")
 
     elif desc.type == descriptor.TYPE_CVT_TIMING:
-
         cvts = desc.coordinated_video_timings
         for cvt in cvts:
             PrintCvt(cvt)
 
     elif desc.type == descriptor.TYPE_ESTABLISHED_TIMINGS_III:
-
         print(tools.ListTrueOnly(desc.established_timings))
 
     elif desc.type == descriptor.TYPE_MANUFACTURER_SPECIFIED:
@@ -566,7 +554,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
         print("Tag: %d" % ext.tag)
 
     if ext.type == extensions.TYPE_CEA_861:
-
         assert isinstance(ext, extensions.CEAExtension)
         dbs = ext.data_blocks
         dtds = ext.dtds
@@ -639,7 +626,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
                 assert isinstance(db, data_block.AudioBlock)
                 ads = db.short_audio_descriptors
                 for x in range(0, len(ads)):
-
                     ad = ads[x]
                     print("Short audio descriptor #%d" % (x + 1))
 
@@ -700,7 +686,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
                 print("  %-20s %s" % ("Data payload:", db.payload))
 
             elif db.type == data_block.DB_TYPE_COLORIMETRY:
-
                 assert isinstance(db, data_block.ColorimetryDataBlock)
                 print("  Colorimetry:")
                 for c in tools.ListTrueOnly(db.colorimetry):
@@ -708,7 +693,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
                 print("  %-20s %s" % ("Metadata:", db.metadata))
 
             elif db.type == data_block.DB_TYPE_VIDEO_CAPABILITY:
-
                 assert isinstance(db, data_block.VideoCapabilityBlock)
                 vc_info = [
                     ("YCC Quantization range:", db.selectable_quantization_range_ycc),
@@ -721,7 +705,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
                 PrintList(vc_info, mode, "  %-35s %s")
 
             elif db.type == data_block.DB_TYPE_INFO_FRAME:
-
                 assert isinstance(db, data_block.InfoFrameDataBlock)
                 if_proc = db.if_processing
                 vsifs = db.vsifs
@@ -734,7 +717,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
                     )
 
                 for vsif in vsifs:
-
                     if mode == Mode.NORMAL_MODE:
                         v_type = vsif.type
                         print("  %-25s %s" % ("Type:", v_type))
@@ -785,7 +767,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
             PrintSpace(mode)
 
     elif ext.type == extensions.TYPE_VIDEO_TIMING_BLOCK:
-
         assert isinstance(ext, extensions.VTBExtension)
         dtbs = ext.dtbs
         cvts = ext.cvts
@@ -826,7 +807,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
         PrintList(ext_basic, mode, "%-35s %s")
 
         for dtb in dtbs:
-
             print("\n\nDTD")
             if raw_mode:
                 PrintRawRange(dtb.GetBlock(), raw_mode)
@@ -845,7 +825,6 @@ def AnalyzeExtension(e: edid.Edid, mode: Mode, raw_mode, block_num=1):
             PrintSt(st)
 
     elif ext.type == extensions.TYPE_EXTENSION_BLOCK_MAP:
-
         assert isinstance(ext, extensions.ExtensionBlockMap)
         if raw_mode:
             PrintRawRange(ext.GetBlock(), raw_mode)
@@ -996,7 +975,6 @@ def PrintDecEdid(e):
     data = e.GetData()
     dec_rows = len(data) // 8
     for x in range(0, dec_rows):
-
         start = 8 * x
         row = "%04d %04d  " * 4 % tuple(data[start : start + 8])
         line_range = "%d-%d:" % (start, start + 7)

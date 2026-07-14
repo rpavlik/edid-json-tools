@@ -76,7 +76,6 @@ def GetBasicDisplay(e: edid.Edid) -> Dict[str, Any]:
     }
 
     if bd.video_input_type:  # Digital
-
         jdict.update(
             {
                 "Color Bit Depth": bd.color_bit_depth,
@@ -85,7 +84,6 @@ def GetBasicDisplay(e: edid.Edid) -> Dict[str, Any]:
         )
 
     elif not bd.video_input_type:  # Analog
-
         jdict.update(
             {
                 "Video white and sync levels": bd.signal_level,
@@ -103,7 +101,7 @@ def GetBasicDisplay(e: edid.Edid) -> Dict[str, Any]:
     else:
         max_dim = _XYDict(bd.horizontal_dim, bd.vertical_dim)
 
-    pix_str = "Preferred timing includes native timing pixel format and refresh " "rate"
+    pix_str = "Preferred timing includes native timing pixel format and refresh rate"
 
     jdict.update(
         {
@@ -392,7 +390,6 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
         dblist = []
 
         for db in ext.data_blocks:
-
             # TODO have the data blocks describe themselves,
             # instead of this structure of manual typing
             dbdict: Dict[str, Any] = {"Type": db.type}
@@ -411,7 +408,6 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
 
                 adlist = []
                 for ad in db.short_audio_descriptors:
-
                     addict = {
                         "Type": ad.type,
                         "Max channel count": ad.max_channel_count,
@@ -446,7 +442,6 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
                 dbdict["Short audio descriptors"] = adlist
 
             elif db.type == data_block.DB_TYPE_SPEAKER_ALLOCATION:
-
                 assert isinstance(db, data_block.SpeakerBlock)
                 dbdict["Speaker allocation"] = db.allocation
 
@@ -455,19 +450,16 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
                 data_block.DB_TYPE_VENDOR_SPECIFIC_AUDIO,
                 data_block.DB_TYPE_VENDOR_SPECIFIC_VIDEO,
             ):
-
                 assert isinstance(db, data_block.VendorSpecificBlock)
                 dbdict["IEEE OUI"] = db.ieee_oui
                 dbdict["Data payload"] = db.payload
 
             elif db.type == data_block.DB_TYPE_COLORIMETRY:
-
                 assert isinstance(db, data_block.ColorimetryDataBlock)
                 dbdict["Colorimetry"] = db.colorimetry
                 dbdict["Metadata"] = db.metadata
 
             elif db.type == data_block.DB_TYPE_VIDEO_CAPABILITY:
-
                 assert isinstance(db, data_block.VideoCapabilityBlock)
                 dbdict.update(
                     {
@@ -480,7 +472,6 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
                 )
 
             elif db.type == data_block.DB_TYPE_INFO_FRAME:
-
                 assert isinstance(db, data_block.InfoFrameDataBlock)
                 if_proc = db.if_processing
                 dbdict["InfoFrame Processing Descriptor"] = {
@@ -489,7 +480,6 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
 
                 vsiflist = []
                 for vsif in db.vsifs:
-
                     vsifdict = {"Type": vsif.type, "Data payload": vsif.payload}
 
                     if vsif.type == data_block.INFO_FRAME_TYPE_VENDOR_SPECIFIC:
@@ -500,12 +490,10 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
                 dbdict["Vendor-Specific Info Frames"] = vsiflist
 
             elif db.type == data_block.DB_TYPE_YCBCR420_CAPABILITY_MAP:
-
                 assert isinstance(db, data_block.YCBCR420CapabilityMapBlock)
                 dbdict["Supported descriptor indices"] = db.supported_descriptor_indices
 
             elif db.type == data_block.DB_TYPE_VIDEO_FORMAT_PREFERENCE:
-
                 assert isinstance(db, data_block.VideoFormatPrefBlock)
                 vps_list = []
                 for vp in db.video_preferences:
@@ -541,7 +529,6 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
         mydict["Descriptors"] = [BuildDtd(dtd) for dtd in ext.dtds]
 
     elif ext.type == extensions.TYPE_VIDEO_TIMING_BLOCK:
-
         assert isinstance(ext, extensions.VTBExtension)
 
         mydict.update(
@@ -554,7 +541,6 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
         )
 
     elif ext.type == extensions.TYPE_EXTENSION_BLOCK_MAP:
-
         assert isinstance(ext, extensions.ExtensionBlockMap)
         mydict["Tags"] = ext.all_tags
 

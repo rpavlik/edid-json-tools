@@ -9,7 +9,6 @@
 
 """Provides the Error class with methods for describing and reporting errors."""
 
-
 from typing import List, Optional
 
 

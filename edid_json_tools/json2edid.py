@@ -13,7 +13,6 @@
 
 """Create an EDID binary blob out of a Json representation of an EDID."""
 
-
 import itertools
 import json
 from typing import Any, Dict, List, NewType, Tuple
@@ -406,11 +405,9 @@ def BuildDescriptor(desc_json):
     atype = desc_json["Type"]
 
     if atype == "Detailed Timing Descriptor":
-
         return BuildDtd(desc_json)
 
     else:
-
         d[0] = d[1] = d[2] = 0x00
         types = {
             "Display Product Serial Number": 0xFF,
@@ -430,7 +427,6 @@ def BuildDescriptor(desc_json):
         d[3] = types[atype]
 
         if d[3] in [0xFF, 0xFE, 0xFC]:  # Type of string descriptor
-
             d[5:18] = [0x20] * 13  # Padding with 0x20
             data = desc_json["Data string"]
             str_len = len(data)
@@ -439,7 +435,6 @@ def BuildDescriptor(desc_json):
                 d[5 + str_len] = 0x0A
 
         elif atype == "Display Range Limits Descriptor":
-
             subtypes = {
                 "Default GTF supported": 0x00,
                 "Range Limits Only - no additional info": 0x01,
@@ -478,7 +473,6 @@ def BuildDescriptor(desc_json):
                 d[17] = desc_json["J"] * 2
 
             elif asubtype == "CVT supported":
-
                 v, r = desc_json["CVT Version"].split(".")
                 d[11] = (int(v) << 4) + int(r)
                 apc = int(desc_json["Additional Pixel Clock (MHz)"] / 0.25)
@@ -529,7 +523,6 @@ def BuildDescriptor(desc_json):
                 d[3] = desc_json["Tag"]
 
         elif atype == "Established Timings III":
-
             est_timings = [
                 [0x80000000000, "640 x 350 @ 85 Hz"],
                 [0x40000000000, "640 x 400 @ 85 Hz"],
@@ -593,7 +586,6 @@ def BuildDescriptor(desc_json):
             d[11] = sum_bits & 0xFF
 
         elif atype == "Color Point Data":
-
             cps = desc_json["Color Points"]  # List of dicts
 
             start = 5
@@ -611,7 +603,6 @@ def BuildDescriptor(desc_json):
             # If there's only one color point, the 2nd remains all 0x00
 
         elif atype == "Standard Timing Identifiers":
-
             sts = desc_json["Standard Timings"]
             for x in range(0, 6):
                 d[5 + (x * 2) : 7 + (x * 2)] = BuildSt(sts[x])
@@ -619,7 +610,6 @@ def BuildDescriptor(desc_json):
             d[17] = 0x0A
 
         elif atype == "Display Color Management (DCM) Data":
-
             d[5] = 0x03
             d[6] = desc_json["Red a3"] & 0xFF
             d[7] = desc_json["Red a3"] >> 8
@@ -635,7 +625,6 @@ def BuildDescriptor(desc_json):
             d[17] = desc_json["Blue a2"] >> 8
 
         elif atype == "CVT 3 Byte Timing Codes":
-
             d[5] = 0x01
             cvts = desc_json["Coordinated Video Timings"]
             for x in range(0, len(cvts)):  # Up to 4
@@ -752,7 +741,6 @@ def BuildExtension(ext_json):
             index += 18
 
     elif atype == "Extension Block Map":
-
         tags = ext_json["Tags"]
         e[1 : (1 + len(tags))] = tags
 
@@ -779,7 +767,6 @@ def BuildDataBlock(db_json):
         blob = list(itertools.chain(*[BuildSad(sad) for sad in sads]))
 
     elif atype in (data_block.DB_TYPE_VIDEO, data_block.DB_TYPE_YCBCR420_VIDEO):
-
         if atype == data_block.DB_TYPE_VIDEO:
             tag = 0x02
 
@@ -791,7 +778,6 @@ def BuildDataBlock(db_json):
         blob = [BuildSvd(svd) for svd in db_json["Short video descriptors"]]
 
     elif "Vendor-Specific" in atype:
-
         if atype == data_block.DB_TYPE_VENDOR_SPECIFIC:
             tag = 0x03
         else:
@@ -802,7 +788,6 @@ def BuildDataBlock(db_json):
         blob = [int(z, 16), int(y, 16), int(x, 16)] + db_json["Data payload"]
 
     elif atype == data_block.DB_TYPE_SPEAKER_ALLOCATION:
-
         tag = 0x04
 
         speaker_bits = _BuildBitsFromBitmaskList(
@@ -812,7 +797,6 @@ def BuildDataBlock(db_json):
         blob = [speaker_bits & 0xFF, speaker_bits >> 8, 0]
 
     elif atype == data_block.DB_TYPE_COLORIMETRY:
-
         tag = 0x07
         extended_tag = 0x05
 
@@ -825,7 +809,6 @@ def BuildDataBlock(db_json):
         ]
 
     elif atype == data_block.DB_TYPE_VIDEO_CAPABILITY:
-
         tag = 0x07
         extended_tag = 0x00
 
@@ -853,7 +836,6 @@ def BuildDataBlock(db_json):
         blob = [(qy << 7) + (qs << 6) + (pt << 4) + (it << 2) + ce]
 
     elif atype == data_block.DB_TYPE_INFO_FRAME:
-
         tag = 0x07
         extended_tag = 0x32
 
@@ -866,7 +848,6 @@ def BuildDataBlock(db_json):
             blob += BuildVsif(vsif)
 
     elif atype == data_block.DB_TYPE_YCBCR420_CAPABILITY_MAP:
-
         tag = 0x07
         extended_tag = 0x15
 
@@ -879,7 +860,6 @@ def BuildDataBlock(db_json):
             bit_map >>= 8
 
     elif atype == data_block.DB_TYPE_VIDEO_FORMAT_PREFERENCE:
-
         tag = 0x07
         extended_tag = 0x13
 

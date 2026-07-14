@@ -21,7 +21,6 @@
 
 """Parses EDID and establishes command line options for EDID analysis."""
 
-
 import argparse
 import re
 

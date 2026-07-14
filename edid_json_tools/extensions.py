@@ -25,7 +25,7 @@ TYPE_CEA_861 = "CEA-861 Series Timing Extension"
 TYPE_VIDEO_TIMING_BLOCK = "Video Timing Block Extension (VTB-EXT)"
 TYPE_DISPLAY_INFORMATION = "Display Information Extension (DI-EXT)"
 TYPE_LOCALIZED_STRING = "Localized String Extension (LS-EXT)"
-TYPE_DIGITAL_PACKET_VIDEO_LINK = "Digital Packet Video Link Extension " "(DPVL-EXT)"
+TYPE_DIGITAL_PACKET_VIDEO_LINK = "Digital Packet Video Link Extension (DPVL-EXT)"
 TYPE_EXTENSION_BLOCK_MAP = "Extension Block Map"
 TYPE_MANUFACTURER_EXTENSION = "Extension defined by monitor manufacturer"
 TYPE_UNKNOWN = "Unknown Extension type"
@@ -282,7 +282,7 @@ class CEAExtension(Extension):
             return [
                 error.Error(
                     "CEA extension %s" % ext_index,
-                    "All bytes after DTDs" " should be 0x00",
+                    "All bytes after DTDs should be 0x00",
                     "All 0x00s",
                     found,
                 )
