@@ -14,7 +14,7 @@ The various types of Descriptor all inherit the basic Descriptor object.
 
 import typing
 from collections import OrderedDict
-from typing import Final, List, Optional, Union
+from typing import ClassVar, Final, List, Optional, Tuple, Union
 
 from . import coordinated_video_timings as cvt_module
 from . import error, standard_timings, tools
@@ -381,7 +381,10 @@ class DisplayRangeDescriptor(Descriptor):
         if not self.pixel_clock:
             errors.append(
                 error.Error(
-                    loc, "Pixel clock value invalid", "Non-zero", self.pixel_clock
+                    loc,
+                    "Pixel clock value invalid",
+                    "Non-zero",
+                    self.pixel_clock,
                 )
             )
 
@@ -462,7 +465,7 @@ class DisplayRangeGTF(DisplayRangeDescriptor):
 class DisplayRangeCVT(DisplayRangeDescriptor):
     """Analyzes a Display Range CVT Descriptor (subtype of Display Range)."""
 
-    _aspect_ratios = [
+    _aspect_ratios: ClassVar[List[Tuple[int, str]]] = [
         (0x80, "4:3 AR"),
         (0x40, "16:9 AR"),
         (0x20, "16:10 AR"),
@@ -716,7 +719,9 @@ class StandardTimingDescriptor(Descriptor):
 
         for x in range(7):
             st = standard_timings.GetStandardTiming(
-                self._block, 5 + (x * 2), self._version
+                self._block,
+                5 + (x * 2),
+                self._version,
             )
             if st:
                 sts.append(st)

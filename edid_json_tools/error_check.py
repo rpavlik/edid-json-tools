@@ -35,7 +35,7 @@ def _LengthError(e: ByteList):
             "Invalid length",
             "Length % 128 = 0",
             "Length %% 128 = %d" % (len(e) % 128),
-        )
+        ),
     ]
 
 
@@ -190,7 +190,7 @@ def _WeekError(edid: ByteList) -> error.OptionalErrorList:
                 "Invalid week value",
                 "Week in range 1-54",
                 "Week %d" % edid[0x10],
-            )
+            ),
         ]
     return None
 

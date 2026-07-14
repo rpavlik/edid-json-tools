@@ -52,7 +52,9 @@ def ParseEdid():
     p = argparse.ArgumentParser(description="Select sections of EDID to parse.")
 
     sp = p.add_subparsers(
-        title="subcommands", description="valid subcommands", metavar=""
+        title="subcommands",
+        description="valid subcommands",
+        metavar="",
     )
     sp_verify = sp.add_parser("verify", help="Error check the EDID")
     sp_verify.set_defaults(func=Verify)
@@ -74,21 +76,34 @@ def ParseEdid():
     # The following are all arguments for the parse subcommand
     parse_mode = sp_parse.add_mutually_exclusive_group()
     parse_mode.add_argument(
-        "-v", "--verbose", action="store_true", help="Show detailed information"
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Show detailed information",
     )
     parse_mode.add_argument(
-        "-n", "--normal", action="store_true", help="Show standard information"
+        "-n",
+        "--normal",
+        action="store_true",
+        help="Show standard information",
     )
     parse_mode.add_argument(
-        "-l", "--layout", action="store_true", help="Show basic layout information"
+        "-l",
+        "--layout",
+        action="store_true",
+        help="Show basic layout information",
     )
 
     parse_raw = sp_parse.add_mutually_exclusive_group()
     parse_raw.add_argument(
-        "--hex", action="store_true", help="Print raw data for each section in hex"
+        "--hex",
+        action="store_true",
+        help="Print raw data for each section in hex",
     )
     parse_raw.add_argument(
-        "--dec", action="store_true", help="Print raw data for each section in decimal"
+        "--dec",
+        action="store_true",
+        help="Print raw data for each section in decimal",
     )
 
     sp_parse.add_argument("-t", "--types", type=str, help=type_help_string)

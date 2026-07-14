@@ -222,10 +222,16 @@ def BuildBlockAnalysis(desc: descriptor.Descriptor) -> Dict[str, Any]:
         mydict["Subtype"] = desc.subtype
 
         vert_rate = _XYDict(
-            desc.min_vertical_rate, desc.max_vertical_rate, "Minimum", "Maximum"
+            desc.min_vertical_rate,
+            desc.max_vertical_rate,
+            "Minimum",
+            "Maximum",
         )
         hor_rate = _XYDict(
-            desc.min_horizontal_rate, desc.max_horizontal_rate, "Minimum", "Maximum"
+            desc.min_horizontal_rate,
+            desc.max_horizontal_rate,
+            "Minimum",
+            "Maximum",
         )
 
         mydict.update(
@@ -516,7 +522,8 @@ def AnalyzeExtension(e: edid.Edid, block_num: int):
             else:
                 raise RuntimeError(
                     "Can't convert a datablock of type {}, tag {}!".format(
-                        db.type, db.tag
+                        db.type,
+                        db.tag,
                     )
                 )
 

@@ -88,7 +88,7 @@ class StandardTiming(object):
                     '"unused" in a non-compliant way',
                     "256-2288 pixels",
                     "Value of 0 (converts to 248)",
-                )
+                ),
             ]
         return None
 

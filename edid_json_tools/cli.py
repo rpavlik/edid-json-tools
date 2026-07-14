@@ -49,7 +49,8 @@ def edid2json(ignore_errors, edid_file):
     type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
 )
 @click.argument(
-    "edid_file", type=click.Path(file_okay=True, dir_okay=False, writable=True)
+    "edid_file",
+    type=click.Path(file_okay=True, dir_okay=False, writable=True),
 )
 def json2edid(json_file, edid_file):
     """Loads in JSON_FILE describing an EDID,

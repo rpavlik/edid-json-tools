@@ -200,7 +200,9 @@ class Edid(object):
         sts = []
         for x in range(8):
             st = standard_timings.GetStandardTiming(
-                self._edid, (base + (x * 2)), self.edid_version
+                self._edid,
+                (base + (x * 2)),
+                self.edid_version,
             )
             if st:
                 sts.append(st)
@@ -220,7 +222,9 @@ class Edid(object):
         """
         base = 54  # Descriptor blocks begin at byte 54 in base EDID
         return descriptor.GetDescriptor(
-            self._edid, (base + (index * 18)), self.edid_version
+            self._edid,
+            (base + (index * 18)),
+            self.edid_version,
         )
 
     @property

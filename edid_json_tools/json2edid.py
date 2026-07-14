@@ -48,7 +48,8 @@ def _BuildBitsFromOptions(options: List[str], json_map: BoolDict) -> int:
 
 
 def _BuildBitsFromBitmaskList(
-    options: Sequence[Tuple[BitMask, str]], json_map: BoolDict
+    options: Sequence[Tuple[BitMask, str]],
+    json_map: BoolDict,
 ) -> int:
     """Encode a list of options into bit form for an EDID binary blob.
 
@@ -789,7 +790,8 @@ def BuildDataBlock(db_json):
         tag = 0x04
 
         speaker_bits = _BuildBitsFromBitmaskList(
-            data_block.SPEAKERS, db_json["Speaker allocation"]
+            data_block.SPEAKERS,
+            db_json["Speaker allocation"],
         )
 
         blob = [speaker_bits & 0xFF, speaker_bits >> 8, 0]
@@ -840,7 +842,7 @@ def BuildDataBlock(db_json):
         if_proc = db_json["InfoFrame Processing Descriptor"]
         if_proc_payload = if_proc["Data payload"]
         vsifs = db_json["Vendor-Specific Info Frames"]
-        blob = [len(if_proc_payload) << 5, len(vsifs)] + if_proc_payload
+        blob = [len(if_proc_payload) << 5, len(vsifs), *if_proc_payload]
 
         for vsif in vsifs:
             blob += BuildVsif(vsif)

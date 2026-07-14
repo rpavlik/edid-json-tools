@@ -108,7 +108,9 @@ def PrintSpace(num=1):
 
 
 def PrintList(
-    alist: Union[List[Tuple[Any, Any]], List[List[Any]]], mode: Mode, print_format: str
+    alist: Union[List[Tuple[Any, Any]], List[List[Any]]],
+    mode: Mode,
+    print_format: str,
 ):
     """Print out a list of properties and their values in specified format.
 
@@ -372,7 +374,10 @@ def PrintBlockAnalysis(e: edid.Edid, desc, mode: Mode, raw_mode, start, prefix=N
     if raw_mode:
         base = 54
         PrintRawRange(
-            e.GetData(), raw_mode, base + (start * 18), base + ((start + 1) * 18)
+            e.GetData(),
+            raw_mode,
+            base + (start * 18),
+            base + ((start + 1) * 18),
         )
 
     if mode == Mode.LAYOUT_MODE:

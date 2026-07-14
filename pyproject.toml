@@ -26,6 +26,14 @@ select = [
     "PIE",
     # flake8-return
     "RET",
+    # flake8-quotes
+    "Q",
+    # flake8-self
+    "SLF",
+    # flake8-tidy-imports
+    "TID",
+    # ruff
+    "RUF",
     # isort
     "I",
 ]

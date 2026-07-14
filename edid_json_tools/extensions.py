@@ -69,7 +69,10 @@ class Extension(object):
     """Defines a basic extension."""
 
     def __init__(
-        self, block: ByteList, my_type: str, version: Optional[EdidVersion] = None
+        self,
+        block: ByteList,
+        my_type: str,
+        version: Optional[EdidVersion] = None,
     ):
         """Create an Extension object.
 
@@ -284,7 +287,7 @@ class CEAExtension(Extension):
                     "All bytes after DTDs should be 0x00",
                     "All 0x00s",
                     found,
-                )
+                ),
             ]
         return None
 
@@ -352,7 +355,9 @@ class VTBExtension(Extension):
 
         for x in range(self._dtb_count):
             dtd = descriptor.GetDescriptor(
-                self._block, dtb_start + (x * 18), self._version
+                self._block,
+                dtb_start + (x * 18),
+                self._version,
             )
             assert isinstance(dtd, descriptor.DetailedTimingDescriptor)
             dtbs.append(dtd)
@@ -387,7 +392,9 @@ class VTBExtension(Extension):
 
         for x in range(self._st_count):
             st = standard_timings.GetStandardTiming(
-                self._block, st_start + (x * 2), self._version
+                self._block,
+                st_start + (x * 2),
+                self._version,
             )
             sts.append(st)
 
