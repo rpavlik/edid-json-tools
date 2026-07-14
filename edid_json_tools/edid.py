@@ -201,7 +201,7 @@ class Edid(object):
         """
         base = 38
         sts = []
-        for x in range(0, 8):
+        for x in range(8):
             st = standard_timings.GetStandardTiming(
                 self._edid, (base + (x * 2)), self.edid_version
             )
@@ -234,7 +234,7 @@ class Edid(object):
           A list of descriptor.Descriptor objects.
         """
         descs = []
-        for x in range(0, 4):
+        for x in range(4):
             desc = self.GetDescriptor(x)
             if desc:
                 descs.append(desc)

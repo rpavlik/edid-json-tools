@@ -594,7 +594,7 @@ def BuildExtensions(e: edid.Edid) -> List[Any]:
     Returns:
       A list of extension information.
     """
-    return [AnalyzeExtension(e, x + 1) for x in list(range(0, e.extension_count))]
+    return [AnalyzeExtension(e, x + 1) for x in list(range(e.extension_count))]
 
 
 def ParseEdid(filename, ignore_errors=False):

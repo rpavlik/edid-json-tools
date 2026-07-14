@@ -722,7 +722,7 @@ class StandardTimingDescriptor(Descriptor):
         """
         sts = []
 
-        for x in range(0, 7):
+        for x in range(7):
             st = standard_timings.GetStandardTiming(
                 self._block, 5 + (x * 2), self._version
             )
@@ -818,7 +818,7 @@ class CoordinatedVideoTimingsDescriptor(Descriptor):
         """
         cvts = []
 
-        for x in range(0, 4):
+        for x in range(4):
             cvt = cvt_module.GetCoordinatedVideoTiming(self._block, 6 + (x * 3))
             if cvt:
                 cvts.append(cvt)
@@ -837,7 +837,7 @@ class CoordinatedVideoTimingsDescriptor(Descriptor):
         errors = []
         cvts = self.coordinated_video_timings
 
-        for x in range(0, len(cvts)):
+        for x in range(len(cvts)):
             err = cvts[x].CheckErrors(x + 1)
             if err:
                 errors.append(err)

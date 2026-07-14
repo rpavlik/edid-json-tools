@@ -1000,7 +1000,7 @@ class YCBCR420CapabilityMapBlock(DataBlock):
 
         for x in range(2, len(self._block)):
             byte = self._block[x]
-            for _ in range(0, 8):
+            for _ in range(8):
                 if byte & 0x01:
                     supported.append(index)
                 byte >>= 1

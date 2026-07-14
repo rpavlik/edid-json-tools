@@ -271,7 +271,7 @@ def BuildStandardTimings(edid: List[int], sts_json):
     base = 0x26
     edid[base : (base + 16)] = [0x01] * 16
 
-    for x in range(0, num_st):
+    for x in range(num_st):
         edid[base + (x * 2) : base + 2 + (x * 2)] = BuildSt(sts_json[x])
 
 
@@ -302,7 +302,7 @@ def BuildDescriptors(edid: List[int], descs_json):
       descs_json: The list of dictionaries of descriptor info.
     """
     base = 0x36
-    for x in range(0, 4):
+    for x in range(4):
         edid[base + (x * 18) : base + ((x + 1) * 18)] = BuildDescriptor(descs_json[x])
 
 
@@ -605,7 +605,7 @@ def BuildDescriptor(desc_json):
 
         elif atype == "Standard Timing Identifiers":
             sts = desc_json["Standard Timings"]
-            for x in range(0, 6):
+            for x in range(6):
                 d[5 + (x * 2) : 7 + (x * 2)] = BuildSt(sts[x])
 
             d[17] = 0x0A
@@ -628,7 +628,7 @@ def BuildDescriptor(desc_json):
         elif atype == "CVT 3 Byte Timing Codes":
             d[5] = 0x01
             cvts = desc_json["Coordinated Video Timings"]
-            for x in range(0, len(cvts)):  # Up to 4
+            for x in range(len(cvts)):  # Up to 4
                 d[6 + (x * 3) : 9 + (x * 3)] = BuildCvt(cvts[x])
 
     return d

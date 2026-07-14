@@ -352,7 +352,7 @@ class VTBExtension(Extension):
         dtbs = []
         dtb_start = 5
 
-        for x in range(0, self._dtb_count):
+        for x in range(self._dtb_count):
             dtd = descriptor.GetDescriptor(
                 self._block, dtb_start + (x * 18), self._version
             )
@@ -371,7 +371,7 @@ class VTBExtension(Extension):
         cvts = []
         cvt_start = 5 + (18 * self._dtb_count)
 
-        for x in range(0, self._cvt_count):
+        for x in range(self._cvt_count):
             cvt = cvt_module.GetCoordinatedVideoTiming(self._block, cvt_start + (x * 3))
             cvts.append(cvt)
 
@@ -387,7 +387,7 @@ class VTBExtension(Extension):
         sts = []
         st_start = 5 + (18 * self._dtb_count) + (3 * self._cvt_count)
 
-        for x in range(0, self._st_count):
+        for x in range(self._st_count):
             st = standard_timings.GetStandardTiming(
                 self._block, st_start + (x * 2), self._version
             )
@@ -407,13 +407,13 @@ class VTBExtension(Extension):
         errors = []
 
         cvts = self.cvts
-        for x in range(0, self._cvt_count):
+        for x in range(self._cvt_count):
             err = cvts[x].CheckErrors(x + 1)
             if err:
                 errors.extend(err)
 
         sts = self.sts
-        for x in range(0, self._st_count):
+        for x in range(self._st_count):
             err = sts[x].CheckErrors(x + 1)
             if err:
                 errors.extend(err)

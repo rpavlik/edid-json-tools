@@ -109,7 +109,7 @@ def _DescriptorErrors(edid: ByteList, version: EdidVersion):
 
     errors = []
 
-    for x in range(0, 4):
+    for x in range(4):
         desc = descriptor.GetDescriptor(edid, base + (x * 18), version)
 
         desc_errors = desc.CheckErrors(x + 1)
@@ -134,7 +134,7 @@ def _BaseStErrors(edid: ByteList, version: EdidVersion):
 
     errors = []
 
-    for x in range(0, 8):
+    for x in range(8):
         st = standard_timings.GetStandardTiming(edid, base + (x * 2), version)
         if st:
             err = st.CheckErrors(x + 1)

@@ -20,6 +20,10 @@ select = [
     "B",
     # flake8-simplify
     "SIM",
+    # flake8-comprehensions
+    "C4",
+    # flake8-pie
+    "PIE",
     # isort
     "I",
 ]
