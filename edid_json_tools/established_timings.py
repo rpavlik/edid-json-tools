@@ -12,9 +12,8 @@
 EstablishedTimings information is found in bytes 23h-25h of the base EDID.
 """
 
-from .typing import BoolDict, ByteList
 from . import tools
-
+from .typing import BoolDict, ByteList
 
 _timings = (
     (0x800000, "720x400 @ 70 Hz"),

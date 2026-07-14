@@ -8,7 +8,6 @@
 
 from typing import Dict, List
 
-
 EdidVersion = str
 
 ByteList = List[int]

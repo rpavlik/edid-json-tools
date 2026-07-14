@@ -10,8 +10,9 @@
 """Provides EDID class with methods for parsing info."""
 
 import array
-from edid_json_tools.typing import ByteList
 from typing import List, Optional
+
+from edid_json_tools.typing import ByteList
 
 from . import (
     basic_display,
