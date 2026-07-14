@@ -1062,7 +1062,7 @@ def JsonToBinary(in_file: str, out_file: str):
         invalid_bytes = [
             i
             for i in range(len(list_edid))
-            if not 0 <= list_edid[i] and not list_edid[i] < 256
+            if not list_edid[i] >= 0 and not list_edid[i] < 256
         ]
         if not invalid_bytes:
             edid_obj = edid_module.Edid(list_edid)

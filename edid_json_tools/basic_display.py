@@ -85,20 +85,15 @@ class BasicDisplay(object):
         """
         supp = self._edid[0x14] & 0x0F
 
-        if supp == 0x00:
-            return None
-        elif supp == 0x01:
-            return "DVI"
-        elif supp == 0x02:
-            return "HDMI-a"
-        elif supp == 0x03:
-            return "HDMI-b"
-        elif supp == 0x04:
-            return "MDDI"
-        elif supp == 0x05:
-            return "DisplayPort"
-        else:
-            return "Reserved: Should not be used"
+        digital_interface = {
+            0x00: None,
+            0x01: "DVI",
+            0x02: "HDMI-a",
+            0x03: "HDMI-b",
+            0x04: "MDDI",
+            0x05: "DisplayPort",
+        }
+        return digital_interface.get(supp, "Reserved: Should not be used")
 
     #####################################
     # FOR ANALOG VIDEO SIGNAL INTERFACE #
@@ -116,14 +111,13 @@ class BasicDisplay(object):
         """
         vid_input = (self._edid[0x14] >> 5) & 0x03
 
-        if vid_input == 0x00:
-            return "+0.7/-0.3 V"
-        elif vid_input == 0x01:
-            return "+0.714/-0.286 V"
-        elif vid_input == 0x02:
-            return "+1.0/-0.4 V"
-        elif vid_input == 0x03:
-            return "+0.7/0 V"
+        signal_levels = {
+            0x00: "+0.7/-0.3 V",
+            0x01: "+0.714/-0.286 V",
+            0x02: "+1.0/-0.4 V",
+            0x03: "+0.7/0 V",
+        }
+        return signal_levels[vid_input]
 
     @property
     def blank_black(self):
