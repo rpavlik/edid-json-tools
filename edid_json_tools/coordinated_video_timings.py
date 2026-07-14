@@ -11,7 +11,7 @@
 CoordinatedVideoTiming info is stored in Video Timing Block extensions.
 """
 
-from typing import Final, List, Optional, Tuple
+from typing import ClassVar, Final, List, Optional, Tuple
 
 from . import error, tools
 from .typing import ByteList
@@ -37,7 +37,7 @@ def GetCoordinatedVideoTiming(
 class CoordinatedVideoTiming(object):
     """Return a CoordinatedVideoTiming object and its properties."""
 
-    _ref_rates: List[Tuple[int, str]] = [
+    _ref_rates: ClassVar[List[Tuple[int, str]]] = [
         (0x10, "50Hz"),
         (0x08, "60Hz"),
         (0x04, "75Hz"),

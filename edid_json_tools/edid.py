@@ -94,7 +94,7 @@ class Edid(object):
         sn += self._edid[0x0D] << 8
         sn += self._edid[0x0C]
 
-        return sn if sn else None
+        return sn or None
 
     @property
     def manufacturing_week(self) -> Optional[int]:
