@@ -6,6 +6,10 @@
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.ruff]
+# Always generate Python 3.7-compatible code.
+target-version = "py37"
+
 [tool.ruff.lint]
 select = [
     # pycodestyle
@@ -19,3 +23,9 @@ select = [
     # isort
     "I",
 ]
+ignore = [
+    "UP031"
+]
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
