@@ -13,7 +13,7 @@ StandardTiming objects are found in bytes 26h-35h of the base EDID, as well as
 in StandardTimingDescriptor objects.
 """
 
-from typing import Final
+from typing import Final, Optional
 
 from . import error
 from .typing import ByteList, EdidVersion
@@ -69,7 +69,7 @@ class StandardTiming(object):
         """
         return (self._block[0] + 31) * 8
 
-    def CheckErrors(self, index=None) -> error.OptionalErrorList:
+    def CheckErrors(self, index: Optional[int] = None) -> error.OptionalErrorList:
         """Check if the x resolution is faulty.
 
         Args:
@@ -90,8 +90,7 @@ class StandardTiming(object):
                     "Value of 0 (converts to 248)",
                 )
             ]
-        else:
-            return None
+        return None
 
     @property
     def xy_pixel_ratio(self) -> str:

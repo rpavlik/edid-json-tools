@@ -368,9 +368,8 @@ def PrintBlockAnalysis(e: edid.Edid, desc, mode: Mode, raw_mode, start, prefix=N
     """
     print("%s%s" % (prefix, desc.type))
 
-    if mode == Mode.LAYOUT_MODE:
-        if desc.type == descriptor.TYPE_DISPLAY_RANGE_LIMITS:
-            print("  Subtype: %s" % desc.subtype)
+    if mode == Mode.LAYOUT_MODE and desc.type == descriptor.TYPE_DISPLAY_RANGE_LIMITS:
+        print("  Subtype: %s" % desc.subtype)
 
     if raw_mode:
         base = 54

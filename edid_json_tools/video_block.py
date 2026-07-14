@@ -132,5 +132,4 @@ def GetSvd(code: int) -> str:
     """
     if code < len(_svds):
         return _svds[code]
-    else:
-        return "Reserved for Future"
+    return "Reserved for Future"

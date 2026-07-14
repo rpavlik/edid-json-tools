@@ -70,7 +70,7 @@ def PrintHexData(data: ByteList):
 
     print("\t\t 0 1  2 3  4 5  6 7  8 9  A B  C D  E F")
 
-    for x in range(0, hex_rows):
+    for x in range(hex_rows):
         start = 0x10 * x
         row = "%02X%02X " * 8 % tuple(data[start : (start + 16)])
         print("0x%04X:\t\t%s" % (x, row))
