@@ -30,6 +30,12 @@ select = [
     "Q",
     # flake8-self
     "SLF",
+    # flake8-bandit
+    "S",
+    # flake8-import-conventions
+    "ICN",
+    # flake8-type-checking
+    "TC",
     # flake8-tidy-imports
     "TID",
     # ruff
@@ -38,7 +44,9 @@ select = [
     "I",
 ]
 ignore = [
-    "UP031"
+    "UP031",
+    # assert
+    "S101",
 ]
 
 [tool.ruff.lint.pyupgrade]
