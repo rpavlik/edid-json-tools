@@ -4,13 +4,5 @@
 #
 # These are requirements for better development.
 
-black
-flake8
-mypy
-pre-commit
-
 # for command-line programs
 click
-
-# typed stubs for click
-types-click
