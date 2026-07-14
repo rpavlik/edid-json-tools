@@ -109,7 +109,7 @@ class Extension(object):
         """
         return self._block
 
-    def CheckErrors(self, index=None):
+    def CheckErrors(self, index=None) -> error.OptionalErrorList:
         """Create a method for error checking to define in other Extensions.
 
         Args:
@@ -395,7 +395,7 @@ class VTBExtension(Extension):
 
         return sts
 
-    def CheckErrors(self, index=None):
+    def CheckErrors(self, index=None) -> error.OptionalErrorList:
         """Check the extension for errors.
 
         Args:

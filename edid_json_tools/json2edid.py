@@ -15,7 +15,7 @@
 
 import itertools
 import json
-from typing import Any, Dict, List, NewType, Tuple
+from typing import Any, Dict, List, Sequence, Tuple, TypeAlias
 
 from . import data_block
 from . import edid as edid_module
@@ -23,7 +23,7 @@ from . import options as options_module
 from .tools import PrintHexData
 from .typing import BoolDict
 
-BitMask = NewType("BitMask", int)
+BitMask: TypeAlias = int
 
 
 def _BuildBitsFromOptions(options: List[str], json_map: BoolDict) -> int:
@@ -48,7 +48,7 @@ def _BuildBitsFromOptions(options: List[str], json_map: BoolDict) -> int:
 
 
 def _BuildBitsFromBitmaskList(
-    options: List[Tuple[BitMask, str]], json_map: BoolDict
+    options: Sequence[Tuple[BitMask, str]], json_map: BoolDict
 ) -> int:
     """Encode a list of options into bit form for an EDID binary blob.
 
